@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        google() // Google의 Maven 저장소
+        mavenCentral() // Maven 중앙 저장소
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.0.4' // Android Gradle Plugin
+        classpath 'com.google.gms:google-services:4.4.2' // Firebase Gradle 플러그인
+    }
+}
+
 allprojects {
     repositories {
         google()

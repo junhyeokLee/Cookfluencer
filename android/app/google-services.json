@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "359202154414",
+    "project_id": "cookfluencer",
+    "storage_bucket": "cookfluencer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359202154414:android:af25a97edd73c7ac754a3f",
+        "android_client_info": {
+          "package_name": "com.example.cookfluencer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCVLKDUclrNLBa59jIlWvt2i4NyreyMVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

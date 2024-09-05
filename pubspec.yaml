@@ -1,32 +1,13 @@
 name: cookfluencer
 description: "A new Flutter project."
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: 'none'
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-# In Windows, build-name is used as the major, minor, and patch parts
-# of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
 environment:
   sdk: ^3.5.0
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
+
 dependencies:
   flutter:
     sdk: flutter
@@ -38,11 +19,62 @@ dependencies:
   firebase_crashlytics: ^4.1.0
   cloud_firestore: ^5.3.0
   cupertino_icons: ^1.0.8
+  google_fonts: ^4.0.4  # 구글 폰트를 위한 google_fonts
+  freezed_annotation: ^2.4.4  # 불변 모델 생성을 위한 Freezed
+  json_annotation: ^4.9.0   # JSON 파싱을 위한 json_annotation
+  flutter_riverpod: ^2.5.1  # 상태 관리를 위한 Riverpod
+  riverpod_annotation: ^2.3.5  # 상태 관리를 위한 Riverpod
+  hooks_riverpod: ^2.5.1     # Hook을 사용하기 위한 hooks_riverpod
+  go_router: ^14.2.3        # 라우팅을 위한 GoRouter
+  flutter_hooks: ^0.18.0    # Hook을 사용하기 위한 flutter_hooks
+  shared_preferences: ^2.2.3  # 로컬 저장소를 위한 shared_preferences
+  animations: ^2.0.11    # 애니메이션을 위한 animations
+  cached_network_image: ^3.2.3  # 이미지 캐싱을 위한 cached_network_image
+  flutter_svg: ^2.0.3   # SVG 이미지를 위한 flutter_svg
+  transparent_image: ^2.0.1 # 이미지 투명도를 위한 transparent_image
+  keyboard_utils_fork: ^0.0.4 # 키보드 관리를 위한 keyboard_utils_fork
+  flutter_cache_manager: ^3.3.0 # 캐시 관리를 위한 flutter_cache_manager
+  easy_localization: ^3.0.2 # 다국어 지원을 위한 easy_localization
+  velocity_x: ^4.1.0  # UI를 위한 velocity_x
+  logger: ^2.4.0  # 로그를 위한 logger
+  quiver: ^3.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+
+  flutter_launcher_icons: ^0.13.1 # 앱 아이콘을 위한 flutter_launcher_icons
+  flutter_lints: ^4.0.0 # Lint를 위한 flutter_lints
+  build_runner: ^2.4.12  # 빌드를 위한 build_runner
+  riverpod_generator: ^2.4.0 # 상태 관리를 위한 riverpod_generator
+  freezed: ^2.5.7 # 불변 모델 생성을 위한 freezed
+  json_serializable: ^6.8.0  # JSON 파싱을 위한 json_serializable
+  analyzer: ^6.7.0
+
+flutter_launcher_icons:
+  #  android: "launcher_icon"
+  #  ios: "AppIcon"
+  android: true
+  ios: true
+#  image_path_ios: "assets/icon/app_icon.png"
+#  image_path_android: "assets/icon/app_icon.png"
+#  remove_alpha_ios: true
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/images/icon/
+
+  fonts:
+    - family: Rubik
+      fonts:
+        - asset: assets/fonts/rubik/Rubik-Regular.ttf
+        - asset: assets/fonts/rubik/Rubik-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/rubik/Rubik-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/rubik/Rubik-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/rubik/Rubik-Light.ttf
+          weight: 300

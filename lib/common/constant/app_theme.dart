@@ -7,23 +7,23 @@ class AppTheme {
   static TextTheme lightTextTheme =  TextTheme(
 
     labelLarge: GoogleFonts.nanumGothic(
-        fontSize: 18.0, fontWeight: FontWeight.w600, color: Colors.black),
+        fontSize: 16.0, fontWeight: FontWeight.w800, color: Colors.black,),
     labelMedium: GoogleFonts.nanumGothic(
-        fontSize: 16.0, fontWeight: FontWeight.w600, color: Colors.black),
+        fontSize: 14.0, fontWeight: FontWeight.w700, color: Colors.black),
     labelSmall: GoogleFonts.nanumGothic(
-        fontSize: 14.0, fontWeight: FontWeight.w600, color: Colors.black),
+        fontSize: 12.0, fontWeight: FontWeight.w700, color: Colors.black),
     bodyLarge: GoogleFonts.nanumGothic(
-        fontSize: 18.0, fontWeight: FontWeight.w600, color: Colors.black),
+        fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
     bodyMedium: GoogleFonts.nanumGothic(
-        fontSize: 16.0, fontWeight: FontWeight.w400, color: Colors.black),
+        fontSize: 14.0, fontWeight: FontWeight.w500, color: Colors.black),
     bodySmall: GoogleFonts.nanumGothic(
-        fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.black),
+        fontSize: 12.0, fontWeight: FontWeight.w500, color: Colors.black),
     displayLarge: GoogleFonts.nanumGothic(
         fontSize: 40.0, fontWeight: FontWeight.w600, color: Colors.black),
     displayMedium: GoogleFonts.nanumGothic(
-        fontSize: 32.0, fontWeight: FontWeight.w400, color: Colors.black),
+        fontSize: 32.0, fontWeight: FontWeight.w600, color: Colors.black),
     displaySmall: GoogleFonts.nanumGothic(
-        fontSize: 24.0, fontWeight: FontWeight.w400, color: Colors.black),
+        fontSize: 24.0, fontWeight: FontWeight.w600, color: Colors.black),
   );
 
   static TextTheme darkTextTheme = const TextTheme(
@@ -150,7 +150,7 @@ class AppTheme {
         // titleSpacing: 0.0,
         elevation: 0,
         centerTitle: false,
-        toolbarHeight: 64,
+        toolbarHeight: 54,
       ),
 
       inputDecorationTheme: const InputDecorationTheme(

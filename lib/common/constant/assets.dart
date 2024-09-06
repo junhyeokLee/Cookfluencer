@@ -16,5 +16,9 @@ class Assets {
   static const String home = 'assets/images/icon/home.png';
   static const String search = 'assets/images/icon/search.png';
   static const String heart = 'assets/images/icon/heart.png';
+  static const String view = 'assets/images/icon/view.png';
+  static const String youtube = 'assets/images/icon/youtube.png';
+  static const String group = 'assets/images/icon/group.png';
+
 }
 

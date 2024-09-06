@@ -2,10 +2,10 @@ import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:flutter/material.dart';
 
 enum RoundButtonTheme {
-  blue(AppColors.blue, Colors.white, AppColors.blue, backgroundColorProvider: blueColorProvider),
-  whiteWithBlueBorder(Colors.white, AppColors.darkBlue, AppColors.blue,
+  grey(AppColors.greyBackground, AppColors.grey, AppColors.greyBackground, backgroundColorProvider: blueColorProvider),
+  whiteWithBlueBorder(Colors.grey, AppColors.greyBackground, AppColors.greyBackground,
       backgroundColorProvider: blueColorProvider),
-  blink(AppColors.blue, Colors.white, Colors.black, backgroundColorProvider: blueColorProvider);
+  blink(AppColors.greyBackground, AppColors.grey, AppColors.greyBackground, backgroundColorProvider: blueColorProvider);
 
   const RoundButtonTheme(
     this.bgColor,
@@ -22,6 +22,6 @@ enum RoundButtonTheme {
   final Color shadowColor;
 }
 
-Color blueColorProvider(BuildContext context) => AppColors.blue;
+Color blueColorProvider(BuildContext context) => AppColors.greyBackground;
 
 Color Function(BuildContext context) defaultColorProvider(Color color) => blueColorProvider;

@@ -63,7 +63,7 @@ class RoundButton extends StatefulWidget {
       Key? key})
       : shadowColor = shadowColor ?? theme?.shadowColor ?? Colors.transparent,
         textColor = textColor ?? theme?.textColor ?? Colors.white,
-        bgColor = bgColor ?? theme?.bgColor ?? AppColors.blue,
+        bgColor = bgColor ?? theme?.bgColor ?? AppColors.grey,
         borderColor = borderColor ?? theme?.borderColor ?? Colors.transparent,
         super(key: key);
 
@@ -72,8 +72,8 @@ class RoundButton extends StatefulWidget {
 }
 
 class RoundButtonState extends State<RoundButton> with RefreshEverySecond {
-  final Color disabledBgColor = AppColors.grey;
-  final Color disabledTextColor = Colors.white;
+  final Color disabledBgColor = AppColors.greyBackground;
+  final Color disabledTextColor = Colors.black;
 
   int colorIndex = 0;
 
@@ -113,9 +113,9 @@ class RoundButtonState extends State<RoundButton> with RefreshEverySecond {
       switch (widget.theme) {
         case RoundButtonTheme.blink:
           final index = colorIndex % 2;
-          color = index == 0 ? AppColors.green : AppColors.salmon;
+          color = index == 0 ? AppColors.greyBackground : AppColors.grey;
           currentTextColor = Colors.white;
-          borderColor = index == 0 ? AppColors.green : AppColors.salmon;
+          borderColor = index == 0 ? AppColors.greyBackground : AppColors.grey;
           shadowColor = Colors.transparent;
           break;
         default:

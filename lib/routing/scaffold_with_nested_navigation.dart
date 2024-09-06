@@ -104,7 +104,7 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
                 width: 16,
                 height: 16,
               ),
-              label: '북마크',
+              label: '좋아요',
             ),
           ],
           onDestinationSelected: onDestinationSelected,

@@ -4,19 +4,18 @@ import 'package:cookfluencer/common/common.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:cookfluencer/common/util/ScrrenUtil.dart';
-import 'package:cookfluencer/ui/widget/RecommendChannelVideo.dart';
+import 'package:cookfluencer/ui/widget/home/RecommendChannelVideo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Recommendchannel extends HookConsumerWidget {
-  const Recommendchannel({
+class RecommendChannel extends HookConsumerWidget {
+  const RecommendChannel({
     super.key,
     required this.recommendChannelsListAsyncValue,
   });
 
-  final List<Map<String, dynamic>>
-      recommendChannelsListAsyncValue; // 비디오 리스트 (썸네일, 제목, 설명 등 포함)
+  final List<Map<String, dynamic>> recommendChannelsListAsyncValue; // 비디오 리스트 (썸네일, 제목, 설명 등 포함)
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,8 +34,9 @@ class Recommendchannel extends HookConsumerWidget {
             CarouselSlider(
               options: CarouselOptions(
                 autoPlay: false,
-                height: MediaQuery.of(context).size.width * 1,
+                // height: null, // Carousel 전체 높이
                 // Carousel 전체 높이
+                aspectRatio: 0.85,
                 enableInfiniteScroll: true,
                 enlargeCenterPage: false,
                 initialPage: 0,
@@ -164,8 +164,8 @@ class Recommendchannel extends HookConsumerWidget {
                         ),
                       ),
                       // 채널의 비디오 리스트 표시 (최대 3개)
-                      SizedBox(height: 12),
-                      ChannelVideosList(channelId: channel['id']),
+                      SizedBox(height: 16),
+                      RecommendChannelVideos(channelId: channel['id']),
                     ],
                   ),
                 );
@@ -173,7 +173,6 @@ class Recommendchannel extends HookConsumerWidget {
             ),
           ],
         ),
-        SizedBox(height: 12),
 
         Container(
           padding: const EdgeInsets.only(top: 18.0, bottom: 18.0),

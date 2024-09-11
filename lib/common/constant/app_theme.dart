@@ -109,31 +109,20 @@ class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
           minimumSize: WidgetStateProperty.all<Size>(
-            const Size(48, 48),
-          ),
-          padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-            const EdgeInsets.symmetric(vertical: 12.5),
+            const Size(40, 40),
           ),
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
               return AppColors.grey; // 비활성화된 버튼의 배경색
             }
-            return AppColors.primaryColor; // 활성화된 버튼의 배경색
+            return AppColors.greyBackground; // 활성화된 버튼의 배경색
           }),
           foregroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
               return AppColors.black; // 비활성화된 버튼의 텍스트 색상
             }
-            return AppColors.backgroundColor; // 활성화된 버튼의 텍스트 색상
+            return AppColors.black; // 활성화된 버튼의 텍스트 색상
           }),
-        shape: WidgetStateProperty.all<ContinuousRectangleBorder>(
-          ContinuousRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(48.0), // 위쪽 라운드 정도
-              bottom: Radius.circular(48.0), // 아래쪽 라운드 정도
-            ),
-          ),
-        ),
       ),
     ),
 

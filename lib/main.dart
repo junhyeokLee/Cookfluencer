@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookfluencer/common/constant/app_theme.dart';
 import 'package:cookfluencer/firebase_options.dart';
 import 'package:cookfluencer/routing/appRoute.dart';
@@ -11,8 +12,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(const ProviderScope(child: MyApp())); // Riverpod ProviderScope 추가
 }
+
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});

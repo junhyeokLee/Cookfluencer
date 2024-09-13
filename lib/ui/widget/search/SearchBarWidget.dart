@@ -53,7 +53,9 @@ class SearchBarWidget extends HookConsumerWidget {
                   child: searchQuery.value.isEmpty
                       ? Text(
                     '검색어를 입력하세요',
-                    style: TextStyle(color: AppColors.grey, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.grey,
+                      )
                   )
                       : SizedBox.shrink(), // 힌트가 필요 없을 때는 숨김
                 ),
@@ -62,6 +64,7 @@ class SearchBarWidget extends HookConsumerWidget {
                   child: AbsorbPointer( // AbsorbPointer를 사용하여 클릭 및 포커스 차단
                     absorbing: !enabled, // enabled가 false일 때 클릭 및 포커스 차단
                     child: TextField(
+                      style: Theme.of(context).textTheme.bodyLarge,
                       controller: searchController,
                       decoration: InputDecoration(
                         hintText: '',
@@ -75,7 +78,7 @@ class SearchBarWidget extends HookConsumerWidget {
                           onPressed: () {
                             searchQuery.value = '';
                             searchController.clear();
-                            ref.refresh(searchChannelProvider(''));
+                            ref.refresh(searchChannelAndVideoProvider(''));
                           },
                         )
                             : null,
@@ -83,7 +86,7 @@ class SearchBarWidget extends HookConsumerWidget {
                       onTap: onSearchTap,
                       onChanged: (value) {
                         searchQuery.value = value.trim(); // 검색어 상태 업데이트
-                        ref.refresh(searchChannelProvider(
+                        ref.refresh(searchChannelAndVideoProvider(
                             searchQuery.value)); // 검색어 변경 시 검색 결과 업데이트
                       },
                       onSubmitted: (value) async {

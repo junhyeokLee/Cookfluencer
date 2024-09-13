@@ -1,5 +1,6 @@
+import 'package:cookfluencer/common/CircularLoading.dart';
+import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
-import 'package:cookfluencer/common/dart/extension/context_extension.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
 import 'package:cookfluencer/sharedPreferences/sharedPreferences.dart';
 import 'package:cookfluencer/ui/widget/search/AutoSearch.dart';
@@ -9,12 +10,8 @@ import 'package:cookfluencer/ui/widget/search/ResultSearch.dart';
 import 'package:cookfluencer/ui/widget/search/SearchBarWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // SharedPreferences 패키지 추가
 
 class SearchScreen extends HookConsumerWidget {
   @override
@@ -26,7 +23,7 @@ class SearchScreen extends HookConsumerWidget {
     final showFinalResults = useState<bool>(false); // 최종 검색 결과 화면 제어
     final showRecentSearch = useState<bool>(true); // 최근 검색어 보이기 여부 추가
 
-    final fb_searchResult = ref.watch(searchChannelProvider(searchQuery.value));
+    final fb_searchResult = ref.watch(searchChannelAndVideoProvider(searchQuery.value));
     final keywordListAsyncValue = ref.watch(keywordListProvider);
 
     useEffect(() {
@@ -109,14 +106,8 @@ class SearchScreen extends HookConsumerWidget {
                   searchController: searchController, // 검색 컨트롤러 전달
                 ); // 키워드 리스트 전달
               },
-              loading: () => Center(
-                child: CircularProgressIndicator(
-                  color: AppColors.greyBackground,
-                ),
-              ),
-              error: (error, stackTrace) => Center(
-                child: Text('키워드 로드 중 오류 발생: $error'),
-              ),
+              loading: () => CircularLoading(),
+              error: (error, stackTrace) => ErrorMessage(message: '${error}'),
             ),
           ],
         )
@@ -124,8 +115,11 @@ class SearchScreen extends HookConsumerWidget {
           data: (results) {
             // 검색 결과가 있는 경우
             if (results.isEmpty) {
-              return Center(
-                child: Text('검색 결과가 없습니다.'), // 결과가 없을 때 메시지
+              return Padding(
+                padding: const EdgeInsets.all(42),
+                child: Center(
+                  child: Text('검색 결과가 없습니다.'), // 결과가 없을 때 메시지
+                ),
               );
             }
             return AutoSearch(
@@ -140,14 +134,8 @@ class SearchScreen extends HookConsumerWidget {
               },
             ); // 검색 결과 위젯 반환
           },
-          loading: () => Center(
-            child: CircularProgressIndicator(
-              color: AppColors.greyBackground,
-            ),
-          ),
-          error: (error, stackTrace) => Center(
-            child: Text('검색 중 오류 발생: $error'),
-          ),
+          loading: () => CircularLoading(),
+          error: (error, stackTrace) => ErrorMessage(message: '${error}'),
         ),
       ),
     );

@@ -67,7 +67,7 @@ class RecentSearch extends HookConsumerWidget {
                         final selectedSearch = recentSearches.value[reversedIndex];
                         searchQuery.value = selectedSearch; // 역순으로 검색어 할당
                         searchController.text = selectedSearch; // 검색창에 텍스트 채우기
-                        ref.refresh(searchChannelProvider(selectedSearch)); // 검색어 변경 시 검색 결과 업데이트
+                        ref.refresh(searchChannelAndVideoProvider(selectedSearch)); // 검색어 변경 시 검색 결과 업데이트
                         onSubmitted(); // 추가: 엔터 눌렀을 때 동작 실행
                       },
                       child: Container(

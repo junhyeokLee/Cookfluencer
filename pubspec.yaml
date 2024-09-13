@@ -26,7 +26,7 @@ dependencies:
   riverpod_annotation: ^2.3.5  # 상태 관리를 위한 Riverpod
   hooks_riverpod: ^2.5.1     # Hook을 사용하기 위한 hooks_riverpod
 #  go_router: ^14.2.7  # 라우팅을 위한 go_router
-  go_router: ^12.1.0  # 라우팅을 위한 go_router
+  go_router: ^12.1.0  # 라우팅을 위한 go_router // 버전높일시 willScope 안먹힘
   carousel_slider: ^5.0.0   # 이미지 슬라이더를 위한 carousel_slider
   flutter_hooks: ^0.18.0    # Hook을 사용하기 위한 flutter_hooks
   shared_preferences: ^2.2.3  # 로컬 저장소를 위한 shared_preferences

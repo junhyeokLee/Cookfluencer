@@ -3,6 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:cookfluencer/common/util/ScrrenUtil.dart';
+import 'package:cookfluencer/ui/widget/common/CustomVideoImage.dart';
+import 'package:cookfluencer/ui/widget/common/PageIndicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -56,18 +58,10 @@ class RecommendRecipe extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: ScreenUtil.width(context, 0.6), // 화면 너비의 60%로 설정
-                        height: ScreenUtil.width(context, 0.6), // 1:1 비율로 높이 설정
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0), // 라운드 처리
-                          child: CachedNetworkImage(
-                            imageUrl: video['thumbnail_url'], // 비디오 썸네일 표시
-                            fit: BoxFit.cover, // 또는 none
-                            placeholder: (context, url) => const Center(child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.greyBackground),
-                            )), // 로딩 중 인디케이터
-                            errorWidget: (context, url, error) => const Icon(Icons.error), // 에러 발생 시 아이콘 표시
-                          ),
+                        child: CustomVideoImage(
+                          imageUrl: video['thumbnail_url'],
+                          size: ScreenUtil.width(context, 0.6),
+                          fit: BoxFit.cover,
                         ),
                       ),
                       const SizedBox(height: 16), // 간격을 줄임
@@ -118,25 +112,13 @@ class RecommendRecipe extends HookConsumerWidget {
               }).toList(),
             ),
             SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.only(top: 18.0, bottom: 18.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: recommendVideoListAsyncValue.map((video) {
-                  int index = recommendVideoListAsyncValue.indexOf(video);
-                  return Container(
-                    width: 8.0,
-                    height: 8.0,
-                    margin: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: currentIndex.value == index
-                          ? Colors.black
-                          : Colors.grey, // 현재 페이지와 동일한 인덱스에 색상 변경
-                    ),
-                  );
-                }).toList(),
-              ),
+            PageIndicator(
+              currentIndex: currentIndex.value, // 현재 페이지 인덱스
+              itemCount: recommendVideoListAsyncValue.length, // 전체 아이템 수
+              activeColor: Colors.black, // 활성화된 인디케이터 색상
+              inactiveColor: Colors.grey, // 비활성화된 인디케이터 색상
+              dotSize: 8.0, // 인디케이터 크기
+              spacing: 4.0, // 인디케이터 간 간격
             ),
           ],
         ),

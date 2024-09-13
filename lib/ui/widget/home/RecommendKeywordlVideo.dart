@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cookfluencer/common/CircularLoading.dart';
+import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:cookfluencer/common/dart/extension/num_extension.dart';
 import 'package:cookfluencer/common/util/ScrrenUtil.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
+import 'package:cookfluencer/ui/widget/common/CustomVideoImage.dart';
+import 'package:cookfluencer/ui/widget/common/VideoItem.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -38,108 +42,19 @@ class RecommendKeywordVideos extends HookConsumerWidget {
             final video = videos[index].data() as Map<String, dynamic>;
             int viewCount = int.tryParse(video['view_count'].toString()) ?? 0; // 숫자로 변환
 
-            return Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              child: Row(
-                children: [
-                  Container(
-                    width: ScreenUtil.width(context, 0.25),
-                    // 화면 너비의 60%로 설정
-                    height: ScreenUtil.width(context, 0.25),
-                    // 1:1 비율로 높이 설정
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      // 라운드 처리
-                      child: CachedNetworkImage(
-                        imageUrl: video['thumbnail_url'],
-                        // 비디오 썸네일 표시
-                        fit: BoxFit.cover,
-                        // 또는 none
-                        placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  AppColors.greyBackground),
-                            )),
-                        // 로딩 중 인디케이터
-                        errorWidget: (context, url, error) =>
-                        const Icon(Icons.error), // 에러 발생 시 아이콘 표시
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12), // 간격을 줄임
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            // 간격
-                            Container(
-                              width: ScreenUtil.width(context, 0.55),
-                              child: Text(
-                                video['title'], // 채널이름
-                                maxLines: 1,
-                                // 한 줄로 제한
-                                overflow: TextOverflow.ellipsis,
-                                // 길어질 경우 생략
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 6), // 간격
-                        Row(
-                          children: [
-
-                            Image.asset(Assets.view,width: 14,height: 14,color: AppColors.grey), // 별 아이콘
-                            SizedBox(width: 4), // 간격
-                            Text(
-                              viewCount.toViewCountUnit(), // 조회수를 한국어 형식으로 변환
-                              style: TextStyle(
-                                color: AppColors.grey,
-                                fontSize: 12,
-                              ),
-                            ),
-
-                            SizedBox(width: 16),
-
-                            Image.asset(Assets.youtube,
-                                width: 14,
-                                height: 14,
-                                color: AppColors.grey),
-                            // youtube 아이콘
-                            SizedBox(width: 4),
-                            // 간격
-                            Container(
-                              width: ScreenUtil.width(context, 0.3),
-                              child: Text(
-                                video['channel_name'], // 채널이름
-                                maxLines: 1,
-                                // 한 줄로 제한
-                                overflow: TextOverflow.ellipsis,
-                                // 길어질 경우 생략
-                                style: TextStyle(
-                                  color: AppColors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            return VideoItem(
+              video: video, // 비디오 데이터
+              channelName: video['channel_name'], // 채널 이름
+              viewCount: viewCount, // 조회수
+              size: ScreenUtil.width(context, 0.25), // 썸네일 사이즈
+              titleWidth: ScreenUtil.width(context, 0.6), // 제목 너비
+              channelWidth: ScreenUtil.width(context, 0.3), // 채널 이름 너비
             );
           },
         );
       },
-      loading: () => const CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(AppColors.greyBackground),
-      ),
-      error: (error, stack) => Text('비디오 로드 중 오류 발생: $error'),
+      loading: () => CircularLoading(),
+      error: (error, stackTrace) => ErrorMessage(message: '${error}'),
     );
   }
 }

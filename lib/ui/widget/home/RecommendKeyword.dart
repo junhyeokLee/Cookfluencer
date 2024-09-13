@@ -1,6 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cookfluencer/common/CircularLoading.dart';
+import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
+import 'package:cookfluencer/ui/widget/common/CustomRoundButton.dart';
+import 'package:cookfluencer/ui/widget/common/KeywordChip.dart';
 import 'package:cookfluencer/ui/widget/home/RecommendKeywordlVideo.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -55,36 +59,16 @@ class RecommendKeyword extends HookConsumerWidget {
                       final keyword = keywords[index].data() as Map<String, dynamic>;
                       final isSelected = selectedKeyword.value == keyword['name']; // 선택 여부 확인
 
-                      return GestureDetector(
+                      // KeywordChip을 사용하여 키워드 렌더링
+                      return KeywordChip(
+                        keyword: keyword['name'] ?? '', // 키워드 이름
+                        isSelected: isSelected, // 선택 상태 전달
                         onTap: () {
-                          // 동일한 키워드는 다시 선택할 수 없고, 다른 키워드만 선택 가능
+                          // 키워드 선택 로직
                           if (selectedKeyword.value != keyword['name']) {
                             selectedKeyword.value = keyword['name']; // 새로운 키워드 선택
                           }
                         },
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 8), // 간격 조정
-                          decoration: BoxDecoration(
-                            color: isSelected ? AppColors.grey : AppColors.greyBackground, // 선택되면 배경색 변경
-                            borderRadius: BorderRadius.circular(50), // 둥근 사각형 (양옆과 위아래가 둥근 형태)
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 12, right: 12), // 내부 패딩
-                            child: Center(
-                              child: Text(
-                                keyword['name'] ?? '', // null 체크 후 텍스트 표시
-                                maxLines: 1, // 한 줄로 제한
-                                overflow: TextOverflow.ellipsis, // 길어질 경우 생략
-                                style: TextStyle(
-                                  color: isSelected ? Colors.white : AppColors.black, // 선택 여부에 따라 텍스트 색 변경
-                                  fontSize: 12, // 글자 크기
-                                  fontFamily: GoogleFonts.nanumGothic().fontFamily, // 글자 폰트
-                                  fontWeight: FontWeight.w500, // 글자 굵기
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
                       );
                     },
                   ),
@@ -97,32 +81,8 @@ class RecommendKeyword extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RecommendKeywordVideos(keywrod: selectedKeyword.value!), // 선택된 키워드에 대한 비디오 리스트
-                      Material(
-                        color: AppColors.greyBackground, // 컨테이너 배경색
-                        borderRadius: BorderRadius.circular(50), // 둥근 모서리
-                        child: InkWell(
-                          onTap: () {
 
-                          },
-                          splashColor: AppColors.grey.withOpacity(0.5), // 리플 효과 색상
-                          highlightColor: AppColors.grey.withOpacity(0.3), // 클릭 시의 배경 색상
-                          borderRadius: BorderRadius.circular(50), // 둥근 모서리
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(vertical: 12), // 버튼의 패딩
-                            child: Text(
-                              '더보기',
-                              style: TextStyle(
-                                color: AppColors.black,
-                                fontSize: 14,
-                                fontFamily: GoogleFonts.nanumGothic().fontFamily,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      CustomRoundButton(text: '더보기', onTap: () {  }, ),
                       const SizedBox(height: 12),
                     ],
                   ),
@@ -130,10 +90,8 @@ class RecommendKeyword extends HookConsumerWidget {
             ],
           );
         },
-        loading: () => const CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(AppColors.greyBackground),
-        ),
-        error: (error, stack) => Text('키워드 로드 중 오류 발생: $error'),
+        loading: () => CircularLoading(),
+        error: (error, stackTrace) => ErrorMessage(message: '${error}'),
       ),
     );
   }

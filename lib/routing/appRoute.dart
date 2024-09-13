@@ -1,4 +1,6 @@
+import 'package:cookfluencer/common/SlideTransition.dart';
 import 'package:cookfluencer/routing/scaffold_with_nested_navigation.dart';
+import 'package:cookfluencer/ui/screen/ChannelsScreen.dart';
 import 'package:cookfluencer/ui/screen/HomeScreen.dart';
 import 'package:cookfluencer/ui/screen/LikeScreen.dart';
 import 'package:cookfluencer/ui/screen/SearchScreen.dart';
@@ -6,15 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-
 enum AppRoute {
   home,
   search,
   like,
-  ;
-  static AppRoute find(String? name) {
-    return values.asNameMap()[name] ?? AppRoute.home;
-  }
+  channels,
 }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -30,16 +28,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
-          debugPrint("상태 : "+state.toString());
-          debugPrint("상태 currentIndex : "+navigationShell.currentIndex.toString());
-
           return ScaffoldWithNestedNavigation(navigationShell: navigationShell);
         },
         branches: [
           StatefulShellBranch(
             navigatorKey: _homeNavigatorKey,
             routes: [
-              // Products
+              // 홈 화면
               GoRoute(
                 path: '/home',
                 name: AppRoute.home.name,
@@ -53,7 +48,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             navigatorKey: _searchNavigatorKey,
             routes: [
-              // Shopping Cart
               GoRoute(
                 path: '/search',
                 name: AppRoute.search.name,
@@ -62,12 +56,29 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                   child: SearchScreen(),
                 ),
               ),
+              // ChannelsTotalScreen 라우트 추가
+              GoRoute(
+                path: '/channels',
+                name: AppRoute.channels.name,
+                pageBuilder: (context, state) {
+                  final searchQuery = state.pathParameters['searchQuery'] as String;;
+                  // 애니메이션 적용
+                  return CustomTransitionPage(
+                    key: state.pageKey,
+                    child: ChannelsScreen(searchQuery: searchQuery),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      return SlideAnimation(animation, child); // 슬라이드 애니메이션에 지속 시간 적용
+                    },
+                    transitionDuration: const Duration(milliseconds: 300), // 애니메이션 속도 조절
+                  );
+                },
+              ),
             ],
           ),
           StatefulShellBranch(
             navigatorKey: _bookmarkNavigatorKey,
             routes: [
-              // Shopping Cart
+              // 좋아요 화면
               GoRoute(
                 path: '/like',
                 name: AppRoute.like.name,

@@ -1,5 +1,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cookfluencer/common/CircularLoading.dart';
+import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
 import 'package:cookfluencer/ui/widget/home/RecommendChannel.dart';
@@ -39,12 +41,8 @@ class HomeScreen extends ConsumerWidget {
                           .toList();
                       return RecommendRecipe(recommendVideoListAsyncValue: videos);
                     },
-                    loading: () => Center(
-                      child: CircularProgressIndicator(color: AppColors.greyBackground),
-                    ),
-                    error: (error, stackTrace) => Center(
-                      child: Text('추천 레시피 로드 중 오류 발생: $error'),
-                    ),
+                    loading: () => CircularLoading(),
+                    error: (error, stackTrace) => ErrorMessage(message: '${error}')
                   ),
                   // 추천 채널 리스트
                   recommendChannelsAsyncValue.when(
@@ -55,12 +53,8 @@ class HomeScreen extends ConsumerWidget {
                           .toList();
                       return RecommendChannel(recommendChannelsListAsyncValue: channels);
                     },
-                    loading: () => Center(
-                      child: CircularProgressIndicator(color: AppColors.greyBackground),
-                    ),
-                    error: (error, stackTrace) => Center(
-                      child: Text('추천 채널 로드 중 오류 발생: $error'),
-                    ),
+                    loading: () => CircularLoading(),
+                    error: (error, stackTrace) => ErrorMessage(message: '${error}'),
                   ),
 
                   keywordListAsyncValue.when(
@@ -71,12 +65,8 @@ class HomeScreen extends ConsumerWidget {
                           .toList();
                       return RecommendKeyword(keywordListAsyncValue: keywordList);
                     },
-                    loading: () => Center(
-                      child: CircularProgressIndicator(color: AppColors.greyBackground),
-                    ),
-                    error: (error, stackTrace) => Center(
-                      child: Text('키워드 로드 중 오류 발생: $error'),
-                    ),
+                    loading: () => CircularLoading(),
+                    error: (error, stackTrace) => ErrorMessage(message: '${error}'),
                   ),
                 ],
               ),

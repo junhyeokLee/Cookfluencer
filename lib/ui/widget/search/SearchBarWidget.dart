@@ -64,6 +64,9 @@ class SearchBarWidget extends HookConsumerWidget {
                   child: AbsorbPointer( // AbsorbPointer를 사용하여 클릭 및 포커스 차단
                     absorbing: !enabled, // enabled가 false일 때 클릭 및 포커스 차단
                     child: TextField(
+                      cursorColor: AppColors.grey,
+                      cursorWidth: 1,
+                      cursorHeight: 15,
                       style: Theme.of(context).textTheme.bodyLarge,
                       controller: searchController,
                       decoration: InputDecoration(

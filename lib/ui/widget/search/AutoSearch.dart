@@ -53,11 +53,7 @@ class AutoSearch extends StatelessWidget {
                       item['title'], // 채널 이름 또는 비디오 제목 표시
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.nanumGothic().fontFamily,
-                        fontWeight: item['type'] == 'channel' ? FontWeight.normal : FontWeight.normal,
-                        fontSize: 14,
-                      ),
+                      style: Theme.of(context).textTheme.labelMedium
                     ),
                   ),
                 ],

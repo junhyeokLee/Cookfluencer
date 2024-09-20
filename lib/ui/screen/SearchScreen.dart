@@ -72,7 +72,7 @@ class SearchScreen extends HookConsumerWidget {
               showFinalResults.value = true; // 최종 검색 결과 화면 보이기
               showRecentSearch.value = false; // 최근 검색어 숨기기
             },
-            enabled: !showFinalResults.value, // showFinalResults가 true일 때 비활성화
+            enabled: true, // ResultSearch가 true일 때 enabled 설정
           ),
         ),
         body: showFinalResults.value

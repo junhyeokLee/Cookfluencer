@@ -39,7 +39,7 @@ final channelVideosProvider = FutureProvider.autoDispose
       .collection('channels')
       .doc(channelId)
       .collection('videos')
-      .where('section', isEqualTo: 'top3recommend')
+      // .where('section', isEqualTo: 'top3recommend')
       .orderBy('view_count', descending: true) // view_count를 기준으로 내림차순 정렬
       .limit(3) // 최대 3개만 가져옴
       .get();
@@ -89,12 +89,12 @@ final searchVideoProvider = FutureProvider.autoDispose.family<List<QueryDocument
 });
 
 // 비디오를 조회수 또는 최신순으로 검색하는 Provider
-final searchFilterVideoProvider = FutureProvider.autoDispose
-    .family<List<QueryDocumentSnapshot>, Map<String, dynamic>>(
+final searchFilterVideoProvider = FutureProvider.autoDispose.family<List<QueryDocumentSnapshot>, Map<String, dynamic>>(
         (ref, searchParams) async {
       try {
         final searchQuery = searchParams['query'] as String;
         final selectedFilter = searchParams['filter'] as FilterOption;
+        final lastDocument = searchParams['lastDocument'] as DocumentSnapshot?; // 마지막 문서 추가
 
         debugPrint('searchQuery: $searchQuery');
         debugPrint('selectedFilter: $selectedFilter');
@@ -105,7 +105,13 @@ final searchFilterVideoProvider = FutureProvider.autoDispose
         Query<Map<String, dynamic>> query = FirebaseFirestore.instance
             .collection('videos')
             .where('title', isGreaterThanOrEqualTo: searchQuery)
-            .where('title', isLessThanOrEqualTo: searchQuery + '\uf8ff');
+            .where('title', isLessThanOrEqualTo: searchQuery + '\uf8ff')
+            .limit(10); // 한 번에 가져올 데이터 수
+
+        // 마지막 문서가 있을 경우, 그 이후부터 가져오도록 쿼리 수정
+        if (lastDocument != null) {
+          query = query.startAfterDocument(lastDocument);
+        }
 
         // 인기순(조회수) 필터 적용
         if (selectedFilter == FilterOption.viewCount) {
@@ -126,7 +132,9 @@ final searchFilterVideoProvider = FutureProvider.autoDispose
         // 오류 발생 시 throw
         throw Exception('쿼리 실패: $e');
       }
-    });
+    }
+);
+
 
 // Firestore에서 채널과 비디오 데이터를 검색하는 Provider
 final searchChannelAndVideoProvider = FutureProvider.autoDispose

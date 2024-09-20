@@ -5,6 +5,7 @@ import 'package:cookfluencer/routing/appRoute.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   // Flutter 바인딩을 초기화합니다.
@@ -12,7 +13,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  // Future<void> clearPreferences() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.clear(); // 모든 SharedPreferences 데이터 삭제
+  //   print('All SharedPreferences cleared.');
+  // }
+  // clearPreferences();
   runApp(const ProviderScope(child: MyApp())); // Riverpod ProviderScope 추가
 }
 

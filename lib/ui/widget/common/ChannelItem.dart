@@ -1,26 +1,19 @@
 import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:cookfluencer/common/dart/extension/num_extension.dart';
-import 'package:cookfluencer/common/util/ScrrenUtil.dart';
+import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/ui/widget/common/CustomChannelImage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../../common/constant/app_colors.dart';
 
 class ChannelItem extends StatelessWidget {
-  final String channelName; // 채널 이름
-  final String channelImage; // 채널 이미지 URL
-  final int subscriberCount; // 구독자 수
-  final int videoCount; // 동영상 개수
-  final double size; // 채널 카드의 사이즈
+  final ChannelData channelData; // 채널 데이터
+  final double size;
 
   const ChannelItem({
     Key? key,
-    required this.channelName,
-    required this.channelImage,
-    required this.subscriberCount,
-    required this.videoCount,
-    required this.size, // 사이즈 매개변수 추가
+    required this.channelData,
+    required this.size,
   }) : super(key: key);
 
   @override
@@ -32,7 +25,7 @@ class ChannelItem extends StatelessWidget {
         children: [
           // 채널 이미지 (CachedNetworkImage 사용)
           Customchannelimage(
-            imageUrl: channelImage,
+            imageUrl: channelData.thumbnailUrl,
             size: size,
             fit: BoxFit.cover,
           ),
@@ -45,16 +38,11 @@ class ChannelItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(width: 3.7),
-                  Image.asset(
-                    Assets.youtube,
-                    width: 16,
-                    height: 16,
-                    color: Colors.red,
-                  ),
+                  Image.asset(Assets.youtube,width: 20,height: 20), // 별 아이콘AppColors.grey
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      channelName,
+                      channelData.channelName,
                       style: Theme.of(context).textTheme.labelMedium,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis, // 이름이 길면 생략
@@ -77,7 +65,7 @@ class ChannelItem extends StatelessWidget {
                 ),
                 SizedBox(width: 4),
                 Text(
-                  subscriberCount.toSubscribeUnit(),
+                  channelData.subscriberCount.toSubscribeUnit(),
                   style: TextStyle(
                     color: AppColors.grey,
                     fontSize: 12,
@@ -97,7 +85,7 @@ class ChannelItem extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    '동영상 $videoCount개', // 채널에 있는 동영상 개수
+                    '동영상 ${channelData.videoCount}개', // 채널에 있는 동영상 개수
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

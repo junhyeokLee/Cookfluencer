@@ -7,13 +7,13 @@ class AppTheme {
   static TextTheme lightTextTheme =  TextTheme(
 
     labelLarge: GoogleFonts.nanumGothic(
-        fontSize: 16.0, fontWeight: FontWeight.w800, color: Colors.black,),
+        fontSize: 18.0, fontWeight: FontWeight.w700, color: Colors.black,),
     labelMedium: GoogleFonts.nanumGothic(
         fontSize: 14.0, fontWeight: FontWeight.w700, color: Colors.black),
     labelSmall: GoogleFonts.nanumGothic(
         fontSize: 12.0, fontWeight: FontWeight.w700, color: Colors.black),
     bodyLarge: GoogleFonts.nanumGothic(
-        fontSize: 18.0, fontWeight: FontWeight.w500, color: Colors.black),
+        fontSize: 18.0, fontWeight: FontWeight.w400, color: Colors.black),
     bodyMedium: GoogleFonts.nanumGothic(
         fontSize: 14.0, fontWeight: FontWeight.w500, color: Colors.black),
     bodySmall: GoogleFonts.nanumGothic(

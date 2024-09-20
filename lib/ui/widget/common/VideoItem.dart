@@ -1,14 +1,13 @@
+import 'package:cookfluencer/data/videoData.dart';
 import 'package:flutter/material.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:cookfluencer/common/dart/extension/num_extension.dart';
-import 'package:cookfluencer/common/util/ScrrenUtil.dart';
+import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/ui/widget/common/CustomVideoImage.dart';
 
 class VideoItem extends StatelessWidget {
-  final Map<String, dynamic> video; // 비디오 데이터
-  final String channelName; // 채널 이름
-  final int viewCount; // 조회수
+  final VideoData video; // 비디오 데이터
   final double size; // 썸네일 사이즈
   final double titleWidth; // 비디오 제목 너비
   final double channelWidth; // 채널 이름 너비
@@ -16,8 +15,6 @@ class VideoItem extends StatelessWidget {
   const VideoItem({
     Key? key,
     required this.video,
-    required this.channelName,
-    required this.viewCount,
     required this.size, // 썸네일 사이즈 추가
     required this.titleWidth, // 제목 너비 추가
     required this.channelWidth, // 채널 이름 너비 추가
@@ -35,7 +32,7 @@ class VideoItem extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8), // 라운드 처리
               child: CustomVideoImage(
-                imageUrl: video['thumbnail_url'], // 썸네일 이미지
+                imageUrl: video.thumbnailUrl, // 썸네일 이미지
                 size: size,
                 fit: BoxFit.cover,
               ),
@@ -51,7 +48,7 @@ class VideoItem extends StatelessWidget {
                     Container(
                       width: titleWidth, // 전달받은 제목 너비 사용
                       child: Text(
-                        video['title'], // 비디오 제목
+                        video.title, // 비디오 제목
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.labelSmall,
@@ -68,20 +65,17 @@ class VideoItem extends StatelessWidget {
                         color: AppColors.grey), // 조회수 아이콘
                     SizedBox(width: 4), // 간격
                     Text(
-                      viewCount.toViewCountUnit(), // 조회수 표시
+                      video.viewCount.toViewCountUnit(), // 조회수 표시
                       style: TextStyle(
                           color: AppColors.grey, fontSize: 12),
                     ),
                     SizedBox(width: 16),
-                    Image.asset(Assets.youtube,
-                        width: 14,
-                        height: 14,
-                        color: AppColors.grey), // 유튜브 아이콘
+                    Image.asset(Assets.youtube,width: 20,height: 20), // 별 아이콘AppColors.grey// 유튜브 아이콘
                     SizedBox(width: 4), // 간격
                     Container(
                       width: channelWidth, // 전달받은 채널 이름 너비 사용
                       child: Text(
-                        channelName, // 채널 이름
+                        video.channelName, // 채널 이름
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

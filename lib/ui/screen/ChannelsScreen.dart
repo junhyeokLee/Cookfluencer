@@ -1,7 +1,9 @@
 import 'package:cookfluencer/common/CircularLoading.dart';
+import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
-import 'package:cookfluencer/common/util/ScrrenUtil.dart';
+import 'package:cookfluencer/common/util/ScreenUtil.dart';
+import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
 import 'package:cookfluencer/ui/widget/common/ChannelItem.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +78,7 @@ class ChannelsScreen extends HookConsumerWidget {
               data: (channels) {
                 if (channels.isEmpty) {
                   return Center(
-                    child: Text('검색 결과가 없습니다.'),
+                    child: EmptyMessage(message: '쿡플루언서 검색 결과가 없습니다.'),
                   );
                 }
 
@@ -95,13 +97,21 @@ class ChannelsScreen extends HookConsumerWidget {
                     itemBuilder: (context, index) {
                       final channel = channels[index].data() as Map<String, dynamic>;
 
-                      return ChannelItem(
+                      // ChannelModel에 데이터를 맵핑
+                      final channelData = ChannelData(
+                        id: channel['id'] ?? 'Unknown',
                         channelName: channel['channel_name'] ?? 'Unknown',
-                        channelImage: channel['thumbnail_url'] ?? '',
-                        subscriberCount:
-                        int.tryParse(channel['subscriber_count'].toString()) ?? 0,
+                        channelDescription: channel['channel_description'] ?? '',
+                        channelUrl: channel['channel_url'] ?? '',
+                        thumbnailUrl: channel['thumbnail_url'] ?? '',
+                        subscriberCount: int.tryParse(channel['subscriber_count'].toString()) ?? 0,
                         videoCount: channel['video_count'] ?? 0,
-                        size: ScreenUtil.width(context, 0.5), // 채널 아이템 크기 조정
+                        videos: channel['videos'] ?? [],
+                        section: channel['section'] ?? '',
+                      );
+                      return ChannelItem(
+                        channelData :channelData , // 채널 아이템 크기 조정
+                        size: ScreenUtil.width(context, 0.5),
                       );
                     },
                   ),

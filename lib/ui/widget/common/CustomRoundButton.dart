@@ -26,9 +26,9 @@ class CustomRoundButton extends StatelessWidget {
     this.height = 40.0,
     this.borderRadius,
     this.fontSize = 14,
-    this.textColor = Colors.black,
-    this.bgColor = AppColors.grey,
-    this.fontWeight = FontWeight.w500,
+    this.textColor = Colors.white,
+    this.bgColor = AppColors.primarySelectedColor,
+    this.fontWeight = FontWeight.w700,
     this.leftIcon,
     this.rightIcon,
     this.padding = const EdgeInsets.symmetric(horizontal: 16), // 기본 패딩 설정
@@ -37,7 +37,7 @@ class CustomRoundButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: isEnabled ? bgColor : AppColors.greyBackground,
+      color: isEnabled ? bgColor : AppColors.primarySelectedColor,
       borderRadius: BorderRadius.circular(borderRadius ?? height / 2), // 둥근 모서리
       child: InkWell(
         onTap: isEnabled ? onTap : () {}, // 활성화 상태에서만 클릭 가능

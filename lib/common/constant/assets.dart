@@ -13,12 +13,17 @@ class Assets {
   // static const String backNumber = 'assets/images/icon/back_number.png';
   // static const String name = 'assets/images/icon/name.png';
   // static const String contract = 'assets/images/icon/contract.png';
+  static const String logo = 'assets/images/icon/logo.png';
   static const String home = 'assets/images/icon/home.png';
   static const String search = 'assets/images/icon/search.png';
-  static const String heart = 'assets/images/icon/heart.png';
+  static const String heart = 'assets/images/icon/like.png';
+  static const String like = 'assets/images/icon/heart.png';
   static const String view = 'assets/images/icon/view.png';
   static const String youtube = 'assets/images/icon/youtube.png';
   static const String group = 'assets/images/icon/group.png';
+  static const String mypage = 'assets/images/icon/mypage.png';
+  static const String empty = 'assets/images/icon/empty.png';
+  static const String recipe_ai = 'assets/images/icon/recipe_ai.png';
 
 }
 

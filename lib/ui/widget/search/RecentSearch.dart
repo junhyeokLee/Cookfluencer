@@ -37,7 +37,7 @@ class RecentSearch extends HookConsumerWidget {
                 onTap: () {
                   // 전체 삭제 기능
                   recentSearches.value = [];
-                  SaveRecentSearches(recentSearches.value); // 삭제 후 저장
+                  saveRecentSearches(recentSearches.value); // 삭제 후 저장
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(right: 14),
@@ -93,7 +93,7 @@ class RecentSearch extends HookConsumerWidget {
                                 final updatedSearches = List<String>.from(recentSearches.value); // 기존 리스트 복사
                                 updatedSearches.removeAt(reversedIndex); // 역순으로 리스트에서 검색어 제거
                                 recentSearches.value = updatedSearches; // 변경된 리스트 할당하여 상태 업데이트
-                                SaveRecentSearches(updatedSearches); // 변경된 리스트 저장
+                                saveRecentSearches(updatedSearches); // 변경된 리스트 저장
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 4.0, right: 4.0), // 텍스트와 아이콘 사이 간격 조정

@@ -2,7 +2,9 @@ import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
-import 'package:cookfluencer/common/util/ScrrenUtil.dart';
+import 'package:cookfluencer/common/util/ScreenUtil.dart';
+import 'package:cookfluencer/data/channelData.dart';
+import 'package:cookfluencer/data/videoData.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
 import 'package:cookfluencer/routing/appRoute.dart';
 import 'package:cookfluencer/ui/widget/common/ChannelItem.dart';
@@ -57,7 +59,7 @@ class ResultSearch extends HookConsumerWidget {
             data: (channels) {
               if (channels.isEmpty) {
                 return Center(
-                  child: Text('검색 결과가 없습니다.'),
+                  child: EmptyMessage(message: '검색된 쿡플루언서가 없습니다.'),
                 );
               }
 
@@ -79,6 +81,18 @@ class ResultSearch extends HookConsumerWidget {
                       itemBuilder: (context, index) {
                         final channel =
                         channels[index].data() as Map<String, dynamic>;
+                        // ChannelModel에 데이터를 맵핑
+                        final channelData = ChannelData(
+                          id: channel['id'] ?? 'Unknown',
+                          channelName: channel['channel_name'] ?? 'Unknown',
+                          channelDescription: channel['channel_description'] ?? '',
+                          channelUrl: channel['channel_url'] ?? '',
+                          thumbnailUrl: channel['thumbnail_url'] ?? '',
+                          subscriberCount: int.tryParse(channel['subscriber_count'].toString()) ?? 0,
+                          videoCount: channel['video_count'] ?? 0,
+                          videos: channel['videos'] ?? [],
+                          section: channel['section'] ?? '',
+                        );
 
                         // 첫 번째 아이템에만 padding-left 24 설정
                         final paddingLeft = index == 0 ? 24.0 : 0.0;
@@ -89,12 +103,8 @@ class ResultSearch extends HookConsumerWidget {
                               left: paddingLeft, right: paddingRight),
                           // 오른쪽 마진 설정
                           child: ChannelItem(
-                            channelName: channel['channel_name'] ?? 'Unknown',
-                            channelImage: channel['thumbnail_url'] ?? '',
-                            subscriberCount: int.tryParse(
-                                channel['subscriber_count'].toString()) ?? 0,
-                            videoCount: channel['video_count'] ?? 0,
-                            size: ScreenUtil.width(context, 0.38),
+                            channelData: channelData,
+                            size: ScreenUtil.width(context, 0.35),
                           ),
                         );
                       },
@@ -159,15 +169,24 @@ class ResultSearch extends HookConsumerWidget {
                   itemCount: videos.length,
                   itemBuilder: (context, index) {
                     final video = videos[index].data() as Map<String, dynamic>;
-                    // view_count를 숫자로 변환
-                    int viewCount = int.tryParse(video['view_count'].toString()) ?? 0;
-
+                    // ChannelModel에 데이터를 맵핑
+                    final videoData = VideoData(
+                      id: video['id'] ?? 'Unknown',
+                      channelId: video['channel_id'] ?? 'Unknown',
+                      channelName: video['channel_name'] ?? 'Unknown',
+                      description: video['description'] ?? '',
+                      thumbnailUrl: video['thumbnail_url'] ?? '',
+                      title: video['title'] ?? 'Unknown',
+                      uploadDate: video['upload_date'] ?? '',
+                      videoId: video['video_id'] ?? '',
+                      videoUrl: video['video_url'] ?? '',
+                      viewCount: int.tryParse(video['view_count'].toString()) ?? 0,
+                      section: video['section'] ?? '',
+                    );
                     return Padding(
                       padding: const EdgeInsets.only(left: 24),
                       child: VideoItem(
-                        video: video,
-                        channelName: video['channel_name'],
-                        viewCount: viewCount,
+                        video: videoData,
                         size: ScreenUtil.width(context, 0.25),
                         titleWidth: ScreenUtil.width(context, 0.6),
                         channelWidth: ScreenUtil.width(context, 0.3),

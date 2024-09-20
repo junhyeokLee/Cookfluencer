@@ -17,27 +17,26 @@ class EmptyMessage extends StatelessWidget {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(42),
-        child: Center(
-          child: Column(
-            children: [
-              Image.asset(
-                Assets.view,
-                color: AppColors.grey, // 이미지 색상
-                width: 42,
-                height: 42,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 24),
-                child: Text(
-                  '${message}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.grey, // 오류 메시지 색상
-                  ),
-                  textAlign: TextAlign.center, // 중앙 정렬
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // 세로로 중앙 정렬
+          children: [
+            Image.asset(
+              Assets.empty,
+              color: AppColors.grey, // 이미지 색상
+              width: 42,
+              height: 42,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 24),
+              child: Text(
+                message,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.grey, // 오류 메시지 색상
                 ),
+                textAlign: TextAlign.center, // 중앙 정렬
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

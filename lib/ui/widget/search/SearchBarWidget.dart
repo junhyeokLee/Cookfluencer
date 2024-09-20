@@ -96,7 +96,7 @@ class SearchBarWidget extends HookConsumerWidget {
                             ...recentSearches.value,
                             value,
                           ];
-                          await SaveRecentSearches(recentSearches.value); // 최근 검색어 저장
+                          await saveRecentSearches(recentSearches.value); // 최근 검색어 저장
                         }
                         onSubmitted(); // 엔터 눌렀을 때 동작 실행
                       },

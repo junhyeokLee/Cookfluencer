@@ -1,34 +1,30 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cookfluencer/common/common.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
-import 'package:cookfluencer/common/constant/assets.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
-import 'package:cookfluencer/data/channelData.dart';
-import 'package:cookfluencer/ui/widget/common/ChannelItems.dart';
-import 'package:cookfluencer/ui/widget/common/CustomChannelImage.dart';
+import 'package:cookfluencer/data/seasonData.dart';
 import 'package:cookfluencer/ui/widget/common/PageIndicator.dart';
+import 'package:cookfluencer/ui/widget/common/SeasonItems.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class RecommendChannel extends HookConsumerWidget {
-  const RecommendChannel({
+class RecommendSeasonRecipe extends HookConsumerWidget {
+  const RecommendSeasonRecipe({
     super.key,
-    required this.recommendChannelsListAsyncValue,
+    required this.recommendSeasonListAsyncValue,
   });
 
-  final List<Map<String, dynamic>> recommendChannelsListAsyncValue; // 채널 리스트 (썸네일, 제목, 설명 등 포함)
+  final List<Map<String, dynamic>> recommendSeasonListAsyncValue; // 채널 리스트 (썸네일, 제목, 설명 등 포함)
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = useState(0); // 현재 슬라이더의 인덱스 저장
 
     // 사용할 컬러 리스트
-    List<Color> channelColors = [
-      AppColors.channelColor1,
-      AppColors.channelColor2,
-      AppColors.channelColor3,
+    List<Color> themeColors = [
+      AppColors.themeColor1,
+      AppColors.themeColor2,
+      AppColors.themeColor3,
+      AppColors.themeColor4,
     ];
 
     return Column(
@@ -37,7 +33,7 @@ class RecommendChannel extends HookConsumerWidget {
         Padding(
           padding: const EdgeInsets.only(left: 24, top: 12, bottom: 12),
           child: Text(
-              '추천 쿡플루언서',
+              '시즌/테마별 레시피',
               style: Theme.of(context).textTheme.labelLarge
           ),
         ),
@@ -46,7 +42,7 @@ class RecommendChannel extends HookConsumerWidget {
             CarouselSlider(
               options: CarouselOptions(
                 autoPlay: false,
-                aspectRatio: 0.6, // Carousel 전체 높이 비율
+                aspectRatio: 0.82, // Carousel 전체 높이 비율
                 enableInfiniteScroll: true,
                 enlargeCenterPage: false,
                 initialPage: 0,
@@ -56,25 +52,13 @@ class RecommendChannel extends HookConsumerWidget {
                   currentIndex.value = index; // 페이지 변경 시 상태 업데이트
                 },
               ),
-              items: recommendChannelsListAsyncValue.asMap().entries.map((entry) {
+              items: recommendSeasonListAsyncValue.asMap().entries.map((entry) {
                 int index = entry.key;
-                var channel = entry.value; // 채널 데이터
-
-                // ChannelModel에 데이터를 맵핑
-                final channelData = ChannelData(
-                  id: channel['id'] ?? 'Unknown',
-                  channelName: channel['channel_name'] ?? 'Unknown',
-                  channelDescription: channel['channel_description'] ?? '',
-                  channelUrl: channel['channel_url'] ?? '',
-                  thumbnailUrl: channel['thumbnail_url'] ?? '',
-                  subscriberCount: int.tryParse(channel['subscriber_count'].toString()) ?? 0,
-                  videoCount: int.tryParse(channel['video_count'].toString()) ?? 0, // 숫자로 변환
-                  videos: channel['videos'] ?? [],
-                  section: channel['section'] ?? '',
-                );
+                var season = entry.value; // 채널 데이터
+                final seasonData = SeasonData.fromJson(season);
 
                 // 각 카드의 인덱스에 따라 배경색 설정
-                Color backgroundColor = channelColors[index % channelColors.length];
+                Color backgroundColor = themeColors[index % themeColors.length];
 
                 return Container(
                   margin: EdgeInsets.only(top: 0, left: 16, right: 0, bottom: 12),
@@ -83,14 +67,13 @@ class RecommendChannel extends HookConsumerWidget {
                     color: backgroundColor, // 배경색 설정
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 24, top: 20),
+                    padding: const EdgeInsets.only(left: 24, top: 20,right: 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ChannelItems(
-                            channelData: channelData
+                        SeasonItems(
+                            seasonData: seasonData
                         ),
-
                         // 채널의 비디오 리스트 표시 (최대 3개)
                         SizedBox(height: 16),
 
@@ -104,12 +87,13 @@ class RecommendChannel extends HookConsumerWidget {
         ),
         PageIndicator(
           currentIndex: currentIndex.value, // 현재 페이지 인덱스
-          itemCount: recommendChannelsListAsyncValue.length, // 전체 아이템 수
+          itemCount: recommendSeasonListAsyncValue.length, // 전체 아이템 수
           activeColor: AppColors.primarySelectedColor, // 활성화된 인디케이터 색상
           inactiveColor: Colors.grey, // 비활성화된 인디케이터 색상
           dotSize: 8.0, // 인디케이터 크기
           spacing: 4.0, // 인디케이터 간 간격
         ),
+        SizedBox(height: 20),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:cookfluencer/common/CircularLoading.dart';
+import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
@@ -27,7 +28,7 @@ class SearchScreen extends HookConsumerWidget {
     final keywordListAsyncValue = ref.watch(keywordListProvider);
 
     useEffect(() {
-      LoadRecentSearches(recentSearches);
+      loadRecentSearches(recentSearches);
       return null; // cleanup 함수가 필요 없는 경우 null 반환
     }, []);
 
@@ -118,7 +119,7 @@ class SearchScreen extends HookConsumerWidget {
               return Padding(
                 padding: const EdgeInsets.all(42),
                 child: Center(
-                  child: Text('검색 결과가 없습니다.'), // 결과가 없을 때 메시지
+                  child: EmptyMessage(message: '쿡플루언서 검색 결과가 없습니다.'), // 결과가 없을 때 메시지
                 ),
               );
             }

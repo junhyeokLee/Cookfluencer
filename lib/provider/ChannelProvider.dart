@@ -137,7 +137,7 @@ final searchFilterVideoProvider = FutureProvider.autoDispose.family<List<QueryDo
 
 
 // Firestore에서 채널과 비디오 데이터를 검색하는 Provider
-final searchChannelAndVideoProvider = FutureProvider.autoDispose
+final autoSearchChannelAndVideoProvider = FutureProvider.autoDispose
     .family<List<Map<String, dynamic>>, String>((ref, searchQuery) async {
   // 검색 쿼리가 비어있으면 빈 리스트 반환
   if (searchQuery.isEmpty) return [];
@@ -183,6 +183,37 @@ final searchChannelAndVideoProvider = FutureProvider.autoDispose
 });
 
 // Firestore에서 채널과 비디오 데이터를 검색하는 Provider
+final autoSearchChannelProvider = FutureProvider.autoDispose
+    .family<List<Map<String, dynamic>>, String>((ref, searchQuery) async {
+  // 검색 쿼리가 비어있으면 빈 리스트 반환
+  if (searchQuery.isEmpty) return [];
+
+  List<Map<String, dynamic>> results = [];
+
+  // 채널에서 검색하기
+  final channelQuerySnapshot = await FirebaseFirestore.instance
+      .collection('channels')
+      .where('channel_name', isGreaterThanOrEqualTo: searchQuery)
+      .where('channel_name', isLessThanOrEqualTo: searchQuery + '\uf8ff')
+      .limit(10)
+      .get();
+
+  // 채널 이름 리스트 생성
+  results.addAll(channelQuerySnapshot.docs.map((doc) {
+    final channelName = doc['channel_name'] ?? ''; // null 체크
+    return {
+      'type': 'channel',
+      'title': channelName,
+    };
+  }));
+
+  // 채널 이름과 비디오 제목을 함께 반환
+  return results;
+});
+
+
+
+// Firestore에서 채널과 비디오 데이터를 검색하는 Provider
 final searchChannelProvider = FutureProvider.autoDispose
     .family<List<QueryDocumentSnapshot>, String>((ref, searchQuery) async {
   // 검색 쿼리가 비어있으면 빈 리스트 반환
@@ -210,6 +241,8 @@ final searchTotalChannelProvider = FutureProvider.autoDispose
       .collection('channels')
       .where('channel_name', isGreaterThanOrEqualTo: searchQuery)
       .where('channel_name', isLessThanOrEqualTo: searchQuery + '\uf8ff') // 쿼리 범위를 지정해서 검색어에 맞는 결과만 가져오기
+      .orderBy('subscriber_count', descending: true) // 조회수 순으로 정렬
+      .orderBy('channel_name') // 제목으로도 정렬 (필요한 경우)
       .get();
 
   return querySnapshot.docs;

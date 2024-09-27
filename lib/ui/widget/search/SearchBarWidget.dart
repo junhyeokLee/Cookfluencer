@@ -28,6 +28,11 @@ class SearchBarWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // searchController.text = searchQuery.value; // 초기값 설정
+    searchController.value = searchController.value.copyWith(
+      text: searchQuery.value,
+      selection: TextSelection.collapsed(offset: searchQuery.value.length),
+    );
     return Container(
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: AppColors.grey)), // 밑줄 추가
@@ -56,8 +61,7 @@ class SearchBarWidget extends HookConsumerWidget {
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppColors.grey,
                       )
-                  )
-                      : SizedBox.shrink(), // 힌트가 필요 없을 때는 숨김
+                  ) : SizedBox.shrink(), // 힌트가 필요 없을 때는 숨김
                 ),
                 GestureDetector(
                   onTap: enabled ? () {} : null, // enabled가 true일 때만 클릭 이벤트 허용
@@ -81,7 +85,7 @@ class SearchBarWidget extends HookConsumerWidget {
                           onPressed: () {
                             searchQuery.value = '';
                             searchController.clear();
-                            ref.refresh(searchChannelAndVideoProvider(''));
+                            ref.refresh(autoSearchChannelAndVideoProvider(''));
                           },
                         )
                             : null,
@@ -89,7 +93,7 @@ class SearchBarWidget extends HookConsumerWidget {
                       onTap: onSearchTap,
                       onChanged: (value) {
                         searchQuery.value = value.trim(); // 검색어 상태 업데이트
-                        ref.refresh(searchChannelAndVideoProvider(
+                        ref.refresh(autoSearchChannelAndVideoProvider(
                             searchQuery.value)); // 검색어 변경 시 검색 결과 업데이트
                       },
                       onSubmitted: (value) async {

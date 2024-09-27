@@ -24,7 +24,7 @@ class SearchScreen extends HookConsumerWidget {
     final showFinalResults = useState<bool>(false); // 최종 검색 결과 화면 제어
     final showRecentSearch = useState<bool>(true); // 최근 검색어 보이기 여부 추가
 
-    final fb_searchResult = ref.watch(searchChannelAndVideoProvider(searchQuery.value));
+    final fb_searchResult = ref.watch(autoSearchChannelAndVideoProvider(searchQuery.value));
     final keywordListAsyncValue = ref.watch(keywordListProvider);
 
     useEffect(() {

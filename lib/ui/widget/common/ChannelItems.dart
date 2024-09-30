@@ -5,22 +5,21 @@ import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/data/videoData.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
-import 'package:cookfluencer/provider/LikeStatusNotifier.dart';
-import 'package:cookfluencer/sharedPreferences/sharedPreferences.dart';
 import 'package:cookfluencer/ui/widget/common/LikeChannelButton.dart';
 import 'package:flutter/material.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:cookfluencer/ui/widget/common/VideoItem.dart';
 
 class ChannelItems extends HookConsumerWidget {
   final ChannelData channelData;
+  final VoidCallback onChannelItemClick; // 채널 클릭 시 호출할 콜백 추가
 
   const ChannelItems({
     Key? key,
     required this.channelData,
+    required this.onChannelItemClick, // 콜백 전달
   }) : super(key: key);
 
   @override
@@ -35,17 +34,23 @@ class ChannelItems extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 채널 썸네일
-            ClipOval(
-              child: Image.network(
-                channelData.thumbnailUrl,
-                width: ScreenUtil.width(context, 0.4),
-                height: ScreenUtil.width(context, 0.4),
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+            InkWell(
+              onTap: () {
+                onChannelItemClick(); // 채널 클릭 시 콜백 호출
+              },
+              child: ClipOval(
+                child: Image.network(
+                  channelData.thumbnailUrl,
+                  width: ScreenUtil.width(context, 0.4),
+                  height: ScreenUtil.width(context, 0.4),
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                ),
               ),
             ),
             // 좋아요 버튼
             LikeChannelButton(channelData: channelData, rightMargin: 20)
+
           ],
         ),
         Row(

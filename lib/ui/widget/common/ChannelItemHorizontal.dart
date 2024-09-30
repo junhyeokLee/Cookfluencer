@@ -23,13 +23,16 @@ class ChannelItemHorizontal extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center, // 콘텐츠가 중앙 정렬되도록 유지
         children: [
           // 썸네일 이미지
-          ClipOval(
-            child: Image.network(
-              channelData.thumbnailUrl,
-              width: ScreenUtil.width(context, 0.25), // 썸네일 이미지 크기
-              height: ScreenUtil.width(context, 0.25), // 썸네일 이미지 크기
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Icon(Icons.error), // 에러 발생 시 표시할 아이콘
+          Hero(
+            tag: 'channelHero_${channelData.id}', // 채널 ID를 태그로 사용
+            child: ClipOval(
+              child: Image.network(
+                channelData.thumbnailUrl,
+                width: ScreenUtil.width(context, 0.25), // 썸네일 이미지 크기
+                height: ScreenUtil.width(context, 0.25), // 썸네일 이미지 크기
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Icon(Icons.error), // 에러 발생 시 표시할 아이콘
+              ),
             ),
           ),
           const SizedBox(width: 12), // 간격

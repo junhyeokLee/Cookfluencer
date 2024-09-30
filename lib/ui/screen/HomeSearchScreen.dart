@@ -70,7 +70,7 @@ class HomeSearchScreen extends HookConsumerWidget {
             ),
           ),
           body: showFinalResults.value
-              ? ResultSearch(searchQuery: searchQuery.value)
+              ? ResultSearch(searchQuery: searchQuery.value, onChannelItemClick: (ChannelData ) {  }, onTotalChannelClick: (String ) {  },)
               : showSearchWidgets.value
                   ? fb_searchResult.when(
                       data: (results) {

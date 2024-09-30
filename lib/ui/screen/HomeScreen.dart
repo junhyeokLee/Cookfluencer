@@ -3,8 +3,11 @@ import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
+import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
 import 'package:cookfluencer/provider/SeasonProvider.dart';
+import 'package:cookfluencer/routing/appRoute.dart';
+import 'package:cookfluencer/ui/screen/SearchScreen.dart';
 import 'package:cookfluencer/ui/widget/common/AppbarWidget.dart';
 import 'package:cookfluencer/ui/widget/common/ServiceSuggestions.dart';
 import 'package:cookfluencer/ui/widget/home/RecommendChannel.dart';
@@ -20,13 +23,11 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 세 개의 AsyncValue를 한번에 처리
     final recommendChannelsAsyncValue = ref.watch(recommendChannelsProvider);
     final recommendVideoListAsyncValue = ref.watch(recommendVideosProvider);
     final recommendSeasonAsyncValue = ref.watch(seasonListProvider);
     final keywordListAsyncValue = ref.watch(keywordListProvider);
 
-    // 모든 데이터가 로드되는지 확인
     final isLoading = recommendChannelsAsyncValue.isLoading ||
         recommendVideoListAsyncValue.isLoading ||
         keywordListAsyncValue.isLoading;
@@ -35,7 +36,6 @@ class HomeScreen extends ConsumerWidget {
         recommendVideoListAsyncValue.hasError ||
         keywordListAsyncValue.hasError;
 
-    // 에러가 발생한 경우 에러 메시지 처리
     if (hasError) {
       return Scaffold(
         appBar: AppbarWidget(),
@@ -47,7 +47,6 @@ class HomeScreen extends ConsumerWidget {
       );
     }
 
-    // 로딩 상태 처리: 세 가지 데이터가 모두 로드될 때까지 하나의 로딩 화면을 보여줌
     if (isLoading) {
       return Scaffold(
         appBar: AppbarWidget(),
@@ -57,7 +56,6 @@ class HomeScreen extends ConsumerWidget {
       );
     }
 
-    // 데이터가 모두 로드되면 보여줄 UI
     final videoSnapshots = recommendVideoListAsyncValue.asData!.value;
     final videos = videoSnapshots
         .map((doc) => doc.data() as Map<String, dynamic>)
@@ -78,11 +76,9 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppbarWidget(),
-
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 추천 비디오 리스트
             Container(
               margin: EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
               decoration: BoxDecoration(
@@ -91,9 +87,18 @@ class HomeScreen extends ConsumerWidget {
               ),
               child: RecommendRecipe(recommendVideoListAsyncValue: videos),
             ),
-            // 추천 채널 리스트
-            RecommendChannel(recommendChannelsListAsyncValue: channels),
-            // 추천 키워드 리스트
+            // HomeScreen에서 채널 아이템 클릭 시
+            RecommendChannel(
+              recommendChannelsListAsyncValue: channels,
+              onChannelItemClick: (channelData) {
+                // print("Channel clicked: ${channelData}"); // 로그 확인
+                // context.goNamed(
+                //   AppRoute.channelDetail.name, // 경로를 '/home/channel/{id}'로 수정하여 중복 방지
+                //   extra: channelData, // 채널 데이터 전체를 extra로 전달
+                // );
+                // context.go('/home/channelDetail', extra: channelData);
+              },
+            ),
             Container(
                 margin: EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
                 decoration: BoxDecoration(
@@ -101,7 +106,6 @@ class HomeScreen extends ConsumerWidget {
                   color: AppColors.keywordBackground,
                 ),
                 child: RecommendKeyword(keywordListAsyncValue: keywordList)),
-
             RecommendSeasonRecipe(recommendSeasonListAsyncValue: season),
             Servicesuggestions(),
           ],
@@ -110,4 +114,3 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 }
-

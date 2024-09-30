@@ -18,10 +18,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ResultSearch extends HookConsumerWidget {
   final String searchQuery;
+  final Function(ChannelData) onChannelItemClick; // 콜백 추가
+  final Function(String) onTotalChannelClick; // 콜백 추가
 
   const ResultSearch({
     super.key,
     required this.searchQuery,
+    required this.onChannelItemClick, // 콜백 받기
+    required this.onTotalChannelClick, // 콜백 받기
   });
 
   @override
@@ -29,7 +33,7 @@ class ResultSearch extends HookConsumerWidget {
     final selectedFilter = useState<FilterOption>(FilterOption.viewCount);
     final showFilterOptions = useState<bool>(false);
     final searchChannelListAsyncValue =
-        ref.watch(searchChannelProvider(searchQuery));
+    ref.watch(searchChannelProvider(searchQuery));
     final searchParams = useState<Map<String, dynamic>>({
       'query': searchQuery,
       'filter': selectedFilter.value,
@@ -44,7 +48,7 @@ class ResultSearch extends HookConsumerWidget {
     }, [selectedFilter.value]);
 
     final searchVideoListAsyncValue =
-        ref.watch(searchFilterVideoProvider(searchParams.value));
+    ref.watch(searchFilterVideoProvider(searchParams.value));
 
     debugPrint("searchQuery: $searchQuery");
 
@@ -52,7 +56,7 @@ class ResultSearch extends HookConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 현재 인플루언서 전체 보기 상태가 아닐 때 보여줄 내용
+          // 채널 검색 결과 처리
           searchChannelListAsyncValue.when(
             data: (channels) {
               if (channels.isEmpty) {
@@ -77,16 +81,16 @@ class ResultSearch extends HookConsumerWidget {
                       itemCount: channels.length,
                       itemBuilder: (context, index) {
                         final channel =
-                            channels[index].data() as Map<String, dynamic>;
+                        channels[index].data() as Map<String, dynamic>;
                         final channelData = ChannelData(
                           id: channel['id'] ?? 'Unknown',
                           channelName: channel['channel_name'] ?? 'Unknown',
                           channelDescription:
-                              channel['channel_description'] ?? '',
+                          channel['channel_description'] ?? '',
                           channelUrl: channel['channel_url'] ?? '',
                           thumbnailUrl: channel['thumbnail_url'] ?? '',
                           subscriberCount: int.tryParse(
-                                  channel['subscriber_count'].toString()) ??
+                              channel['subscriber_count'].toString()) ??
                               0,
                           videoCount: channel['video_count'] ?? 0,
                           videos: channel['videos'] ?? [],
@@ -102,6 +106,9 @@ class ResultSearch extends HookConsumerWidget {
                           child: ChannelItem(
                             channelData: channelData,
                             size: ScreenUtil.width(context, 0.35),
+                            onChannelItemClick: () {
+                              onChannelItemClick(channelData); // 콜백 호출
+                            },
                           ),
                         );
                       },
@@ -123,10 +130,11 @@ class ResultSearch extends HookConsumerWidget {
                       ),
                       text: '인플루언서 전체 보기',
                       onTap: () {
-                        context.goNamed(
-                          AppRoute.channels.name,
-                          pathParameters: {'channels': searchQuery},
-                        );
+                        onTotalChannelClick(searchQuery); // 콜백 호출
+                        // context.goNamed(
+                        //   AppRoute.channels.name,
+                        //   pathParameters: {'channels': searchQuery},
+                        // );
                       },
                     ),
                   ),
@@ -141,7 +149,7 @@ class ResultSearch extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(left: 24, top: 12, bottom: 12),
             child:
-                Text('레시피 영상', style: Theme.of(context).textTheme.labelLarge),
+            Text('레시피 영상', style: Theme.of(context).textTheme.labelLarge),
           ),
 
           Container(
@@ -179,7 +187,7 @@ class ResultSearch extends HookConsumerWidget {
                       videoId: video['video_id'] ?? '',
                       videoUrl: video['video_url'] ?? '',
                       viewCount:
-                          int.tryParse(video['view_count'].toString()) ?? 0,
+                      int.tryParse(video['view_count'].toString()) ?? 0,
                       section: video['section'] ?? '',
                     );
                     return Padding(

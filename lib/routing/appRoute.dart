@@ -49,8 +49,33 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                   key: state.pageKey,
                   child: const HomeScreen(),
                 ),
-
                 routes: [
+                  GoRoute(
+                    path: 'channelDetail', // 슬래시 없이 설정
+                    name: AppRoute.channelDetail.name,
+                    pageBuilder: (context, state) {
+                      final channelData = state.extra as ChannelData; // ChannelData 가져오기
+
+                      return CustomTransitionPage(
+                        key: state.pageKey,
+                        child: ChannelDetailScreen(channelData: channelData), // 채널 데이터 전달
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.easeInOut;
+                          final tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+                          final offsetAnimation = animation.drive(tween);
+
+                          return SlideTransition(
+                            position: offsetAnimation,
+                            child: child,
+                          );
+                        },
+                      );
+                    },
+                  ),
+
                   GoRoute(
                     path: ':keyword',
                     name: AppRoute.homeKeyword.name,
@@ -77,32 +102,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                       );
                     },
                   ),
-                    // ChannelDetailScreen 경로에 extra 파라미터로 채널 데이터 전달
-                    GoRoute(
-                      path: 'channel/detail',
-                      name: AppRoute.channelDetail.name,
-                      pageBuilder: (context, state) {
-                        final channelData = state.extra as ChannelData;
-                        return CustomTransitionPage(
-                          key: state.pageKey,
-                          child: ChannelDetailScreen(channelData: channelData),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            const begin = Offset(1.0, 0.0);
-                            const end = Offset.zero;
-                            const curve = Curves.easeInOut;
-                            final tween = Tween(begin: begin, end: end)
-                                .chain(CurveTween(curve: curve));
-                            final offsetAnimation = animation.drive(tween);
-
-                            return SlideTransition(
-                              position: offsetAnimation,
-                              child: child,
-                            );
-                          },
-                        );
-                      },
-                    ),
                 ],
               ),
             ],
@@ -111,39 +110,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             navigatorKey: _searchNavigatorKey,
             routes: [
               GoRoute(
-                path: '/search',
-                name: AppRoute.search.name,
-                pageBuilder: (context, state) => NoTransitionPage(
-                  key: state.pageKey,
-                  child: SearchScreen(),
-                ),
-                routes: [
-                  GoRoute(
-                    path: ':channels',
-                    name: AppRoute.channels.name,
-                    pageBuilder: (context, state) {
-                      final searchQuery = state.pathParameters['channels'] as String;;
-                      // 애니메이션 적용
-                      return CustomTransitionPage(
-                        key: state.pageKey,
-                        child: ChannelsScreen(searchQuery: searchQuery),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(1.0, 0.0);
-                          const end = Offset.zero;
-                          const curve = Curves.easeInOut;
-                          final tween = Tween(begin: begin, end: end)
-                              .chain(CurveTween(curve: curve));
-                          final offsetAnimation = animation.drive(tween);
-                          return SlideTransition(
-                            position: offsetAnimation,
-                            child: child,
-                          );
-                        },
-                      );
-                    },
+                  path: '/search',
+                  name: AppRoute.search.name,
+                  pageBuilder: (context, state) => NoTransitionPage(
+                    key: state.pageKey,
+                    child: SearchScreen(),
                   ),
-                ]
               ),
             ],
           ),

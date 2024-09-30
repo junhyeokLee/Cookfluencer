@@ -91,7 +91,8 @@ class ChannelsScreen extends HookConsumerWidget {
     );
   }
 
-  SingleChildScrollView buildSingleChildScrollView(AsyncValue<List<QueryDocumentSnapshot<Object?>>> searchChannelListAsyncValue, BuildContext context) {
+  SingleChildScrollView buildSingleChildScrollView(AsyncValue<List<QueryDocumentSnapshot<Object?>>> searchChannelListAsyncValue,
+      BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +139,7 @@ class ChannelsScreen extends HookConsumerWidget {
                     );
                     return ChannelItem(
                       channelData :channelData , // 채널 아이템 크기 조정
-                      size: ScreenUtil.width(context, 0.32),
+                      size: ScreenUtil.width(context, 0.32), onChannelItemClick: () {  },
                     );
                   },
                 ),

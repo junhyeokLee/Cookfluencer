@@ -11,34 +11,36 @@ import '../../../common/constant/app_colors.dart';
 class ChannelItem extends StatelessWidget {
   final ChannelData channelData; // 채널 데이터
   final double size;
+  final VoidCallback onChannelItemClick; // 채널 클릭 시 호출할 콜백 추가
 
   const ChannelItem({
     Key? key,
     required this.channelData,
     required this.size,
+    required this.onChannelItemClick, // 콜백 전달
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // 채널 클릭 시 채널 상세 화면으로 이동
-        // 채널 아이템 클릭 시 ChannelDetailScreen으로 이동
-        context.pushNamed(
-          AppRoute.channelDetail.name, // 이동할 라우트 이름
-          extra: channelData, // 객체 전달
-        );
+        onChannelItemClick(); // 채널 클릭 시 콜백 호출
       },
+      splashColor: Colors.transparent,    // 물결 효과를 투명으로 설정
+      highlightColor: Colors.transparent, // 클릭 시 하이라이트 효과를 투명으로 설정
       child: Container(
         width: size, // 전달받은 사이즈 사용
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // 채널 이미지 (CachedNetworkImage 사용)
-            Customchannelimage(
-              imageUrl: channelData.thumbnailUrl,
-              size: size,
-              fit: BoxFit.cover,
+            Hero(
+              tag: 'channelHero_${channelData.id}', // 채널 ID를 태그로 사용
+              child: Customchannelimage(
+                imageUrl: channelData.thumbnailUrl,
+                size: size,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(height: 12),
             Expanded(
@@ -49,7 +51,7 @@ class ChannelItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(width: 3.7),
-                    Image.asset(Assets.youtube,width: 20,height: 20), // 별 아이콘AppColors.grey
+                    Image.asset(Assets.youtube, width: 20, height: 20), // youtube 아이콘
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -62,7 +64,7 @@ class ChannelItem extends StatelessWidget {
                   ],
                 ),
               ),
-            ), // youtube 아이콘
+            ),
             SizedBox(height: 4),
             Padding(
               padding: const EdgeInsets.only(left: 4),

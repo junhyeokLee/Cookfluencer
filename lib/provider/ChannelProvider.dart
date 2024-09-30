@@ -263,3 +263,35 @@ Future<void> updateViewCounts() async {
     }
   }
 }
+
+
+
+final videosByChannelProvider = FutureProvider.autoDispose
+    .family<List<QueryDocumentSnapshot>, Map<String, dynamic>>(
+        (ref, params) async {
+      final String channelId = params['channel_id'] as String; // 채널 ID
+      final FilterOption selectedFilter = params['filter'] as FilterOption; // 선택한 필터
+      final DocumentSnapshot? startAfterDocument = params['start_after'] as DocumentSnapshot?;
+      // 비디오 쿼리 생성
+      Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+          .collection('channels')
+          .doc(channelId)
+          .collection('videos'); // 채널의 비디오 컬렉션
+      // 필터링 조건 추가
+      if (selectedFilter == FilterOption.viewCount) {
+        query = query.orderBy('view_count', descending: true); // 조회수 내림차순
+      } else if (selectedFilter == FilterOption.latest) {
+        query = query.orderBy('upload_date', descending: true); // 최신순
+      }
+      // 시작 문서 설정 (페이지네이션)
+      if (startAfterDocument != null) {
+        query = query.startAfterDocument(startAfterDocument);
+      }
+      // 쿼리 실행 및 결과 반환
+      final querySnapshot = await query.limit(10).get(); // 한 번에 10개 가져옴
+      // 인덱스 생성 링크 안내
+      if (querySnapshot.docs.isEmpty && startAfterDocument != null) {
+        throw Exception('쿼리 인덱스가 필요합니다. Firebase Console에서 인덱스를 생성하세요:');
+      }
+      return querySnapshot.docs; // 비디오 리스트 반환
+    });

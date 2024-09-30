@@ -43,8 +43,8 @@ class SearchBarWidget extends HookConsumerWidget {
             IconButton(
               icon: Icon(Icons.arrow_back_ios, color: AppColors.black),
               onPressed: () {
-                searchQuery.value = ''; // 검색어 초기화
-                searchController.clear(); // TextField 초기화
+                // searchQuery.value = ''; // 검색어 초기화
+                // searchController.clear(); // TextField 초기화
                 onBackPressed(); // 뒤로가기 아이콘 클릭 시 호출
               },
             ),

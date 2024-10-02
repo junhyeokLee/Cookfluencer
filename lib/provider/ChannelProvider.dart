@@ -89,15 +89,12 @@ final searchVideoProvider = FutureProvider.autoDispose.family<List<QueryDocument
 });
 
 // 비디오를 조회수 또는 최신순으로 검색하는 Provider
-final searchFilterVideoProvider = FutureProvider.autoDispose.family<List<QueryDocumentSnapshot>, Map<String, dynamic>>(
-        (ref, searchParams) async {
+final searchFilterVideoProvider =  FutureProvider.autoDispose.family<List<QueryDocumentSnapshot>, Map<String, dynamic>>(
+      (ref, params) async {
       try {
-        final searchQuery = searchParams['query'] as String;
-        final selectedFilter = searchParams['filter'] as FilterOption;
-        final lastDocument = searchParams['lastDocument'] as DocumentSnapshot?; // 마지막 문서 추가
-
-        debugPrint('searchQuery: $searchQuery');
-        debugPrint('selectedFilter: $selectedFilter');
+        final String searchQuery = params['query'] as String;
+        final FilterOption selectedFilter = params['filter'] as FilterOption;
+        final DocumentSnapshot? startAfterDocument = params['start_after'] as DocumentSnapshot?; // 페이지네이션을 위한 시작 문서
 
         if (searchQuery.isEmpty) return [];
 
@@ -105,13 +102,9 @@ final searchFilterVideoProvider = FutureProvider.autoDispose.family<List<QueryDo
         Query<Map<String, dynamic>> query = FirebaseFirestore.instance
             .collection('videos')
             .where('title', isGreaterThanOrEqualTo: searchQuery)
-            .where('title', isLessThanOrEqualTo: searchQuery + '\uf8ff')
-            .limit(10); // 한 번에 가져올 데이터 수
+            .where('title', isLessThanOrEqualTo: searchQuery + '\uf8ff');
+            // .limit(10); // 한 번에 가져올 데이터 수
 
-        // 마지막 문서가 있을 경우, 그 이후부터 가져오도록 쿼리 수정
-        if (lastDocument != null) {
-          query = query.startAfterDocument(lastDocument);
-        }
 
         // 인기순(조회수) 필터 적용
         if (selectedFilter == FilterOption.viewCount) {
@@ -126,7 +119,16 @@ final searchFilterVideoProvider = FutureProvider.autoDispose.family<List<QueryDo
               .orderBy('title'); // 제목으로도 정렬 (필요한 경우)
         }
 
-        final querySnapshot = await query.get();
+        // 페이지네이션: 시작 문서가 있을 경우 설정
+        if (startAfterDocument != null) {
+          query = query.startAfterDocument(startAfterDocument);
+        }
+        // 쿼리 실행 및 결과 반환
+        final querySnapshot = await query.limit(10).get(); // 한 번에 10개 문서 가져옴
+        // 쿼리 결과가 비어 있고 페이지네이션을 하고 있을 때 예외 처리
+        if (querySnapshot.docs.isEmpty && startAfterDocument != null) {
+          throw Exception('인덱스가 필요할 수 있습니다. Firebase Console에서 인덱스를 생성하세요.');
+        }
         return querySnapshot.docs;
       } catch (e) {
         // 오류 발생 시 throw
@@ -134,7 +136,6 @@ final searchFilterVideoProvider = FutureProvider.autoDispose.family<List<QueryDo
       }
     }
 );
-
 
 // Firestore에서 채널과 비디오 데이터를 검색하는 Provider
 final autoSearchChannelAndVideoProvider = FutureProvider.autoDispose
@@ -248,8 +249,6 @@ final searchTotalChannelProvider = FutureProvider.autoDispose
   return querySnapshot.docs;
 });
 
-
-
 Future<void> updateViewCounts() async {
   final videosCollection = FirebaseFirestore.instance.collection('videos');
   final querySnapshot = await videosCollection.get();
@@ -264,34 +263,52 @@ Future<void> updateViewCounts() async {
   }
 }
 
-
-
-final videosByChannelProvider = FutureProvider.autoDispose
-    .family<List<QueryDocumentSnapshot>, Map<String, dynamic>>(
-        (ref, params) async {
+// videosByChannelProvider 정의
+final videosByChannelProvider = FutureProvider.autoDispose.family<List<QueryDocumentSnapshot>, Map<String, dynamic>>(
+      (ref, params) async {
+    try {
+      // params에서 채널 ID, 필터, 시작 문서 추출
       final String channelId = params['channel_id'] as String; // 채널 ID
       final FilterOption selectedFilter = params['filter'] as FilterOption; // 선택한 필터
-      final DocumentSnapshot? startAfterDocument = params['start_after'] as DocumentSnapshot?;
-      // 비디오 쿼리 생성
+      final DocumentSnapshot? startAfterDocument = params['start_after'] as DocumentSnapshot?; // 페이지네이션을 위한 시작 문서
+
+      // Firestore에서 해당 채널의 비디오 컬렉션 쿼리
       Query<Map<String, dynamic>> query = FirebaseFirestore.instance
           .collection('channels')
           .doc(channelId)
-          .collection('videos'); // 채널의 비디오 컬렉션
-      // 필터링 조건 추가
+          .collection('videos'); // 채널 비디오 콜렉션 접근
+
+      // 인기순(조회수) 필터 적용
       if (selectedFilter == FilterOption.viewCount) {
-        query = query.orderBy('view_count', descending: true); // 조회수 내림차순
-      } else if (selectedFilter == FilterOption.latest) {
-        query = query.orderBy('upload_date', descending: true); // 최신순
+        query = query
+            .orderBy('view_count', descending: true) // 조회수 순으로 정렬
+            .orderBy('title'); // 제목으로도 정렬 (필요한 경우)
       }
-      // 시작 문서 설정 (페이지네이션)
+      // 최신순 필터 적용
+      else if (selectedFilter == FilterOption.latest) {
+        query = query
+            .orderBy('upload_date', descending: true) // 최신순으로 정렬
+            .orderBy('title'); // 제목으로도 정렬 (필요한 경우)
+      }
+
+      // 페이지네이션: 시작 문서가 있을 경우 설정
       if (startAfterDocument != null) {
         query = query.startAfterDocument(startAfterDocument);
       }
+
       // 쿼리 실행 및 결과 반환
-      final querySnapshot = await query.limit(10).get(); // 한 번에 10개 가져옴
-      // 인덱스 생성 링크 안내
+      final querySnapshot = await query.limit(10).get(); // 한 번에 10개 문서 가져옴
+
+      // 쿼리 결과가 비어 있고 페이지네이션을 하고 있을 때 예외 처리
       if (querySnapshot.docs.isEmpty && startAfterDocument != null) {
-        throw Exception('쿼리 인덱스가 필요합니다. Firebase Console에서 인덱스를 생성하세요:');
+        throw Exception('인덱스가 필요할 수 있습니다. Firebase Console에서 인덱스를 생성하세요.');
       }
-      return querySnapshot.docs; // 비디오 리스트 반환
-    });
+
+      // 쿼리 결과 반환
+      return querySnapshot.docs;
+    } catch (e) {
+      // 에러 처리
+      throw Exception('쿼리 실패: $e');
+    }
+  },
+);

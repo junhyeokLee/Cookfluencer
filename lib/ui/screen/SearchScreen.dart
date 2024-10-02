@@ -23,7 +23,8 @@ class SearchScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchController = useTextEditingController(); // TextEditingController 생성
+    final searchController =
+        useTextEditingController(); // TextEditingController 생성
     final searchQuery = useState<String>(''); // 검색 쿼리 상태 관리
     final recentSearches = useState<List<String>>([]); // 최근 검색어 상태 관리
     final showSearchWidgets = useState<bool>(true); // 검색 위젯 보이기 여부
@@ -32,7 +33,8 @@ class SearchScreen extends HookConsumerWidget {
     final showChannelDetail = useState<bool>(false); // ChannelItem 선택 시 보이기 여부
     final showTotalChannel = useState<bool>(false); // 채널 검색 결과 화면 제어
 
-    final selectedChannelData = useState<ChannelData?>(null); // 선택된 채널 데이터 변수 추가
+    final selectedChannelData =
+        useState<ChannelData?>(null); // 선택된 채널 데이터 변수 추가
     final selectedTotalChannel = useState<String>(''); // 선택된 전체보기 타이틀 쿼리 변수 추가
 
     // 파라미터가 필요한 경우를 확인 후 수정
@@ -41,18 +43,6 @@ class SearchScreen extends HookConsumerWidget {
     final keywordListAsyncValue = ref.watch(keywordListProvider);
 
     useEffect(() {
-
-      // if(channelData != null) {
-      //   selectedChannelData.value = channelData;
-      //   searchQuery.value = channelData!.channelName;
-      //   showChannelDetail.value = true;
-      //   showSearchWidgets.value = false;
-      //   showFinalResults.value = false;
-      //   showRecentSearch.value = false;
-      //   showChannelDetail.value = false;
-      //   showTotalChannel.value = false;
-      // }
-
       loadRecentSearches(recentSearches);
       return null; // cleanup 함수가 필요 없는 경우 null 반환
     }, []);
@@ -88,6 +78,7 @@ class SearchScreen extends HookConsumerWidget {
             // 값으로 전달
             searchController: searchController,
             recentSearches: recentSearches,
+            showChannelDetail: showChannelDetail.value,
             // 값으로 전달
             onSearchTap: () {
               showSearchWidgets.value = false; // 자동 검색 화면 활성화
@@ -131,94 +122,122 @@ class SearchScreen extends HookConsumerWidget {
             return _buildSlideTransition(child, animation);
           },
           child: showTotalChannel.value
-              ? Totalchannels(searchQuery: selectedTotalChannel.value,
-            onChannelItemClick: (channelData ) {
-              showTotalChannel.value = false; // 채널 전체 화면 숨기기
-              selectedChannelData.value = channelData; // 선택된 채널 데이터를 저장
-              showChannelDetail.value = true; // 채널 상세 화면 보이기
-          }) // 전체보기 화면
+              ? Totalchannels(
+                  searchQuery: selectedTotalChannel.value,
+                  onChannelItemClick: (channelData) {
+                    showTotalChannel.value = false; // 채널 전체 화면 숨기기
+                    selectedChannelData.value = channelData; // 선택된 채널 데이터를 저장
+                    showChannelDetail.value = true; // 채널 상세 화면 보이기
+                  }) // 전체보기 화면
               : showChannelDetail.value
-              ? ResultSearchChannel(
-            key: ValueKey(selectedChannelData.value?.id), // 키를 추가하여 변경 감지
-            channelData: selectedChannelData.value!,
-          ) // ChannelItem 클릭 시 표시할 화면
-              : showFinalResults.value
-              ? ResultSearch(
-            key: ValueKey(searchQuery.value), // 키를 추가하여 변경 감지
-            searchQuery: searchQuery.value,
-            onChannelItemClick: (channelData) {
-              selectedChannelData.value = channelData; // 선택된 채널 데이터를 저장
-              showChannelDetail.value = true; // 채널 상세 화면 보이기
-            },
-            onTotalChannelClick: (String) {
-              selectedTotalChannel.value = String; // 선택된 전체보기 타이틀 쿼리 저장
-              showTotalChannel.value = true; // 채널 전체 화면 보이기
-            },
-          ) : showSearchWidgets.value
-              ? Column(
-            key: ValueKey('searchWidgets'), // 키를 추가하여 변경 감지
-            children: [
-              RecentSearch(
-                recentSearches: recentSearches, // 값으로 전달
-                searchQuery: searchQuery, // 값으로 전달
-                searchController: searchController,
-                onSubmitted: () {
-                  showSearchWidgets.value = false; // 자동 검색 화면 숨기기
-                  showFinalResults.value = true; // 최종 검색 결과 화면 보이기
-                  showRecentSearch.value = false; // 최근 검색어 숨기기
-                  showChannelDetail.value = false; // 채널 상세 페이지 숨기기
-                  showTotalChannel.value = false; // 채널 전체 화면 숨기기
-                },
-              ),
-              keywordListAsyncValue.when(
-                data: (keywords) {
-                  List<Map<String, dynamic>> keywordList =
-                  keywords.map((doc) => doc.data() as Map<String, dynamic>).toList();
-                  return Popularkeyword(
-                    keywordList: keywordList,
-                    searchQuery: searchQuery, // 값으로 전달
-                    onSubmitted: () {
-                      showSearchWidgets.value = false; // 자동 검색 화면 숨기기
-                      showFinalResults.value = true; // 최종 검색 결과 화면 보이기
-                      showRecentSearch.value = false; // 최근 검색어 숨기기
-                      showChannelDetail.value = false; // 채널 상세 페이지 숨기기
-                      showTotalChannel.value = false; // 채널 전체 화면 숨기기
-                    },
-                    searchController: searchController,
-                  ); // 키워드 리스트 전달
-                },
-                loading: () => CircularLoading(),
-                error: (error, stackTrace) => ErrorMessage(message: '${error}'),
-              ),
-            ],
-          )
-              : fb_searchResult.when(
-            data: (results) {
-              if (results.isEmpty) {
-                return Padding(
-                  padding: const EdgeInsets.all(42),
-                  child: Center(
-                    child: EmptyMessage(message: '쿡플루언서 검색 결과가 없습니다.'),
-                  ),
-                );
-              }
-              return AutoSearch(
-                key: ValueKey('autoSearch'), // 키를 추가하여 변경 감지
-                results: results,
-                searchQuery: searchQuery, // 값으로 전달
-                searchController: searchController,
-                onSubmitted: () {
-                  showSearchWidgets.value = false; // 자동 검색 화면 숨기기
-                  showFinalResults.value = true; // 최종 검색 결과 화면 보이기
-                  showRecentSearch.value = false; // 최근 검색어 숨기기
-                  showChannelDetail.value = false; // 채널 상세 페이지 숨기기
-                  showTotalChannel.value = false; // 채널 전체 화면 숨기기
-                },
-              );
-            },
-            loading: () => CircularLoading(),
-            error: (error, stackTrace) => ErrorMessage(message: '${error}'),
-          ),
+                  ? ResultSearchChannel(
+                      key: ValueKey(
+                          selectedChannelData.value?.id), // 키를 추가하여 변경 감지
+                      channelData: selectedChannelData.value!,
+                    ) // ChannelItem 클릭 시 표시할 화면
+                  : showFinalResults.value
+                      ? ResultSearch(
+                          key: ValueKey(searchQuery.value), // 키를 추가하여 변경 감지
+                          searchQuery: searchQuery.value,
+                          onChannelItemClick: (channelData) {
+                            selectedChannelData.value =
+                                channelData; // 선택된 채널 데이터를 저장
+                            showChannelDetail.value = true; // 채널 상세 화면 보이기
+                          },
+                          onTotalChannelClick: (String) {
+                            selectedTotalChannel.value =
+                                String; // 선택된 전체보기 타이틀 쿼리 저장
+                            showTotalChannel.value = true; // 채널 전체 화면 보이기
+                          },
+                        )
+                      : showSearchWidgets.value
+                          ? Column(
+                              key: ValueKey('searchWidgets'), // 키를 추가하여 변경 감지
+                              children: [
+                                RecentSearch(
+                                  recentSearches: recentSearches, // 값으로 전달
+                                  searchQuery: searchQuery, // 값으로 전달
+                                  searchController: searchController,
+                                  onSubmitted: () {
+                                    showSearchWidgets.value =
+                                        false; // 자동 검색 화면 숨기기
+                                    showFinalResults.value =
+                                        true; // 최종 검색 결과 화면 보이기
+                                    showRecentSearch.value =
+                                        false; // 최근 검색어 숨기기
+                                    showChannelDetail.value =
+                                        false; // 채널 상세 페이지 숨기기
+                                    showTotalChannel.value =
+                                        false; // 채널 전체 화면 숨기기
+                                  },
+                                ),
+                                keywordListAsyncValue.when(
+                                  data: (keywords) {
+                                    List<Map<String, dynamic>> keywordList =
+                                        keywords
+                                            .map((doc) => doc.data()
+                                                as Map<String, dynamic>)
+                                            .toList();
+                                    return Popularkeyword(
+                                      keywordList: keywordList,
+                                      searchQuery: searchQuery, // 값으로 전달
+                                      onSubmitted: () {
+                                        showSearchWidgets.value =
+                                            false; // 자동 검색 화면 숨기기
+                                        showFinalResults.value =
+                                            true; // 최종 검색 결과 화면 보이기
+                                        showRecentSearch.value =
+                                            false; // 최근 검색어 숨기기
+                                        showChannelDetail.value =
+                                            false; // 채널 상세 페이지 숨기기
+                                        showTotalChannel.value =
+                                            false; // 채널 전체 화면 숨기기
+                                      },
+                                      searchController: searchController,
+                                    ); // 키워드 리스트 전달
+                                  },
+                                  loading: () => CircularLoading(),
+                                  error: (error, stackTrace) =>
+                                      ErrorMessage(message: '${error}'),
+                                ),
+                              ],
+                            )
+                          : fb_searchResult.when(
+                              data: (results) {
+                                if (results.isEmpty) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(42),
+                                    child: Center(
+                                      child: EmptyMessage(
+                                          message: '쿡플루언서 검색 결과가 없습니다.'),
+                                    ),
+                                  );
+                                }
+                                return AutoSearch(
+                                  key: ValueKey('autoSearch'),
+                                  // 키를 추가하여 변경 감지
+                                  results: results,
+                                  searchQuery: searchQuery,
+                                  // 값으로 전달
+                                  searchController: searchController,
+                                  onSubmitted: () {
+                                    showSearchWidgets.value =
+                                        false; // 자동 검색 화면 숨기기
+                                    showFinalResults.value =
+                                        true; // 최종 검색 결과 화면 보이기
+                                    showRecentSearch.value =
+                                        false; // 최근 검색어 숨기기
+                                    showChannelDetail.value =
+                                        false; // 채널 상세 페이지 숨기기
+                                    showTotalChannel.value =
+                                        false; // 채널 전체 화면 숨기기
+                                  },
+                                );
+                              },
+                              loading: () => CircularLoading(),
+                              error: (error, stackTrace) =>
+                                  ErrorMessage(message: '${error}'),
+                            ),
         ),
       ),
     );
@@ -226,8 +245,7 @@ class SearchScreen extends HookConsumerWidget {
 }
 
 // 슬라이드 애니메이션 함수
-Widget _buildSlideTransition(
-    Widget child, Animation<double> animation) {
+Widget _buildSlideTransition(Widget child, Animation<double> animation) {
   // 뒤로가기 시 애니메이션 방향을 역으로 설정
 
   // final offset = isBackwards ? Offset(-1.0, 0.0) : Offset(1.0, 0.0);

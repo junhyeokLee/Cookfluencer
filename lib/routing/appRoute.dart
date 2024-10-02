@@ -110,12 +110,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             navigatorKey: _searchNavigatorKey,
             routes: [
               GoRoute(
-                  path: '/search',
-                  name: AppRoute.search.name,
-                  pageBuilder: (context, state) => NoTransitionPage(
-                    key: state.pageKey,
-                    child: SearchScreen(),
-                  ),
+                path: '/search',
+                name: AppRoute.search.name,
+                pageBuilder: (context, state) => NoTransitionPage(
+                  key: state.pageKey,
+                  child: SearchScreen(),
+                ),
               ),
             ],
           ),

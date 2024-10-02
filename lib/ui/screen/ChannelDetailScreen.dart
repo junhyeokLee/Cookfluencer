@@ -15,7 +15,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class ChannelDetailScreen extends HookConsumerWidget {
-  final ChannelData channelData; // 채널 데이터를 받는 파라미터
+  final ChannelData channelData;
 
   const ChannelDetailScreen({
     Key? key,
@@ -24,76 +24,81 @@ class ChannelDetailScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedFilter = useState<FilterOption>(FilterOption.viewCount); // 필터
-    final showFilterOptions = useState<bool>(false); // 필터 옵션 보이기 여부
-    final pagingController = PagingController<int, QueryDocumentSnapshot>(
-      firstPageKey: 0, // 첫 페이지 키 초기화
-    );
+    final selectedFilter = useState<FilterOption>(FilterOption.viewCount);
+    final showFilterOptions = useState<bool>(false);
+    final pagingController = useState(PagingController<int, QueryDocumentSnapshot>(
+      firstPageKey: 0,
+    ));
 
     // 비디오 리스트 데이터 가져오기
-    final fetchVideos = (int pageKey) async {
+    Future<void> fetchVideos(int pageKey) async {
       try {
-        // 검색 파라미터 설정
         final searchParams = {
           'channel_id': channelData.id,
           'filter': selectedFilter.value,
-          'start_after': pageKey == 0 ? null : pagingController.itemList!.last,
+          'start_after': pageKey == 0 ? null : pagingController.value.itemList!.last,
         };
 
-        // 비디오 로드 요청을 위한 스크롤 시간 지연
         await Future.delayed(Duration(milliseconds: 500)); // 500ms 지연
 
-        // Firestore 쿼리로 비디오 가져오기
-        final newVideos =
-            await ref.read(videosByChannelProvider(searchParams).future);
+        final newVideos = await ref.read(videosByChannelProvider(searchParams).future);
 
-        final isLastPage = newVideos.isEmpty; // 더 이상 데이터가 없는 경우
+        final isLastPage = newVideos.isEmpty;
         if (isLastPage) {
-          pagingController.appendLastPage(newVideos);
+          pagingController.value.appendLastPage(newVideos);
         } else {
-          final nextPageKey = pageKey + newVideos.length; // 다음 페이지 키 계산
-          pagingController.appendPage(newVideos, nextPageKey);
+          final nextPageKey = pageKey + newVideos.length;
+          pagingController.value.appendPage(newVideos, nextPageKey);
         }
       } catch (error) {
-        pagingController.error = error; // 오류 발생 시 처리
+        pagingController.value.error = error; // 오류 발생 시 처리
       }
-    };
+    }
+
+    // 필터 변경 시, PagingController를 새로 생성
+    useEffect(() {
+      // PagingController 초기화
+      pagingController.value = PagingController<int, QueryDocumentSnapshot>(
+        firstPageKey: 0,
+      );
+      // 필터가 변경되면 새로운 페이지 요청
+      fetchVideos(0);  // 이제 이 호출이 올바르게 작동합니다.
+      return null; // clean up 함수 반환
+    }, [selectedFilter.value]);
 
     useEffect(() {
-      pagingController.addPageRequestListener(fetchVideos); // 페이지 요청 리스너 추가
-      return () =>
-          pagingController.removePageRequestListener(fetchVideos); // 클린업
-    }, [pagingController]);
+      // PagingController에 페이지 요청 리스너 추가
+      pagingController.value.addPageRequestListener(fetchVideos);
+      return () => pagingController.value.removePageRequestListener(fetchVideos);
+    }, [pagingController.value]);
 
     return Scaffold(
       appBar: AppBar(
-          titleSpacing: 0, // 타이틀과 leading 아이콘 사이의 기본 간격을 없앱니다.
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: IconButton(
-              icon: Icon(Icons.arrow_back_ios), // 여기서 원하는 아이콘으로 변경
-              onPressed: () {
-                Navigator.of(context).pop(); // 이전 화면으로 이동
-              },
-            ),
+        titleSpacing: 0,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          title: Text(
-        channelData.channelName,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-      )
+        ),
+        title: Text(
+          channelData.channelName,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: CustomScrollView(
-        // CustomScrollView를 사용
         slivers: [
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 상단 위젯들
                 Padding(
                   padding: const EdgeInsets.only(left: 16, top: 24),
                   child: Text('인플루언서',
@@ -119,7 +124,7 @@ class ChannelDetailScreen extends HookConsumerWidget {
           SliverPadding(
             padding: const EdgeInsets.only(left: 16, right: 16),
             sliver: PagedSliverList<int, QueryDocumentSnapshot>(
-              pagingController: pagingController,
+              pagingController: pagingController.value,
               builderDelegate: PagedChildBuilderDelegate<QueryDocumentSnapshot>(
                 itemBuilder: (context, videoSnapshot, index) {
                   final video = videoSnapshot.data() as Map<String, dynamic>;
@@ -133,8 +138,7 @@ class ChannelDetailScreen extends HookConsumerWidget {
                     uploadDate: video['upload_date'] ?? '',
                     videoId: video['video_id'] ?? '',
                     videoUrl: video['video_url'] ?? '',
-                    viewCount:
-                        int.tryParse(video['view_count'].toString()) ?? 0,
+                    viewCount: int.tryParse(video['view_count'].toString()) ?? 0,
                     section: video['section'] ?? '',
                   );
                   return VideoItem(
@@ -156,9 +160,9 @@ class ChannelDetailScreen extends HookConsumerWidget {
             ),
           ),
           // 오류 발생 시 메시지 표시
-          if (pagingController.error != null)
+          if (pagingController.value.error != null)
             SliverToBoxAdapter(
-              child: ErrorMessage(message: '오류 발생: ${pagingController.error}'),
+              child: ErrorMessage(message: '오류 발생: ${pagingController.value.error}'),
             ),
         ],
       ),

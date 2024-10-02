@@ -41,6 +41,7 @@ class _ScaffoldWithNestedNavigationState
     return WillPopScope(
       onWillPop: () async {
         // 네비게이션 히스토리에 인덱스가 남아 있는 경우
+        debugPrint('히스토리 네비게이션: $navigationHistory');
         if (navigationHistory.isNotEmpty) {
           final previousIndex = navigationHistory.removeLast();
           widget.navigationShell.goBranch(previousIndex);

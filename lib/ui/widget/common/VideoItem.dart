@@ -6,6 +6,7 @@ import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:cookfluencer/common/dart/extension/num_extension.dart';
 import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/ui/widget/common/CustomVideoImage.dart';
+import 'package:cookfluencer/ui/widget/common/LikeVideoButton.dart'; // LikeVideoButton 추가
 import 'package:go_router/go_router.dart';
 
 class VideoItem extends StatelessWidget {
@@ -13,7 +14,8 @@ class VideoItem extends StatelessWidget {
   final double size; // 썸네일 사이즈
   final double titleWidth; // 비디오 제목 너비
   final double channelWidth; // 채널 이름 너비
-  final VoidCallback onVideoItemClick; // 채널 클릭 시 호출할 콜백 추가
+  final VoidCallback onVideoItemClick;
+  final bool showLikeButton; // 비디오 클릭 시 호출할 콜백 추가
 
   const VideoItem({
     Key? key,
@@ -22,7 +24,7 @@ class VideoItem extends StatelessWidget {
     required this.titleWidth, // 제목 너비 추가
     required this.channelWidth, // 채널 이름 너비 추가
     required this.onVideoItemClick, // 콜백 전달
-
+    this.showLikeButton = false,
   }) : super(key: key);
 
   @override
@@ -74,6 +76,7 @@ class VideoItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // 타이틀과 버튼 사이에 공간 배분
                     children: [
                       Container(
                         width: titleWidth, // 전달받은 제목 너비 사용
@@ -84,6 +87,9 @@ class VideoItem extends StatelessWidget {
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
                       ),
+                      showLikeButton
+                          ? LikeVideoButton(videoData: video,rightMargin: 0,)
+                          : Container(),
                     ],
                   ),
                   SizedBox(height: 6), // 간격
@@ -100,7 +106,7 @@ class VideoItem extends StatelessWidget {
                             color: AppColors.grey, fontSize: 12),
                       ),
                       SizedBox(width: 16),
-                      Image.asset(Assets.youtube,width: 20,height: 20), // 별 아이콘AppColors.grey// 유튜브 아이콘
+                      Image.asset(Assets.youtube,width: 20,height: 20), // 유튜브 아이콘
                       SizedBox(width: 4), // 간격
                       Container(
                         width: channelWidth, // 전달받은 채널 이름 너비 사용

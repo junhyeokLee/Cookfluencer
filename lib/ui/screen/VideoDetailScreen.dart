@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
+import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/data/videoData.dart';
@@ -36,6 +37,8 @@ class VideoDetailScreen extends HookConsumerWidget {
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
+        hideControls: false, // 플레이어 컨트롤 숨기기 여부
+        showLiveFullscreenButton: true, // 전체 화면 버튼 표시 여부
       ),
     );
 
@@ -110,6 +113,13 @@ class VideoDetailScreen extends HookConsumerWidget {
                 YoutubePlayer(
                   controller: youtubeController,
                   showVideoProgressIndicator: true,
+                  progressIndicatorColor: AppColors.primarySelectedColor,
+                  progressColors: ProgressBarColors(
+                    playedColor: AppColors.primarySelectedColor,
+                    handleColor: AppColors.primarySelectedColor,
+                  ),
+                liveUIColor: AppColors.primarySelectedColor,
+
                   onReady: () {
                     print('Player is ready.');
                   },

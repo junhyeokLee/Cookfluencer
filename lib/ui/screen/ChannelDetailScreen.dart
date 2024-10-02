@@ -31,7 +31,6 @@ class ChannelDetailScreen extends HookConsumerWidget {
       firstPageKey: 0,
     ));
 
-
     // 비디오 리스트 데이터 가져오기
     Future<void> fetchVideos(int pageKey) async {
       try {

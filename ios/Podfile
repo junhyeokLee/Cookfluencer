@@ -1,10 +1,14 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '13.0'
+platform :ios, '13.0' # 최소 배포 타겟을 13.0으로 변경합니다.
 # Add this line
 use_frameworks!
 
 # Add Firebase dependencies
-pod 'Firebase/Firestore', '~> 11.0.0'
+pod 'Firebase/Core', '11.2.0' # Firebase Core 추가
+pod 'Firebase/Firestore', '~> 11.2.0' # Firestore의 버전 변경
+pod 'Firebase/Messaging', '11.2.0' # Messaging 추가
+pod 'Firebase/Crashlytics', '11.2.0' # Crashlytics 추가
+
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 

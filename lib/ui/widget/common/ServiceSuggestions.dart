@@ -12,7 +12,7 @@ class Servicesuggestions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: ScreenUtil.width(context, 1),
-      height: ScreenUtil.height(context, 0.26),
+      // height: ScreenUtil.height(context, 0.26),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12), // 둥근 테두리 설정
         color: AppColors.primaryColor // 배경 색상
@@ -51,7 +51,7 @@ class Servicesuggestions extends StatelessWidget {
           child: Center(
 
             child: Padding(
-              padding: const EdgeInsets.only(left:20,right: 20 ),
+              padding: const EdgeInsets.only(left:20,right: 20 ,bottom: 32 ),
               child: CustomRoundButton(text: '아이디어 제출', onTap: () {
                 // 아이디어 제출 버튼 클릭 시 동작
               }),

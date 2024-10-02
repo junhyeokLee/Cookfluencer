@@ -1,4 +1,5 @@
 import 'package:cookfluencer/data/channelData.dart';
+import 'package:cookfluencer/data/videoData.dart';
 import 'package:cookfluencer/routing/scaffold_with_nested_navigation.dart';
 import 'package:cookfluencer/ui/screen/ChannelDetailScreen.dart';
 import 'package:cookfluencer/ui/screen/ChannelsScreen.dart';
@@ -7,6 +8,7 @@ import 'package:cookfluencer/ui/screen/LikeScreen.dart';
 import 'package:cookfluencer/ui/screen/MyPageScreen.dart';
 import 'package:cookfluencer/ui/screen/HomeSearchScreen.dart';
 import 'package:cookfluencer/ui/screen/SearchScreen.dart';
+import 'package:cookfluencer/ui/screen/VideoDetailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +21,7 @@ enum AppRoute {
   mypage,
   channels,
   channelDetail,
+  videoDetail,
 }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -33,6 +36,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
     routes: [
+
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return ScaffoldWithNestedNavigation(navigationShell: navigationShell);
@@ -75,6 +79,30 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                       );
                     },
                   ),
+                  // GoRoute(
+                  //   path: 'videoDetail', // 루트 수준에서 설정
+                  //   name: AppRoute.videoDetail.name,
+                  //   pageBuilder: (context, state) {
+                  //     final videoItem = state.extra as VideoData; // VideoItem을 extra에서 받음
+                  //     return CustomTransitionPage(
+                  //       key: state.pageKey,
+                  //       child: VideoDetailScreen(videoData: videoItem), // VideoDetailScreen에 VideoItem 전달
+                  //       transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  //         const begin = Offset(1.0, 0.0);
+                  //         const end = Offset.zero;
+                  //         const curve = Curves.easeInOut;
+                  //         final tween = Tween(begin: begin, end: end)
+                  //             .chain(CurveTween(curve: curve));
+                  //         final offsetAnimation = animation.drive(tween);
+                  //
+                  //         return SlideTransition(
+                  //           position: offsetAnimation,
+                  //           child: child,
+                  //         );
+                  //       },
+                  //     );
+                  //   },
+                  // ),
 
                   GoRoute(
                     path: ':keyword',

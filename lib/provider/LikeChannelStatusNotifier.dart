@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cookfluencer/data/channelData.dart';
 
 // LikeStatus 객체 정의
-class LikeStatus {
+class LikeChannelStatus {
   final String id; // 채널 ID
   final String channelName; // 채널 이름
   final String channelDescription; // 채널 설명
@@ -17,7 +17,7 @@ class LikeStatus {
   final String section; // 섹션
   final bool isLiked; // 좋아요 여부
 
-  LikeStatus({
+  LikeChannelStatus({
     required this.id,
     required this.channelName,
     required this.channelDescription,
@@ -32,8 +32,8 @@ class LikeStatus {
 }
 
 // LikeStatusNotifier 정의
-class LikeStatusNotifier extends StateNotifier<Map<String, LikeStatus>> {
-  LikeStatusNotifier() : super({}) {
+class LikeChannelStatusNotifier extends StateNotifier<Map<String, LikeChannelStatus>> {
+  LikeChannelStatusNotifier() : super({}) {
     _loadLikedChannels(); // 앱 시작 시 좋아요된 채널 로드
   }
 
@@ -43,7 +43,7 @@ class LikeStatusNotifier extends StateNotifier<Map<String, LikeStatus>> {
 
     // 각 채널의 좋아요 상태를 업데이트
     for (ChannelData channelData in likedChannels) {
-      state[channelData.id] = LikeStatus(
+      state[channelData.id] = LikeChannelStatus(
         id: channelData.id,
         channelName: channelData.channelName,
         channelDescription: channelData.channelDescription,
@@ -64,7 +64,7 @@ class LikeStatusNotifier extends StateNotifier<Map<String, LikeStatus>> {
     // 상태 업데이트
     state = {
       ...state,
-      channelData.id: LikeStatus(
+      channelData.id: LikeChannelStatus(
         id: channelData.id,
         channelName: channelData.channelName,
         channelDescription: channelData.channelDescription,
@@ -92,8 +92,8 @@ class LikeStatusNotifier extends StateNotifier<Map<String, LikeStatus>> {
 }
 
 // LikeStatusNotifier Provider 정의
-  final likeStatusProvider = StateNotifierProvider<LikeStatusNotifier,
-      Map<String, LikeStatus>>((ref) {
-    return LikeStatusNotifier();
+  final likeChannelStatusProvider = StateNotifierProvider<LikeChannelStatusNotifier,
+      Map<String, LikeChannelStatus>>((ref) {
+    return LikeChannelStatusNotifier();
   });
 

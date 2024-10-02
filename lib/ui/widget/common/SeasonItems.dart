@@ -1,19 +1,7 @@
-import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/EmptyMessage.dart';
-import 'package:cookfluencer/common/ErrorMessage.dart';
-import 'package:cookfluencer/common/dart/extension/num_extension.dart';
 import 'package:cookfluencer/common/util/ScreenUtil.dart';
-import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/data/seasonData.dart';
-import 'package:cookfluencer/data/videoData.dart';
-import 'package:cookfluencer/provider/ChannelProvider.dart';
-import 'package:cookfluencer/provider/LikeStatusNotifier.dart';
-import 'package:cookfluencer/sharedPreferences/sharedPreferences.dart';
-import 'package:cookfluencer/ui/widget/common/LikeChannelButton.dart';
 import 'package:flutter/material.dart';
-import 'package:cookfluencer/common/constant/app_colors.dart';
-import 'package:cookfluencer/common/constant/assets.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:cookfluencer/ui/widget/common/VideoItem.dart';
 
@@ -75,7 +63,10 @@ class SeasonItems extends HookConsumerWidget {
               video: video,
               size: ScreenUtil.width(context, 0.25), // 썸네일 사이즈
               titleWidth: ScreenUtil.width(context, 0.4), // 제목 너비
-              channelWidth: ScreenUtil.width(context, 0.14), // 채널 이름 너비
+              channelWidth: ScreenUtil.width(context, 0.12),
+              onVideoItemClick: () {
+
+              }, // 채널 이름 너비
             );
           },
         ),

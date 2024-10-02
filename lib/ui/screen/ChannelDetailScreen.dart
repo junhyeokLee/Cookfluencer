@@ -26,9 +26,11 @@ class ChannelDetailScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedFilter = useState<FilterOption>(FilterOption.viewCount);
     final showFilterOptions = useState<bool>(false);
-    final pagingController = useState(PagingController<int, QueryDocumentSnapshot>(
+    final pagingController =
+        useState(PagingController<int, QueryDocumentSnapshot>(
       firstPageKey: 0,
     ));
+
 
     // 비디오 리스트 데이터 가져오기
     Future<void> fetchVideos(int pageKey) async {
@@ -36,12 +38,14 @@ class ChannelDetailScreen extends HookConsumerWidget {
         final searchParams = {
           'channel_id': channelData.id,
           'filter': selectedFilter.value,
-          'start_after': pageKey == 0 ? null : pagingController.value.itemList!.last,
+          'start_after':
+              pageKey == 0 ? null : pagingController.value.itemList!.last,
         };
 
         await Future.delayed(Duration(milliseconds: 500)); // 500ms 지연
 
-        final newVideos = await ref.read(videosByChannelProvider(searchParams).future);
+        final newVideos =
+            await ref.read(videosByChannelProvider(searchParams).future);
 
         final isLastPage = newVideos.isEmpty;
         if (isLastPage) {
@@ -62,14 +66,15 @@ class ChannelDetailScreen extends HookConsumerWidget {
         firstPageKey: 0,
       );
       // 필터가 변경되면 새로운 페이지 요청
-      fetchVideos(0);  // 이제 이 호출이 올바르게 작동합니다.
+      fetchVideos(0); // 이제 이 호출이 올바르게 작동합니다.
       return null; // clean up 함수 반환
     }, [selectedFilter.value]);
 
     useEffect(() {
       // PagingController에 페이지 요청 리스너 추가
       pagingController.value.addPageRequestListener(fetchVideos);
-      return () => pagingController.value.removePageRequestListener(fetchVideos);
+      return () =>
+          pagingController.value.removePageRequestListener(fetchVideos);
     }, [pagingController.value]);
 
     return Scaffold(
@@ -104,7 +109,7 @@ class ChannelDetailScreen extends HookConsumerWidget {
                   child: Text('인플루언서',
                       style: Theme.of(context).textTheme.labelLarge),
                 ),
-                ChannelItemHorizontal(channelData: channelData),
+                ChannelItemHorizontal(channelData: channelData, onChannelItemClick: () { },),
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 16, top: 12, bottom: 12, right: 20),
@@ -138,7 +143,8 @@ class ChannelDetailScreen extends HookConsumerWidget {
                     uploadDate: video['upload_date'] ?? '',
                     videoId: video['video_id'] ?? '',
                     videoUrl: video['video_url'] ?? '',
-                    viewCount: int.tryParse(video['view_count'].toString()) ?? 0,
+                    viewCount:
+                        int.tryParse(video['view_count'].toString()) ?? 0,
                     section: video['section'] ?? '',
                   );
                   return VideoItem(
@@ -146,6 +152,7 @@ class ChannelDetailScreen extends HookConsumerWidget {
                     size: ScreenUtil.width(context, 0.2),
                     titleWidth: ScreenUtil.width(context, 0.65),
                     channelWidth: ScreenUtil.width(context, 0.35),
+                    onVideoItemClick: () {},
                   );
                 },
                 firstPageProgressIndicatorBuilder: (context) =>
@@ -162,7 +169,8 @@ class ChannelDetailScreen extends HookConsumerWidget {
           // 오류 발생 시 메시지 표시
           if (pagingController.value.error != null)
             SliverToBoxAdapter(
-              child: ErrorMessage(message: '오류 발생: ${pagingController.value.error}'),
+              child: ErrorMessage(
+                  message: '오류 발생: ${pagingController.value.error}'),
             ),
         ],
       ),

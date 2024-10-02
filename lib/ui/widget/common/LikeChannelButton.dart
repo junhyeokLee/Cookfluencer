@@ -1,4 +1,4 @@
-import 'package:cookfluencer/provider/LikeStatusNotifier.dart';
+import 'package:cookfluencer/provider/LikeChannelStatusNotifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cookfluencer/data/channelData.dart';
@@ -18,7 +18,7 @@ class LikeChannelButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 현재 좋아요 상태를 가져옴
-    final likeStatus = ref.watch(likeStatusProvider);
+    final likeStatus = ref.watch(likeChannelStatusProvider);
     final isLiked = likeStatus[channelData.id]?.isLiked ?? false;
 
     // 좋아요 상태를 토글하는 함수
@@ -26,7 +26,7 @@ class LikeChannelButton extends ConsumerWidget {
       // 좋아요 상태를 반전하여 업데이트된 데이터를 생성
       final updatedChannel = channelData.copyWith(isLiked: !isLiked);
       // 상태를 업데이트
-      ref.read(likeStatusProvider.notifier).toggleLike(updatedChannel);
+      ref.read(likeChannelStatusProvider.notifier).toggleLike(updatedChannel);
     }
 
     return GestureDetector(

@@ -54,10 +54,11 @@ class HomeSearchScreen extends HookConsumerWidget {
                 showFinalResults.value = false; // 최종 검색 결과 숨기기
               },
               onBackPressed: () {
-                showSearchWidgets.value = true; // 첫 화면 보이기
-                showFinalResults.value = false; // 최종 검색 결과 숨기기
+                // showSearchWidgets.value = true; // 첫 화면 보이기
+                // showFinalResults.value = false; // 최종 검색 결과 숨기기
                 searchQuery.value = ''; // 검색 쿼리 초기화
                 searchController.clear(); // 검색 컨트롤러 초기화
+                GoRouter.of(context).go('/home');
               },
               showBackButton: !showSearchWidgets.value,
               // 뒤로가기 버튼 표시 여부

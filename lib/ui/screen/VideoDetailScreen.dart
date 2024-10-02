@@ -6,36 +6,44 @@ import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/data/videoData.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
-import 'package:cookfluencer/ui/widget/common/ChannelItemHorizontal.dart';
 import 'package:cookfluencer/ui/widget/common/FilterRecipe.dart';
+import 'package:cookfluencer/ui/widget/common/LikeVideoButton.dart';
 import 'package:cookfluencer/ui/widget/common/VideoItem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class ChannelDetailScreen extends HookConsumerWidget {
-  final ChannelData channelData;
+class VideoDetailScreen extends HookConsumerWidget {
+  final VideoData videoData;
 
-  const ChannelDetailScreen({
+  const VideoDetailScreen({
     Key? key,
-    required this.channelData,
+    required this.videoData,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedFilter = useState<FilterOption>(FilterOption.viewCount);
-    final showFilterOptions = useState<bool>(false);
     final pagingController =
         useState(PagingController<int, QueryDocumentSnapshot>(
       firstPageKey: 0,
     ));
 
+    final youtubeController = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(videoData.videoUrl) ?? '',
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+
     // 비디오 리스트 데이터 가져오기
     Future<void> fetchVideos(int pageKey) async {
       try {
         final searchParams = {
-          'channel_id': channelData.id,
+          'channel_id': videoData.channelId,
           'filter': selectedFilter.value,
           'start_after':
               pageKey == 0 ? null : pagingController.value.itemList!.last,
@@ -67,7 +75,7 @@ class ChannelDetailScreen extends HookConsumerWidget {
       // 필터가 변경되면 새로운 페이지 요청
       fetchVideos(0); // 이제 이 호출이 올바르게 작동합니다.
       return null; // clean up 함수 반환
-    }, [selectedFilter.value]);
+    }, []);
 
     useEffect(() {
       // PagingController에 페이지 요청 리스너 추가
@@ -88,14 +96,9 @@ class ChannelDetailScreen extends HookConsumerWidget {
             },
           ),
         ),
-        title: Text(
-          channelData.channelName,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        actions: [
+          LikeVideoButton(videoData: videoData, rightMargin: 24)
+        ],
       ),
       body: CustomScrollView(
         slivers: [
@@ -103,24 +106,18 @@ class ChannelDetailScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 24),
-                  child: Text('인플루언서',
-                      style: Theme.of(context).textTheme.labelLarge),
-                ),
-                ChannelItemHorizontal(channelData: channelData),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, top: 12, bottom: 12, right: 20),
-                  child: Text('레시피 영상',
-                      style: Theme.of(context).textTheme.labelLarge),
+                // YouTube 플레이어 추가
+                YoutubePlayer(
+                  controller: youtubeController,
+                  showVideoProgressIndicator: true,
+                  onReady: () {
+                    print('Player is ready.');
+                  },
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 12, right: 20),
-                  child: FilterRecipe(
-                    selectedFilter: selectedFilter,
-                    showFilterOptions: showFilterOptions,
-                  ),
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 12,bottom: 20),
+                  child: Text('다음 레시피 영상',
+                      style: Theme.of(context).textTheme.labelLarge),
                 ),
               ],
             ),

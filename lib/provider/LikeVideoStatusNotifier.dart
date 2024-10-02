@@ -5,84 +5,92 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cookfluencer/data/channelData.dart';
 
 // LikeStatus 객체 정의
-class LikeChannelStatus {
-  final String id; // 채널 ID
-  final String channelName; // 채널 이름
-  final String channelDescription; // 채널 설명
-  final String channelUrl; // 채널 URL
-  final String thumbnailUrl; // 썸네일 URL
-  final int subscriberCount; // 구독자 수
-  final int videoCount; // 비디오 수
-  final List<VideoData> videos; // 비디오 리스트
-  final String section; // 섹션
+class LikeVideoStatus {
+  final String id;
+  final String channelId;
+  final String channelName;
+  final String description;
+  final String thumbnailUrl;
+  final String title;
+  final String uploadDate;
+  final String videoId;
+  final String videoUrl;
+  final int viewCount;
+  final String section;
   final bool isLiked; // 좋아요 여부
 
-  LikeChannelStatus({
+  LikeVideoStatus({
     required this.id,
+    required this.channelId,
     required this.channelName,
-    required this.channelDescription,
-    required this.channelUrl,
+    required this.description,
     required this.thumbnailUrl,
-    required this.subscriberCount,
-    required this.videoCount,
-    required this.videos,
+    required this.title,
+    required this.uploadDate,
+    required this.videoId,
+    required this.videoUrl,
+    required this.viewCount,
     required this.section,
     required this.isLiked,
   });
 }
 
 // LikeStatusNotifier 정의
-class LikeChannelStatusNotifier extends StateNotifier<Map<String, LikeChannelStatus>> {
-  LikeChannelStatusNotifier() : super({}) {
-    _loadLikedChannels(); // 앱 시작 시 좋아요된 채널 로드
+class LikeVideoStatusNotifier extends StateNotifier<Map<String, LikeVideoStatus>> {
+  LikeVideoStatusNotifier() : super({}) {
+    _loadLikedVideos(); // 앱 시작 시 좋아요된 채널 로드
   }
 
   // 저장된 좋아요 상태를 로드하는 메소드
-  Future<void> _loadLikedChannels() async {
-    final likedChannels = await loadLikedChannelData(); // 기기에서 좋아요된 채널 불러오기
+  Future<void> _loadLikedVideos() async {
+    final likedVideos = await loadLikedVideoData(); // 기기에서 좋아요된 채널 불러오기
 
     // 각 채널의 좋아요 상태를 업데이트
-    for (ChannelData channelData in likedChannels) {
-      state[channelData.id] = LikeChannelStatus(
-        id: channelData.id,
-        channelName: channelData.channelName,
-        channelDescription: channelData.channelDescription,
-        channelUrl: channelData.channelUrl,
-        thumbnailUrl: channelData.thumbnailUrl,
-        subscriberCount: channelData.subscriberCount,
-        videoCount: channelData.videoCount,
-        videos: channelData.videos,
-        section: channelData.section,
+    for (VideoData videoData in likedVideos) {
+      state[videoData.videoId] = LikeVideoStatus(
+        id: videoData.id,
+        channelId: videoData.channelId,
+        channelName: videoData.channelName,
+        description: videoData.description,
+        thumbnailUrl: videoData.thumbnailUrl,
+        title: videoData.title,
+        uploadDate: videoData.uploadDate,
+        videoId: videoData.videoId,
+        videoUrl: videoData.videoUrl,
+        viewCount: videoData.viewCount,
+        section: videoData.section,
         isLiked: true,
       );
     }
   }
 
-  void toggleLike(ChannelData channelData) async {
-    final isLiked = state[channelData.id]?.isLiked ?? false;
+  void toggleLike(VideoData videoData) async {
+    final isLiked = state[videoData.videoId]?.isLiked ?? false;
 
     // 상태 업데이트
     state = {
       ...state,
-      channelData.id: LikeChannelStatus(
-        id: channelData.id,
-        channelName: channelData.channelName,
-        channelDescription: channelData.channelDescription,
-        channelUrl: channelData.channelUrl,
-        thumbnailUrl: channelData.thumbnailUrl,
-        subscriberCount: channelData.subscriberCount,
-        videoCount: channelData.videoCount,
-        videos: channelData.videos,
-        section: channelData.section,
+      videoData.videoId: LikeVideoStatus(
+        id: videoData.id,
+        channelId: videoData.channelId,
+        channelName: videoData.channelName,
+        description: videoData.description,
+        thumbnailUrl: videoData.thumbnailUrl,
+        title: videoData.title,
+        uploadDate: videoData.uploadDate,
+        videoId: videoData.videoId,
+        videoUrl: videoData.videoUrl,
+        viewCount: videoData.viewCount,
+        section: videoData.section,
         isLiked: !isLiked, // 좋아요 상태 반전
       )
     };
 
     // 기기에 저장 또는 삭제
     if (!isLiked) {
-      await saveChannelData(channelData); // 좋아요 추가 시 저장
+      await saveVideoData(videoData); // 좋아요 추가 시 저장
     } else {
-      await removeChannelData(channelData.id); // 좋아요 해제 시 삭제
+      await removeVideoData(videoData.videoId); // 좋아요 해제 시 삭제
     }
 
     // 상태 변경 후 UI 갱신
@@ -92,8 +100,8 @@ class LikeChannelStatusNotifier extends StateNotifier<Map<String, LikeChannelSta
 }
 
 // LikeStatusNotifier Provider 정의
-  final likeStatusProvider = StateNotifierProvider<LikeChannelStatusNotifier,
-      Map<String, LikeChannelStatus>>((ref) {
-    return LikeChannelStatusNotifier();
+  final likeVideoStatusProvider = StateNotifierProvider<LikeVideoStatusNotifier,
+      Map<String, LikeVideoStatus>>((ref) {
+    return LikeVideoStatusNotifier();
   });
 

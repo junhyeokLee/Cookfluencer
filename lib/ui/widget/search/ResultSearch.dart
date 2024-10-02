@@ -242,6 +242,7 @@ class ResultSearch extends HookConsumerWidget {
                   size: ScreenUtil.width(context, 0.2),
                   titleWidth: ScreenUtil.width(context, 0.65),
                   channelWidth: ScreenUtil.width(context, 0.35),
+                  onVideoItemClick: () {},
                 );
               },
               firstPageProgressIndicatorBuilder: (context) =>

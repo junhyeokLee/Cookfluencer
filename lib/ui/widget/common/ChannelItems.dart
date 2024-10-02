@@ -121,7 +121,8 @@ class ChannelItems extends HookConsumerWidget {
                   video: videoData,
                   size: ScreenUtil.width(context, 0.25), // 썸네일 사이즈
                   titleWidth: ScreenUtil.width(context, 0.45), // 제목 너비
-                  channelWidth: ScreenUtil.width(context, 0.14), // 채널 이름 너비
+                  channelWidth: ScreenUtil.width(context, 0.14),
+                  onVideoItemClick: () {  }, // 채널 이름 너비
                 );
               },
             );

@@ -1,12 +1,11 @@
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/channelData.dart';
-import 'package:cookfluencer/ui/widget/common/ChannelItem.dart';
+import 'package:cookfluencer/provider/LikeChannelStatusNotifier.dart';
+import 'package:cookfluencer/ui/screen/ChannelDetailScreen.dart';
 import 'package:cookfluencer/ui/widget/common/ChannelItemHorizontal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../provider/LikeStatusNotifier.dart'; // SharedPreferences 관련 메소드 가져옵니다.
 
 class LikeScreen extends ConsumerWidget {
   const LikeScreen({super.key});
@@ -66,10 +65,12 @@ class LikeScreen extends ConsumerWidget {
     return Consumer(
       builder: (context, ref, child) {
         // 좋아요 상태를 가져오는 프로바이더
-        final likedChannels = ref.watch(likeStatusProvider);
+        final likedChannels = ref.watch(likeChannelStatusProvider);
         // 데이터가 없거나 에러인 경우 처리
         if (likedChannels.isEmpty) {
-          return const Center(child: EmptyMessage( message: '저장된 인플루언서가 없습니다.',));
+          return const Center(
+            child: EmptyMessage(message: '저장된 인플루언서가 없습니다.'),
+          );
         }
 
         // 좋아요된 채널 리스트
@@ -92,9 +93,19 @@ class LikeScreen extends ConsumerWidget {
                 subscriberCount: channel.subscriberCount,
                 videoCount: channel.videoCount,
                 isLiked: channel.isLiked,
-                );
-              debugPrint('채널 저장 데이터!: $channelData');
-              return ChannelItemHorizontal(channelData: channelData);
+              );
+
+              return ChannelItemHorizontal(
+                channelData: channelData,
+                onChannelItemClick: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChannelDetailScreen(channelData: channelData),
+                    ),
+                  );
+                },
+              );
             },
           ),
         );

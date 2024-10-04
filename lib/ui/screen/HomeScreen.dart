@@ -1,13 +1,8 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
-import 'package:cookfluencer/common/constant/assets.dart';
-import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
 import 'package:cookfluencer/provider/SeasonProvider.dart';
-import 'package:cookfluencer/routing/appRoute.dart';
-import 'package:cookfluencer/ui/screen/SearchScreen.dart';
 import 'package:cookfluencer/ui/widget/common/AppbarWidget.dart';
 import 'package:cookfluencer/ui/widget/common/ServiceSuggestions.dart';
 import 'package:cookfluencer/ui/widget/home/RecommendChannel.dart';
@@ -16,7 +11,7 @@ import 'package:cookfluencer/ui/widget/home/RecommendRecipe.dart';
 import 'package:cookfluencer/ui/widget/home/RecommendSeasonRecipe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});

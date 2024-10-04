@@ -40,7 +40,9 @@ class CustomRoundButton extends StatelessWidget {
       color: isEnabled ? bgColor : AppColors.primarySelectedColor,
       borderRadius: BorderRadius.circular(borderRadius ?? height / 2), // 둥근 모서리
       child: InkWell(
-        onTap: isEnabled ? onTap : () {}, // 활성화 상태에서만 클릭 가능
+        onTap: isEnabled ? onTap : () {
+          onTap();
+        }, // 활성화 상태에서만 클릭 가능
         splashColor: AppColors.grey.withOpacity(0.5),
         highlightColor: AppColors.grey.withOpacity(0.3),
         borderRadius: BorderRadius.circular(borderRadius ?? height / 2),

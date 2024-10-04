@@ -312,3 +312,23 @@ final videosByChannelProvider = FutureProvider.autoDispose.family<List<QueryDocu
     }
   },
 );
+
+final channelByIdProvider = FutureProvider.autoDispose
+    .family<DocumentSnapshot, String>((ref, channelId) async {
+  // 채널 ID가 비어있는 경우 예외 처리
+  if (channelId.isEmpty) throw Exception('채널 ID가 비어있습니다.');
+
+  // Firestore에서 해당 채널 ID의 문서를 가져옴
+  final documentSnapshot = await FirebaseFirestore.instance
+      .collection('channels') // 'channels' 컬렉션에 접근
+      .doc(channelId) // 특정 채널 ID에 해당하는 문서를 찾음
+      .get(); // 문서 가져오기
+
+  // 문서가 존재하지 않으면 예외 처리
+  if (!documentSnapshot.exists) {
+    throw Exception('해당 채널을 찾을 수 없습니다.');
+  }
+
+  // 채널 데이터를 반환
+  return documentSnapshot;
+});

@@ -3,6 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:cookfluencer/common/util/ScreenUtil.dart';
+import 'package:cookfluencer/data/videoData.dart';
+import 'package:cookfluencer/ui/screen/VideoDetailScreen.dart';
 import 'package:cookfluencer/ui/widget/common/CustomVideoImage.dart';
 import 'package:cookfluencer/ui/widget/common/PageIndicator.dart';
 import 'package:flutter/material.dart';
@@ -52,12 +54,48 @@ class RecommendRecipe extends HookConsumerWidget {
                 // 패딩 설정
                 EdgeInsets padding = _getPaddingForIndex(index, recommendVideoListAsyncValue.length);
                 int viewCount = int.tryParse(video['view_count'].toString()) ?? 0; // 숫자로 변환
+
+                final videoData = VideoData(
+                  id: video['id'] ?? 'Unknown',
+                  channelId: video['channel_id'] ?? 'Unknown',
+                  channelName: video['channel_name'] ?? 'Unknown',
+                  description: video['description'] ?? '',
+                  thumbnailUrl: video['thumbnail_url'] ?? '',
+                  title: video['title'] ?? 'Unknown',
+                  uploadDate: video['upload_date'] ?? '',
+                  videoId: video['video_id'] ?? '',
+                  videoUrl: video['video_url'] ?? '',
+                  viewCount: int.tryParse(video['view_count'].toString()) ?? 0,
+                  section: video['section'] ?? '',
+                );
+
                 return Padding(
                   padding: padding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => VideoDetailScreen(videoData: videoData),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0); // 시작 위치
+                                const end = Offset.zero; // 끝 위치
+                                const curve = Curves.easeInOut; // 애니메이션 곡선
+                                final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve)); // 트윈 설정
+                                final offsetAnimation = animation.drive(tween); // 애니메이션 드라이버
+
+                                return SlideTransition(
+                                  position: offsetAnimation, // 슬라이드 전환 애니메이션
+                                  child: child,
+                                );
+                              },
+                              transitionDuration: const Duration(milliseconds: 300), // 애니메이션 지속 시간
+                            ),
+                          );
+                        },
                         child: CustomVideoImage(
                           imageUrl: video['thumbnail_url'],
                           size: ScreenUtil.width(context, 0.65),

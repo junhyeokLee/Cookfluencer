@@ -42,7 +42,7 @@ dependencies:
   quiver: ^3.2.1
   infinite_scroll_pagination: ^4.0.0 # 무한 스크롤을 위한 infinite_scroll_pagination
   youtube_player_flutter: ^9.1.1
-
+  package_info_plus: ^8.0.2
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +55,7 @@ dev_dependencies:
   freezed: ^2.5.7 # 불변 모델 생성을 위한 freezed
   json_serializable: ^6.8.0  # JSON 파싱을 위한 json_serializable
   analyzer: ^6.7.0
+  url_launcher: ^6.3.0
 
 flutter_launcher_icons:
   #  android: "launcher_icon"

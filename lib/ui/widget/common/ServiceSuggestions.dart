@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/ui/widget/common/CustomRoundButton.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Servicesuggestions extends StatelessWidget {
   const Servicesuggestions({Key? key}) : super(key: key);
@@ -49,11 +49,15 @@ class Servicesuggestions extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 32),
           child: Center(
-
             child: Padding(
               padding: const EdgeInsets.only(left:20,right: 20 ,bottom: 32 ),
-              child: CustomRoundButton(text: '아이디어 제출', onTap: () {
-                // 아이디어 제출 버튼 클릭 시 동작
+              child: CustomRoundButton(text: '아이디어 제출', onTap: () async {
+                final Uri _url = Uri.parse('https://forms.gle/VdymB883WEmpWkmq7');
+                if (await canLaunchUrl(_url)) {
+                await launchUrl(_url);
+                } else {
+                throw 'Could not launch $_url';
+                }
               }),
             ),
           ),

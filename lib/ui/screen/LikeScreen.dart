@@ -22,7 +22,7 @@ class LikeScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           // TabBar 구성
-          bottom: _buildTabBar(),
+          title: _buildTabBar(),
         ),
         body: TabBarView(
           children: [

@@ -25,5 +25,19 @@ class Assets {
   static const String empty = 'assets/images/icon/empty.png';
   static const String recipe_ai = 'assets/images/icon/recipe_ai.png';
 
+  static const String navHome = 'assets/images/icon/navHome.png';
+  static const String navHomeSelect = 'assets/images/icon/navHomeSelect.png';
+
+  static const String navSearch = 'assets/images/icon/navSearch.png';
+  static const String navSearchSelect = 'assets/images/icon/navSearchSelect.png';
+
+  static const String navLike = 'assets/images/icon/navLike.png';
+  static const String navLikeSelect = 'assets/images/icon/navLikeSelect.png';
+
+  static const String navMypage = 'assets/images/icon/navMypage.png';
+  static const String navMypageSelect = 'assets/images/icon/navMypageSelect.png';
+
+  static const String gradientDot = 'assets/images/icon/dot.png';
+
 }
 

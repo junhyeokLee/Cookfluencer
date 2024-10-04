@@ -115,65 +115,82 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
           height: Dimen.navBottomHeight,
           backgroundColor: Colors.white,
           selectedIndex: currentIndex,
-          indicatorColor: AppColors.greyBackground,
+          indicatorColor: Colors.transparent,
+          // 인디케이터 없애기
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          // 기본적으로 라벨 표시
           destinations: [
-            NavigationDestination(
-              icon: Image.asset(
-                Assets.home,
-                width: 24,
-                height: 24,
-              ),
-              selectedIcon: Image.asset(
-                Assets.home,
-                width: 24,
-                height: 24,
-              ),
+            _buildNavItem(
+              iconPath: Assets.navHome,
+              selectedIconPath: Assets.navHomeSelect,
               label: '홈',
+              isSelected: currentIndex == 0,
             ),
-            NavigationDestination(
-              icon: Image.asset(
-                Assets.search,
-                width: 24,
-                height: 24,
-              ),
-              selectedIcon: Image.asset(
-                Assets.search,
-                width: 24,
-                height: 24,
-              ),
+            _buildNavItem(
+              iconPath: Assets.navSearch,
+              selectedIconPath: Assets.navSearchSelect,
               label: '검색',
+              isSelected: currentIndex == 1,
             ),
-            NavigationDestination(
-              icon: Image.asset(
-                Assets.heart,
-                width: 24,
-                height: 24,
-              ),
-              selectedIcon: Image.asset(
-                Assets.heart,
-                width: 24,
-                height: 24,
-              ),
+            _buildNavItem(
+              iconPath: Assets.navLike,
+              selectedIconPath: Assets.navLikeSelect,
               label: '좋아요',
+              isSelected: currentIndex == 2,
             ),
-            NavigationDestination(
-              icon: Image.asset(
-                Assets.mypage,
-                width: 24,
-                height: 24,
-              ),
-              selectedIcon: Image.asset(
-                Assets.mypage,
-                width: 24,
-                height: 24,
-              ),
+            _buildNavItem(
+              iconPath: Assets.navMypage,
+              selectedIconPath: Assets.navMypageSelect,
               label: '내정보',
+              isSelected: currentIndex == 3,
             ),
           ],
           onDestinationSelected: onDestinationSelected,
         ),
       ),
+    );
+  }
+
+  NavigationDestination _buildNavItem({
+    required String iconPath,
+    required String selectedIconPath,
+    required String label,
+    required bool isSelected,
+  }) {
+    return NavigationDestination(
+      icon: Stack(
+        alignment: Alignment.center,
+        children: [
+          // 선택된 경우 아이콘을 애니메이션으로 자연스럽게 내려줌
+          AnimatedPadding(
+            padding: EdgeInsets.only(top: isSelected ? 20 : 0),
+            // 선택되었을 때 점진적으로 내려감
+            duration: Duration(milliseconds: 300),
+            // 애니메이션 지속 시간
+            curve: Curves.easeInOut,
+            // 애니메이션 커브
+            child: Image.asset(
+              isSelected ? selectedIconPath : iconPath,
+              width: 24,
+              height: 24,
+            ),
+          ),
+          // dot이 선택된 경우 위에서 아래로 자연스럽게 나타나도록 애니메이션 추가
+          AnimatedPositioned(
+            top: isSelected ? 12 : -10, // 선택되지 않았을 때는 위로 숨김, 선택되었을 때는 중앙에 위치
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut, // 부드러운 애니메이션
+            child: isSelected
+                ? Image.asset(
+                    Assets.gradientDot, // dot을 아이콘 이미지로 대체
+                    width: 6,
+                    height: 6,
+                  )
+                : SizedBox.shrink(), // 선택되지 않았을 때는 dot 숨김
+          ),
+        ],
+      ),
+      label: isSelected ? '' : label, // 선택된 경우에는 라벨을 숨기고, 선택되지 않았을 때는 표시
     );
   }
 }

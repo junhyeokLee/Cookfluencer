@@ -47,7 +47,7 @@ class LikeVideoStatusNotifier extends StateNotifier<Map<String, LikeVideoStatus>
 
     // 각 채널의 좋아요 상태를 업데이트
     for (VideoData videoData in likedVideos) {
-      state[videoData.videoId] = LikeVideoStatus(
+      state[videoData.id] = LikeVideoStatus(
         id: videoData.id,
         channelId: videoData.channelId,
         channelName: videoData.channelName,

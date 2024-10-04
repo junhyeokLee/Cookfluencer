@@ -6,23 +6,23 @@ class AppTheme {
   // 1
   static TextTheme lightTextTheme =  TextTheme(
 
-    labelLarge: GoogleFonts.nanumGothic(
+    labelLarge: GoogleFonts.notoSans(
         fontSize: 18.0, fontWeight: FontWeight.w700, color: Colors.black,),
-    labelMedium: GoogleFonts.nanumGothic(
+    labelMedium: GoogleFonts.notoSans(
         fontSize: 14.0, fontWeight: FontWeight.w700, color: Colors.black),
-    labelSmall: GoogleFonts.nanumGothic(
+    labelSmall: GoogleFonts.notoSans(
         fontSize: 12.0, fontWeight: FontWeight.w700, color: Colors.black),
-    bodyLarge: GoogleFonts.nanumGothic(
+    bodyLarge: GoogleFonts.notoSans(
         fontSize: 18.0, fontWeight: FontWeight.w400, color: Colors.black),
-    bodyMedium: GoogleFonts.nanumGothic(
+    bodyMedium: GoogleFonts.notoSans(
         fontSize: 14.0, fontWeight: FontWeight.w500, color: Colors.black),
-    bodySmall: GoogleFonts.nanumGothic(
+    bodySmall: GoogleFonts.notoSans(
         fontSize: 12.0, fontWeight: FontWeight.w500, color: Colors.black),
-    displayLarge: GoogleFonts.nanumGothic(
+    displayLarge: GoogleFonts.notoSans(
         fontSize: 40.0, fontWeight: FontWeight.w600, color: Colors.black),
-    displayMedium: GoogleFonts.nanumGothic(
+    displayMedium: GoogleFonts.notoSans(
         fontSize: 32.0, fontWeight: FontWeight.w600, color: Colors.black),
-    displaySmall: GoogleFonts.nanumGothic(
+    displaySmall: GoogleFonts.notoSans(
         fontSize: 24.0, fontWeight: FontWeight.w600, color: Colors.black),
   );
 
@@ -58,7 +58,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       textTheme: lightTextTheme,
-      fontFamily: GoogleFonts.nanumGothic().fontFamily,
+      fontFamily: GoogleFonts.notoSans().fontFamily,
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
@@ -75,17 +75,17 @@ class AppTheme {
         labelTextStyle: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.selected)) {
             return TextStyle(
-              fontSize: 14,
-              fontFamily: GoogleFonts.nanumGothic().fontFamily,
+              fontSize: 12,
+              fontFamily: GoogleFonts.notoSans().fontFamily,
               fontWeight: FontWeight.bold,
-              color: Colors.black, // 선택되지 않은 텍스트 색상
+              color: Colors.black, // 선택 텍스트 색상
             );
           }
           return TextStyle(
-            fontSize: 14,
-            fontFamily: GoogleFonts.nanumGothic().fontFamily,
+            fontSize: 12,
+            fontFamily: GoogleFonts.notoSans().fontFamily,
             fontWeight: FontWeight.w500,
-            color: Colors.black, // 선택되지 않은 텍스트 색상
+            color: AppColors.greyDeep, // 선택되지 않은 텍스트 색상
           );
         }),
         iconTheme: MaterialStateProperty.resolveWith((states) {

@@ -75,7 +75,7 @@ class Totalchannels extends HookConsumerWidget {
                     );
                     return ChannelItem(
                       channelData :channelData , // 채널 아이템 크기 조정
-                      size: ScreenUtil.width(context, 0.32), onChannelItemClick: () {
+                      size: ScreenUtil.width(context, 0.3), onChannelItemClick: () {
                       onChannelItemClick(channelData); // 콜백 호출
                     },
                     );

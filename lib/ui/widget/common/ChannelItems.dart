@@ -53,6 +53,7 @@ class ChannelItems extends HookConsumerWidget {
 
           ],
         ),
+        SizedBox(height: 8,),
         Row(
           children: [
             Image.asset(Assets.youtube, width: 24.w, height: 24.h),
@@ -70,7 +71,6 @@ class ChannelItems extends HookConsumerWidget {
             ),
           ],
         ),
-        const SizedBox(height: 6), // 간격
         Row(
           children: [
             Image.asset(Assets.group, width: 16.w, height: 16.h),

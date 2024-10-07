@@ -89,8 +89,7 @@ class RecommendChannel extends HookConsumerWidget {
                     channelColors[index % channelColors.length];
 
                 return Container(
-                  margin:
-                      EdgeInsets.only(top: 0, left: 16, right: 0, bottom: 12),
+                  margin: EdgeInsets.only(top: 0, left: 16, right: 0, bottom: 0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16), // 모서리를 둥글게 설정
                     color: backgroundColor, // 배경색 설정
@@ -111,7 +110,7 @@ class RecommendChannel extends HookConsumerWidget {
                         ),
 
                         // 채널의 비디오 리스트 표시 (최대 3개)
-                        SizedBox(height: 16),
+                        SizedBox(height: 24),
                       ],
                     ),
                   ),

@@ -45,8 +45,9 @@ class Popularkeyword extends HookConsumerWidget {
               return GestureDetector(
                 onTap: () {
                   // 검색어를 클릭한 키워드로 업데이트
-                  searchQuery.value = keyword['name'] ?? '';
-                  searchController.text = keyword['name'] ?? ''; // 검색어 업데이트
+                  final selectedKeyword = (keyword['name'] ?? '').trim(); // 공백 제거
+                  searchQuery.value = selectedKeyword; // 공백 제거 후 업데이트
+                  searchController.text = selectedKeyword; // 공백 제거 후 업데이트
                   onSubmitted(); // 추가: 엔터 눌렀을 때 동작 실행
                 },
                 child: Container(
@@ -57,16 +58,16 @@ class Popularkeyword extends HookConsumerWidget {
                       child: Row(
                         children: [
                           Text(
-                            "${index + 1}", // 순위 표시
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.w700, // 글자 굵기
-                            )
+                              "${index + 1}", // 순위 표시
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                fontWeight: FontWeight.w700, // 글자 굵기
+                              )
                           ),
                           SizedBox(width: 12),
                           Text(
-                            keyword['name'] ?? '', // null 체크 후 텍스트 표시
-                            maxLines: 1, // 한 줄로 제한
-                            overflow: TextOverflow.ellipsis, // 길어질 경우 생략
+                              keyword['name'] ?? '', // null 체크 후 텍스트 표시
+                              maxLines: 1, // 한 줄로 제한
+                              overflow: TextOverflow.ellipsis, // 길어질 경우 생략
                               style: Theme.of(context).textTheme.bodySmall
                           ),
                         ],

@@ -157,7 +157,7 @@ class SearchBarWidget extends HookConsumerWidget {
                           ),
                           onTap: onSearchTap,
                           onChanged: (value) {
-                            searchQuery.value = value.trim(); // 검색어 상태 업데이트
+                            searchQuery.value = value; // 검색어 상태 업데이트
                             ref.refresh(autoSearchChannelAndVideoProvider(
                                 searchQuery.value)); // 검색어 변경 시 검색 결과 업데이트
                           },

@@ -75,15 +75,17 @@ final keywordListProvider =
 // Firestore에서 채널 데이터를 검색하는 Provider
 final searchKeywordVideoProvider = FutureProvider.autoDispose
     .family<List<QueryDocumentSnapshot>, String>((ref, searchQuery) async {
+  final trimmedQuery = searchQuery.trim().replaceAll(' ', ''); // 공백 제거
+
   // 검색 쿼리가 비어있으면 빈 리스트 반환
-  if (searchQuery.isEmpty) return [];
+  if (trimmedQuery.isEmpty) return [];
 
   final querySnapshot = await FirebaseFirestore.instance
       .collection('videos')
-      .where('title', isGreaterThanOrEqualTo: searchQuery)
+      .where('title', isGreaterThanOrEqualTo: trimmedQuery)
       .where('title',
           isLessThanOrEqualTo:
-              searchQuery + '\uf8ff') // 쿼리 범위를 지정해서 검색어에 맞는 결과만 가져오기
+          trimmedQuery + '\uf8ff') // 쿼리 범위를 지정해서 검색어에 맞는 결과만 가져오기
       .limit(4)
       .get();
 
@@ -92,13 +94,15 @@ final searchKeywordVideoProvider = FutureProvider.autoDispose
 
 // Firestore에서 채널 데이터를 검색하는 Provider
 final searchVideoProvider = FutureProvider.autoDispose.family<List<QueryDocumentSnapshot>, String>((ref, searchQuery) async {
+  final trimmedQuery = searchQuery.trim().replaceAll(' ', ''); // 공백 제거
+
   // 검색 쿼리가 비어있으면 빈 리스트 반환
-  if (searchQuery.isEmpty) return [];
+  if (trimmedQuery.isEmpty) return [];
 
   final querySnapshot = await FirebaseFirestore.instance
       .collection('videos')
-      .where('title', isGreaterThanOrEqualTo: searchQuery)
-      .where('title', isLessThanOrEqualTo: searchQuery + '\uf8ff') // 쿼리 범위를 지정해서 검색어에 맞는 결과만 가져오기
+      .where('title', isGreaterThanOrEqualTo: trimmedQuery)
+      .where('title', isLessThanOrEqualTo: trimmedQuery + '\uf8ff') // 쿼리 범위를 지정해서 검색어에 맞는 결과만 가져오기
       .get();
 
   return querySnapshot.docs;
@@ -108,19 +112,20 @@ final searchVideoProvider = FutureProvider.autoDispose.family<List<QueryDocument
 final searchFilterVideoProvider =  FutureProvider.autoDispose.family<List<QueryDocumentSnapshot>, Map<String, dynamic>>(
       (ref, params) async {
       try {
-        final String searchQuery = params['query'] as String;
+
+        final String searchQuery = params['query']?.toString().trim() ?? ''; // 공백 제거
         final FilterOption selectedFilter = params['filter'] as FilterOption;
         final DocumentSnapshot? startAfterDocument = params['start_after'] as DocumentSnapshot?; // 페이지네이션을 위한 시작 문서
+        final trimmedQuery = searchQuery.trim().replaceAll(' ', ''); // 공백 제거
 
-        if (searchQuery.isEmpty) return [];
+        if (trimmedQuery.isEmpty) return [];
 
         // 기본 쿼리: 제목 기준으로 검색
         Query<Map<String, dynamic>> query = FirebaseFirestore.instance
             .collection('videos')
-            .where('title', isGreaterThanOrEqualTo: searchQuery)
-            .where('title', isLessThanOrEqualTo: searchQuery + '\uf8ff');
+            .where('title', isGreaterThanOrEqualTo: trimmedQuery)
+            .where('title', isLessThanOrEqualTo: trimmedQuery + '\uf8ff');
             // .limit(10); // 한 번에 가져올 데이터 수
-
 
         // 인기순(조회수) 필터 적용
         if (selectedFilter == FilterOption.viewCount) {
@@ -153,19 +158,21 @@ final searchFilterVideoProvider =  FutureProvider.autoDispose.family<List<QueryD
     }
 );
 
-// Firestore에서 채널과 비디오 데이터를 검색하는 Provider
 final autoSearchChannelAndVideoProvider = FutureProvider.autoDispose
     .family<List<Map<String, dynamic>>, String>((ref, searchQuery) async {
+  // 검색 쿼리에서 공백 제거
+  final trimmedQuery = searchQuery.trim().replaceAll(' ', ''); // 공백 제거
+
   // 검색 쿼리가 비어있으면 빈 리스트 반환
-  if (searchQuery.isEmpty) return [];
+  if (trimmedQuery.isEmpty) return [];
 
   List<Map<String, dynamic>> results = [];
 
   // 채널에서 검색하기
   final channelQuerySnapshot = await FirebaseFirestore.instance
       .collection('channels')
-      .where('channel_name', isGreaterThanOrEqualTo: searchQuery)
-      .where('channel_name', isLessThanOrEqualTo: searchQuery + '\uf8ff')
+      .where('channel_name', isGreaterThanOrEqualTo: trimmedQuery) // 공백 제거된 쿼리
+      .where('channel_name', isLessThanOrEqualTo: trimmedQuery + '\uf8ff') // 공백 제거된 쿼리
       .limit(5)
       .get();
 
@@ -181,8 +188,8 @@ final autoSearchChannelAndVideoProvider = FutureProvider.autoDispose
   // 비디오에서 검색하기
   final videoQuerySnapshot = await FirebaseFirestore.instance
       .collection('videos') // 비디오 컬렉션 이름
-      .where('title', isGreaterThanOrEqualTo: searchQuery)
-      .where('title', isLessThanOrEqualTo: searchQuery + '\uf8ff')
+      .where('title', isGreaterThanOrEqualTo: trimmedQuery) // 공백 제거된 쿼리
+      .where('title', isLessThanOrEqualTo: trimmedQuery + '\uf8ff') // 공백 제거된 쿼리
       .limit(5)
       .get();
 
@@ -202,16 +209,18 @@ final autoSearchChannelAndVideoProvider = FutureProvider.autoDispose
 // Firestore에서 채널과 비디오 데이터를 검색하는 Provider
 final autoSearchChannelProvider = FutureProvider.autoDispose
     .family<List<Map<String, dynamic>>, String>((ref, searchQuery) async {
+  final trimmedQuery = searchQuery.trim().replaceAll(' ', ''); // 공백 제거
+
   // 검색 쿼리가 비어있으면 빈 리스트 반환
-  if (searchQuery.isEmpty) return [];
+  if (trimmedQuery.isEmpty) return [];
 
   List<Map<String, dynamic>> results = [];
 
   // 채널에서 검색하기
   final channelQuerySnapshot = await FirebaseFirestore.instance
       .collection('channels')
-      .where('channel_name', isGreaterThanOrEqualTo: searchQuery)
-      .where('channel_name', isLessThanOrEqualTo: searchQuery + '\uf8ff')
+      .where('channel_name', isGreaterThanOrEqualTo: trimmedQuery)
+      .where('channel_name', isLessThanOrEqualTo: trimmedQuery + '\uf8ff')
       .limit(10)
       .get();
 
@@ -234,13 +243,14 @@ final autoSearchChannelProvider = FutureProvider.autoDispose
 final searchChannelProvider = FutureProvider.autoDispose
     .family<List<QueryDocumentSnapshot>, String>((ref, searchQuery) async {
   // 검색 쿼리가 비어있으면 빈 리스트 반환
+  final trimmedQuery = searchQuery.trim().replaceAll(' ', ''); // 공백 제거
 
-  if (searchQuery.isEmpty) return [];
+  if (trimmedQuery.isEmpty) return [];
 
   final querySnapshot = await FirebaseFirestore.instance
       .collection('channels')
-      .where('channel_name', isGreaterThanOrEqualTo: searchQuery)
-      .where('channel_name', isLessThanOrEqualTo: searchQuery + '\uf8ff') // 쿼리 범위를 지정해서 검색어에 맞는 결과만 가져오기
+      .where('channel_name', isGreaterThanOrEqualTo: trimmedQuery)
+      .where('channel_name', isLessThanOrEqualTo: trimmedQuery + '\uf8ff') // 쿼리 범위를 지정해서 검색어에 맞는 결과만 가져오기
       .limit(5)
       .get();
 
@@ -251,13 +261,14 @@ final searchChannelProvider = FutureProvider.autoDispose
 final searchTotalChannelProvider = FutureProvider.autoDispose
     .family<List<QueryDocumentSnapshot>, String>((ref, searchQuery) async {
   // 검색 쿼리가 비어있으면 빈 리스트 반환
+  final trimmedQuery = searchQuery.trim().replaceAll(' ', ''); // 공백 제거
 
-  if (searchQuery.isEmpty) return [];
+  if (trimmedQuery.isEmpty) return [];
 
   final querySnapshot = await FirebaseFirestore.instance
       .collection('channels')
-      .where('channel_name', isGreaterThanOrEqualTo: searchQuery)
-      .where('channel_name', isLessThanOrEqualTo: searchQuery + '\uf8ff') // 쿼리 범위를 지정해서 검색어에 맞는 결과만 가져오기
+      .where('channel_name', isGreaterThanOrEqualTo: trimmedQuery)
+      .where('channel_name', isLessThanOrEqualTo: trimmedQuery + '\uf8ff') // 쿼리 범위를 지정해서 검색어에 맞는 결과만 가져오기
       .orderBy('subscriber_count', descending: true) // 조회수 순으로 정렬
       .orderBy('channel_name') // 제목으로도 정렬 (필요한 경우)
       .get();

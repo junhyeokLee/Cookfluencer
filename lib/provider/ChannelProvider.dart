@@ -22,31 +22,47 @@ final recommendChannelsProvider =
 
 // 추천 레시피 리스트를 가져오는 Provider
 final recommendVideosProvider =
-    FutureProvider.autoDispose<List<QueryDocumentSnapshot>>((ref) async {
+FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
   final querySnapshot = await FirebaseFirestore.instance
       .collection('videos')
       .where('section', isEqualTo: 'recommend') // "recommend" 섹션의 영상만 가져옴
       .get();
 
-  return querySnapshot.docs;
+  // 문서 ID를 포함한 리스트로 변환
+  return querySnapshot.docs.map((doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return {
+      'id': doc.id, // 문서 ID 추가
+      'video_id': doc.id, // null 체크
+      ...data, // 기존 데이터 추가
+    };
+  }).toList();
 });
 
-// 채널의 추천 영상 가져오기
-final channelVideosProvider = FutureProvider.autoDispose
-    .family<List<QueryDocumentSnapshot>, String>((ref, channelId) async {
-  // Firestore에서 videos 컬렉션의 데이터를 가져옴
+// 채널의 추천 영상을 가져오는 FutureProvider
+final channelVideosProvider =
+FutureProvider.autoDispose.family<List<Map<String, dynamic>>, String>((ref, channelId) async {
+  // Firestore에서 'channels' 컬렉션의 특정 채널 문서를 참조하여 'videos' 서브컬렉션 데이터를 가져옴
   final querySnapshot = await FirebaseFirestore.instance
-      .collection('channels')
-      .doc(channelId)
-      .collection('videos')
-      // .where('section', isEqualTo: 'top3recommend')
-      .orderBy('view_count', descending: true) // view_count를 기준으로 내림차순 정렬
-      .limit(3) // 최대 3개만 가져옴
+      .collection('channels') // 'channels' 컬렉션
+      .doc(channelId) // 특정 채널 ID
+      .collection('videos') // 해당 채널의 'videos' 서브컬렉션
+      .orderBy('view_count', descending: true) // 'view_count' 기준 내림차순 정렬
+      .limit(3) // 최대 3개 비디오만 가져옴
       .get();
 
   // 가져온 데이터를 리스트로 변환
-  return querySnapshot.docs; // 비디오 리스트 반환
+  return querySnapshot.docs.map((doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    // 각 문서에서 데이터와 ID를 포함한 맵을 생성
+    return {
+      'id': doc.id, // 문서 ID
+      'video_id': doc.id, // 비디오 문서 ID
+      ...data, // 기존 데이터 추가
+    };
+  }).toList(); // 리스트로 변환하여 반환
 });
+
 
 final keywordListProvider =
     FutureProvider.autoDispose<List<QueryDocumentSnapshot>>((ref) async {

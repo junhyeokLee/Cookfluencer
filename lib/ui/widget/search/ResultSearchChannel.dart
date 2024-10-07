@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/data/videoData.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
@@ -13,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResultSearchChannel extends HookConsumerWidget {
   const ResultSearchChannel({
@@ -52,22 +52,20 @@ class ResultSearchChannel extends HookConsumerWidget {
             await ref.read(videosByChannelProvider(searchParams).future);
 
         // 기존 비디오 ID를 Set으로 가져와서 중복 체크
-        final existingIds =
-            pagingController.value.itemList?.map((item) => item.id).toSet() ??
-                {};
+        final existingIds = pagingController.value.itemList?.map((item) => item.id).toSet() ?? {};
 
         // 새로운 비디오 리스트에서 이미 있는 비디오를 필터링
         final filteredVideos = newVideos
-            .where((video) => !existingIds.contains(video.id))
+            .where((video) => !existingIds.contains(video))
             .toList();
 
         // 중복 체크 후 비디오가 없으면 lastPage로 설정
         final isLastPage = filteredVideos.isEmpty;
         if (isLastPage) {
-          pagingController.value.appendLastPage(filteredVideos);
+          pagingController.value.appendLastPage(filteredVideos.cast<QueryDocumentSnapshot<Object?>>());
         } else {
           final nextPageKey = pageKey + filteredVideos.length; // 다음 페이지 키 계산
-          pagingController.value.appendPage(filteredVideos, nextPageKey);
+          pagingController.value.appendPage(filteredVideos.cast<QueryDocumentSnapshot<Object?>>(), nextPageKey);
         }
 
       } catch (error) {
@@ -117,9 +115,9 @@ class ResultSearchChannel extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 16, top: 24),
+                padding: const EdgeInsets.only(left: 16, top: 24,bottom: 12),
                 child: Text('인플루언서',
-                    style: Theme.of(context).textTheme.labelLarge),
+                    style: Theme.of(context).textTheme.titleLarge ),
               ),
               ChannelItemHorizontal(
                 channelData: channelData,
@@ -127,12 +125,12 @@ class ResultSearchChannel extends HookConsumerWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 16, top: 12, bottom: 12, right: 20),
+                    left: 16, top: 36, bottom: 12, right: 20),
                 child: Text('레시피 영상',
-                    style: Theme.of(context).textTheme.labelLarge),
+                    style: Theme.of(context).textTheme.titleLarge),
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 12, right: 20),
+                padding: const EdgeInsets.only(top:12,bottom: 14, right: 20),
                 child: FilterRecipe(
                   selectedFilter: selectedFilter,
                   showFilterOptions: showFilterOptions,
@@ -142,7 +140,7 @@ class ResultSearchChannel extends HookConsumerWidget {
           ),
         ),
         SliverPadding(
-          padding: const EdgeInsets.only(left: 16, right: 16),
+          padding: const EdgeInsets.only(left: 16, right: 16,top: 12),
           sliver: PagedSliverList<int, QueryDocumentSnapshot>(
             pagingController: pagingController.value,
             builderDelegate: PagedChildBuilderDelegate<QueryDocumentSnapshot>(
@@ -163,9 +161,9 @@ class ResultSearchChannel extends HookConsumerWidget {
                 );
                 return VideoItem(
                   video: videoData,
-                  size: ScreenUtil.width(context, 0.2),
-                  titleWidth: ScreenUtil.width(context, 0.65),
-                  channelWidth: ScreenUtil.width(context, 0.35),
+                  size: 0.22.sw,
+                  titleWidth: 0.6.sw,
+                  channelWidth: 0.35.sw,
                   onVideoItemClick: () {},
                 );
               },

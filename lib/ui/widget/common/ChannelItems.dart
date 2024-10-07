@@ -1,7 +1,6 @@
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/dart/extension/num_extension.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/data/videoData.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
@@ -11,6 +10,7 @@ import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:cookfluencer/ui/widget/common/VideoItem.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChannelItems extends HookConsumerWidget {
   final ChannelData channelData;
@@ -41,8 +41,8 @@ class ChannelItems extends HookConsumerWidget {
               child: ClipOval(
                 child: Image.network(
                   channelData.thumbnailUrl,
-                  width: ScreenUtil.width(context, 0.4),
-                  height: ScreenUtil.width(context, 0.4),
+                  width: 0.4.sw,
+                  height: 0.4.sw,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
                 ),
@@ -55,14 +55,17 @@ class ChannelItems extends HookConsumerWidget {
         ),
         Row(
           children: [
-            Image.asset(Assets.youtube, width: 20, height: 20),
+            Image.asset(Assets.youtube, width: 24.w, height: 24.h),
             const SizedBox(width: 5),
             Flexible(
-              child: Text(
-                channelData.channelName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.labelSmall,
+              child: Container(
+                width: 0.65.sw,
+                child: Text(
+                  channelData.channelName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
               ),
             ),
           ],
@@ -70,13 +73,16 @@ class ChannelItems extends HookConsumerWidget {
         const SizedBox(height: 6), // 간격
         Row(
           children: [
-            Image.asset(Assets.group, width: 14, height: 14, color: AppColors.grey),
+            Image.asset(Assets.group, width: 16.w, height: 16.h),
             const SizedBox(width: 5),
             Text(
               channelData.subscriberCount.toSubscribeUnit(), // 구독자 수 포맷
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: AppColors.grey, fontSize: 12),
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: AppColors.grey,
+                fontSize: 11.sp,
+              )
             ),
             const SizedBox(width: 4),
             CircleAvatar(radius: 1, backgroundColor: AppColors.grey),
@@ -85,7 +91,10 @@ class ChannelItems extends HookConsumerWidget {
               '동영상 ${channelData.videoCount}개', // 동영상 수
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: AppColors.grey, fontSize: 12),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppColors.grey,
+                  fontSize: 11.sp,
+                )
             ),
           ],
         ),
@@ -101,7 +110,7 @@ class ChannelItems extends HookConsumerWidget {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: videos.length,
               itemBuilder: (context, index) {
-                final video = videos[index].data() as Map<String, dynamic>;
+                final video = videos[index] as Map<String, dynamic>;
                 // 비디오 데이터 매핑
                 final videoData = VideoData(
                   id: video['id'] ?? 'Unknown',
@@ -119,9 +128,9 @@ class ChannelItems extends HookConsumerWidget {
 
                 return VideoItem(
                   video: videoData,
-                  size: ScreenUtil.width(context, 0.25), // 썸네일 사이즈
-                  titleWidth: ScreenUtil.width(context, 0.45), // 제목 너비
-                  channelWidth: ScreenUtil.width(context, 0.14),
+                  size: 0.25.sw, // 썸네일 사이즈
+                  titleWidth: 0.45.sw, // 제목 너비
+                  channelWidth: 0.14.sw,
                   onVideoItemClick: () {  }, // 채널 이름 너비
                 );
               },

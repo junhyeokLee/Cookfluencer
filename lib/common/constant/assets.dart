@@ -18,9 +18,9 @@ class Assets {
   static const String search = 'assets/images/icon/search.png';
   static const String heart = 'assets/images/icon/like.png';
   static const String like = 'assets/images/icon/heart.png';
-  static const String view = 'assets/images/icon/view.png';
+  static const String view = 'assets/images/icon/eye.png';
   static const String youtube = 'assets/images/icon/youtube.png';
-  static const String group = 'assets/images/icon/group.png';
+  static const String group = 'assets/images/icon/person.png';
   static const String mypage = 'assets/images/icon/mypage.png';
   static const String empty = 'assets/images/icon/empty.png';
   static const String recipe_ai = 'assets/images/icon/recipe_ai.png';

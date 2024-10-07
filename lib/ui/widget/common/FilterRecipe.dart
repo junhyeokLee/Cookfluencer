@@ -32,7 +32,9 @@ class FilterRecipe extends HookWidget {
                   selectedFilter.value == FilterOption.viewCount
                       ? '인기순'
                       : '최신순',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
                   textAlign: TextAlign.end,
                 ),
               ),
@@ -64,7 +66,9 @@ class FilterRecipe extends HookWidget {
                       ),
                       child: Text(
                         '인기순',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
@@ -82,7 +86,9 @@ class FilterRecipe extends HookWidget {
                       ),
                       child: Text(
                         '최신순',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),

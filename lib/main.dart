@@ -5,6 +5,7 @@ import 'package:cookfluencer/routing/appRoute.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -29,10 +30,24 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
-    return MaterialApp.router(
-      routerConfig: goRouter,
-      title: 'Flutter Demo',
-      theme: AppTheme.light(),  // AppTheme의 light 테마 적용
+    return ScreenUtilInit(
+      designSize: const Size(360, 640),
+      minTextAdapt: true,  // 다시 활성화
+      splitScreenMode: true,
+      builder: (context, child) {
+        ScreenUtil.ensureScreenSize();  // 초기화 확인
+        return MaterialApp.router(
+          routerConfig: goRouter,
+          title: 'Flutter Demo',
+          theme: AppTheme.light(),  // AppTheme의 light 테마 적용
+          builder: (context, widget) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              child: widget!,
+            );
+          },
+        );
+      },
     );
   }
 }

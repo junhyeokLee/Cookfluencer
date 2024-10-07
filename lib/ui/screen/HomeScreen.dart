@@ -53,7 +53,7 @@ class HomeScreen extends ConsumerWidget {
 
     final videoSnapshots = recommendVideoListAsyncValue.asData!.value;
     final videos = videoSnapshots
-        .map((doc) => doc.data() as Map<String, dynamic>)
+        .map((doc) => doc as Map<String, dynamic>)
         .toList();
 
     final channelsSnapshots = recommendChannelsAsyncValue.asData!.value;
@@ -85,14 +85,7 @@ class HomeScreen extends ConsumerWidget {
             // HomeScreen에서 채널 아이템 클릭 시
             RecommendChannel(
               recommendChannelsListAsyncValue: channels,
-              onChannelItemClick: (channelData) {
-                // print("Channel clicked: ${channelData}"); // 로그 확인
-                // context.goNamed(
-                //   AppRoute.channelDetail.name, // 경로를 '/home/channel/{id}'로 수정하여 중복 방지
-                //   extra: channelData, // 채널 데이터 전체를 extra로 전달
-                // );
-                // context.go('/home/channelDetail', extra: channelData);
-              },
+              onChannelItemClick: (channelData) {},
             ),
             Container(
                 margin: EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),

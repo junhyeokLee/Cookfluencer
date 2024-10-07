@@ -31,10 +31,10 @@ class RecommendSeasonRecipe extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 24, top: 12, bottom: 12),
+          padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
           child: Text(
               '시즌/테마별 레시피',
-              style: Theme.of(context).textTheme.labelLarge
+              style: Theme.of(context).textTheme.titleLarge
           ),
         ),
         Column(
@@ -42,7 +42,7 @@ class RecommendSeasonRecipe extends HookConsumerWidget {
             CarouselSlider(
               options: CarouselOptions(
                 autoPlay: false,
-                aspectRatio: 0.82, // Carousel 전체 높이 비율
+                aspectRatio: 0.78, // Carousel 전체 높이 비율
                 enableInfiniteScroll: true,
                 enlargeCenterPage: false,
                 initialPage: 0,

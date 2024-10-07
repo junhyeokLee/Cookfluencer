@@ -1,5 +1,6 @@
 import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
   const AppbarWidget({super.key});
@@ -8,7 +9,8 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
-      toolbarHeight: 48,
+      toolbarHeight: 48.h,
+      automaticallyImplyLeading: false, // 뒤로가기 버튼을 자동으로 추가하지 않음
       title: Row(
         children: [
           // 로고 이미지 왼쪽에 공백 추가
@@ -16,17 +18,14 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
             padding: const EdgeInsets.only(left: 8),  // 왼쪽에 16 픽셀 공백을 추가
             child: Image.asset(
               Assets.logo,
-              height: 24,  // 이미지 크기를 조절합니다.
+              height: 20.h,  // 이미지 크기를 조절합니다.
             ),
           ),
           SizedBox(width: 12),  // 로고와 텍스트 사이의 간격을 조절합니다.
           // 텍스트
           Text(
-            'COOKFLUENCER',
-            style: TextStyle(
-              color: Colors.black,  // 텍스트 색상을 검은색으로 변경
-              fontSize: 18,         // 폰트 크기
-            ),
+            '쿡플',
+            style: Theme.of(context).textTheme.titleLarge
           ),
         ],
       ),

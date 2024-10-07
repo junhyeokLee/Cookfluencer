@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
 import 'package:cookfluencer/ui/widget/common/ChannelItem.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChannelsScreen extends HookConsumerWidget {
   final String searchQuery;
@@ -101,7 +101,7 @@ class ChannelsScreen extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 24),
             child: Text('인플루언서',
-                style: Theme.of(context).textTheme.labelLarge),
+                style: Theme.of(context).textTheme.titleLarge),
           ),
 
           searchChannelListAsyncValue.when(
@@ -139,7 +139,7 @@ class ChannelsScreen extends HookConsumerWidget {
                     );
                     return ChannelItem(
                       channelData :channelData , // 채널 아이템 크기 조정
-                      size: ScreenUtil.width(context, 0.32), onChannelItemClick: () {  },
+                      size: 0.32.sw, onChannelItemClick: () {  },
                     );
                   },
                 ),

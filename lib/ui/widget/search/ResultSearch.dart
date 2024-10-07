@@ -3,7 +3,6 @@ import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/data/videoData.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
@@ -15,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResultSearch extends HookConsumerWidget {
   final String searchQuery;
@@ -64,16 +64,16 @@ class ResultSearch extends HookConsumerWidget {
 
         // 새로운 비디오 리스트에서 이미 있는 비디오를 필터링
         final filteredVideos = newVideos
-            .where((video) => !existingIds.contains(video.id))
+            .where((video) => !existingIds.contains(video))
             .toList();
 
         // 중복 체크 후 비디오가 없으면 lastPage로 설정
         final isLastPage = filteredVideos.isEmpty;
         if (isLastPage) {
-          pagingController.value.appendLastPage(filteredVideos);
+          pagingController.value.appendLastPage(filteredVideos.cast<QueryDocumentSnapshot<Object?>>());
         } else {
           final nextPageKey = pageKey + filteredVideos.length; // 다음 페이지 키 계산
-          pagingController.value.appendPage(filteredVideos, nextPageKey);
+          pagingController.value.appendPage(filteredVideos.cast<QueryDocumentSnapshot<Object?>>(), nextPageKey);
         }
       } catch (error) {
         pagingController.value.error = error; // 오류 발생 시 처리
@@ -132,13 +132,13 @@ class ResultSearch extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 24, top: 24),
+                        padding: const EdgeInsets.only(left: 16, top: 24),
                         child: Text('인플루언서',
-                            style: Theme.of(context).textTheme.labelLarge),
+                            style: Theme.of(context).textTheme.titleLarge),
                       ),
                       Container(
-                        margin: const EdgeInsets.only(top: 12),
-                        height: ScreenUtil.height(context, 0.25),
+                        margin: const EdgeInsets.only(top: 20),
+                        height: 0.26.sh,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: channels.length,
@@ -160,8 +160,8 @@ class ResultSearch extends HookConsumerWidget {
                               section: channel['section'] ?? '',
                             );
 
-                            final paddingLeft = index == 0 ? 24.0 : 0.0;
-                            final paddingRight = 12.0;
+                            final paddingLeft = index == 0 ? 16.0 : 24.0;
+                            final paddingRight = 0.0;
 
                             return Padding(
                               padding: EdgeInsets.only(
@@ -170,7 +170,7 @@ class ResultSearch extends HookConsumerWidget {
                                 key: ValueKey(channelData.id),
                                 // GlobalKey 대신 ValueKey 사용
                                 channelData: channelData,
-                                size: ScreenUtil.width(context, 0.35),
+                                size: 0.4.sw,
                                 onChannelItemClick: () {
                                   onChannelItemClick(channelData); // 콜백 호출
                                 },
@@ -181,7 +181,7 @@ class ResultSearch extends HookConsumerWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                            left: 24, top: 12, right: 24, bottom: 12),
+                            left: 16, top: 12, right: 24, bottom: 24),
                         child: CustomRoundButton(
                           isEnabled: true,
                           fontSize: 14,
@@ -212,9 +212,9 @@ class ResultSearch extends HookConsumerWidget {
 
               // 비디오 검색 결과 처리
               Padding(
-                padding: const EdgeInsets.only(left: 24, top: 12, bottom: 12),
+                padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
                 child: Text('레시피 영상',
-                    style: Theme.of(context).textTheme.labelLarge),
+                    style: Theme.of(context).textTheme.titleLarge),
               ),
 
               Container(
@@ -255,12 +255,14 @@ class ResultSearch extends HookConsumerWidget {
                   key: ValueKey(videoData.id),
                   // 고유한 ID를 사용해 ValueKey 설정
                   video: videoData,
-                  size: ScreenUtil.width(context, 0.2),
-                  titleWidth: ScreenUtil.width(context, 0.65),
-                  channelWidth: ScreenUtil.width(context, 0.35),
+                  size: 0.22.sw,
+                  titleWidth: 0.6.sw,
+                  channelWidth: 0.35.sw,
                   onVideoItemClick: () {},
                 );
               },
+
+
               firstPageProgressIndicatorBuilder: (context) =>
                   Center(child: CircularLoading()),
               newPageProgressIndicatorBuilder: (context) =>

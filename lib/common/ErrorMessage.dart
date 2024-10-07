@@ -17,7 +17,7 @@ class ErrorMessage extends StatelessWidget {
       child: Center(
         child: Text(
           message,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             color: Colors.red, // 오류 메시지 색상
           ),
           textAlign: TextAlign.center, // 중앙 정렬

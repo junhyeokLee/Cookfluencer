@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:cookfluencer/common/dart/extension/num_extension.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/ui/widget/common/CustomVideoImage.dart';
 import 'package:cookfluencer/ui/widget/common/LikeVideoButton.dart'; // LikeVideoButton 추가
-import 'package:go_router/go_router.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VideoItem extends StatelessWidget {
   final VideoData video; // 비디오 데이터
@@ -31,6 +30,10 @@ class VideoItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        debugPrint('VideoItem - video clicked: ${video.title}'); // 클릭한 비디오 제목 출력
+        debugPrint('VideoItem ID - video clicked: ${video.id}'); // 클릭한 비디오 제목 출력
+        debugPrint('VideoItem VIDEOID - video clicked: ${video.videoId}'); // 클릭한 비디오 제목 출력
+
         Navigator.push(
           context,
           PageRouteBuilder(
@@ -53,6 +56,7 @@ class VideoItem extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
         child: Row(
           children: [
             Container(
@@ -82,9 +86,9 @@ class VideoItem extends StatelessWidget {
                         width: titleWidth, // 전달받은 제목 너비 사용
                         child: Text(
                           video.title, // 비디오 제목
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.labelSmall,
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
                       ),
                       showLikeButton
@@ -96,17 +100,18 @@ class VideoItem extends StatelessWidget {
                   Row(
                     children: [
                       Image.asset(Assets.view,
-                          width: 14,
-                          height: 14,
+                          width: 16.w,
+                          height: 16.h,
                           color: AppColors.grey), // 조회수 아이콘
                       SizedBox(width: 4), // 간격
                       Text(
                         video.viewCount.toViewCountUnit(), // 조회수 표시
-                        style: TextStyle(
-                            color: AppColors.grey, fontSize: 12),
-                      ),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color : AppColors.grey,
+                          fontSize: 10.sp,
+                        )),
                       SizedBox(width: 16),
-                      Image.asset(Assets.youtube,width: 20,height: 20), // 유튜브 아이콘
+                      Image.asset(Assets.youtube,width: 20.w,height: 20.h), // 유튜브 아이콘
                       SizedBox(width: 4), // 간격
                       Container(
                         width: channelWidth, // 전달받은 채널 이름 너비 사용
@@ -114,9 +119,10 @@ class VideoItem extends StatelessWidget {
                           video.channelName, // 채널 이름
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: AppColors.grey, fontSize: 12),
-                        ),
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color : AppColors.grey,
+                              fontSize: 10.sp,
+                            )),
                       ),
                     ],
                   ),

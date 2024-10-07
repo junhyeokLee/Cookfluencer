@@ -20,7 +20,7 @@ class MyPageScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('내 정보', style: Theme.of(context).textTheme.labelLarge),
+            Text('내 정보', style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: 12),
             Container(
               width: double.infinity,
@@ -33,13 +33,11 @@ class MyPageScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Q. 로그인은 따로 없나요?',
-                      style: Theme.of(context).textTheme.labelMedium),
+                      style: Theme.of(context).textTheme.titleSmall),
                   SizedBox(height: 8),
                   Text(
                     'A. 로그인 기능을 준비하고 있어요.\n 개인화 기능이 완성되면 로그인 기능과 함께 제공됩니다.\n 조금만 기다려주세요.',
-                    style: TextStyle(
-                      fontSize: 13,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium
                   )
                 ],
               ),
@@ -48,7 +46,7 @@ class MyPageScreen extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('피드백', style: Theme.of(context).textTheme.labelLarge),
+                Text('피드백', style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(height: 12),
                 // 버그신고 텍스트와 아이콘을 나란히 배치
                 InkWell(
@@ -65,9 +63,7 @@ class MyPageScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '버그신고',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
+                      style: Theme.of(context).textTheme.bodyMedium
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16), // 오른쪽 화살표 아이콘
                     ],
@@ -88,9 +84,7 @@ class MyPageScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '아이디어 제안',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
+                          style: Theme.of(context).textTheme.bodyMedium
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16), // 오른쪽 화살표 아이콘
                     ],
@@ -104,7 +98,7 @@ class MyPageScreen extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('앱 정보', style: Theme.of(context).textTheme.labelLarge),
+                Text('앱 정보', style: Theme.of(context).textTheme.titleSmall),
                 const SizedBox(height: 12),
                 InkWell(
                   onTap: () {},
@@ -113,9 +107,7 @@ class MyPageScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '앱 버전 정보',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
+                          style: Theme.of(context).textTheme.bodyMedium
                       ),
                       FutureBuilder<PackageInfo>(
                         future: PackageInfo.fromPlatform(), // 앱 버전 정보 가져오기
@@ -164,9 +156,7 @@ class MyPageScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '이용 약관',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
+                          style: Theme.of(context).textTheme.bodyMedium
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16), // 오른쪽 화살표 아이콘
                     ],
@@ -202,9 +192,7 @@ class MyPageScreen extends ConsumerWidget {
                     children: [
                       Text(
                         '개인정보 처리방침',
-                        style: TextStyle(
-                          fontSize: 13,
-                        ),
+                          style: Theme.of(context).textTheme.bodyMedium
                       ),
                       Icon(Icons.arrow_forward_ios, size: 16), // 오른쪽 화살표 아이콘
                     ],

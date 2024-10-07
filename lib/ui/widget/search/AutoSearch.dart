@@ -19,7 +19,7 @@ class AutoSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 24, top: 24, right: 24),
+      margin: EdgeInsets.only(left: 16, top: 16, right: 16),
       child: ListView.builder(
         itemCount: results.length,
         itemBuilder: (context, index) {

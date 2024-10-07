@@ -41,9 +41,9 @@ class RecommendChannel extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 24, top: 12, bottom: 12),
+          padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
           child:
-              Text('추천 쿡플루언서', style: Theme.of(context).textTheme.labelLarge),
+              Text('추천 쿡플루언서', style: Theme.of(context).textTheme.titleLarge),
         ),
         Column(
           children: [

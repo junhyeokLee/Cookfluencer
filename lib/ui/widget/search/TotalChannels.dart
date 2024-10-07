@@ -37,7 +37,7 @@ class Totalchannels extends HookConsumerWidget {
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 24),
             child: Text('인플루언서',
-                style: Theme.of(context).textTheme.labelLarge),
+                style: Theme.of(context).textTheme.titleLarge),
           ),
 
           searchChannelListAsyncValue.when(
@@ -48,7 +48,7 @@ class Totalchannels extends HookConsumerWidget {
                 );
               }
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
                 child: GridView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),

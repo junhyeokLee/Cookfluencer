@@ -32,7 +32,7 @@ class RecentSearch extends HookConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween, // 양 끝 정렬
             children: [
-              Text('최근 검색어', style: Theme.of(context).textTheme.labelLarge),
+              Text('최근 검색어', style: Theme.of(context).textTheme.titleSmall),
               InkWell(
                 onTap: () {
                   // 전체 삭제 기능
@@ -85,7 +85,12 @@ class RecentSearch extends HookConsumerWidget {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 4.0, bottom: 4.0),
-                              child: Text(recentSearches.value[reversedIndex], style: TextStyle(color: AppColors.grey, fontSize: 14)), // 역순으로 텍스트 표시
+                              child: Text(recentSearches.value[reversedIndex],
+                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: AppColors.grey, // 검정색 텍스트
+                                    fontWeight: FontWeight.w400, // 폰트 굵기 설정
+                                  )
+                              ), // 역순으로 텍스트 표시
                             ),
                             GestureDetector(
                               onTap: () {

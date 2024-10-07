@@ -1,13 +1,10 @@
 import 'package:cookfluencer/common/dart/extension/num_extension.dart';
 import 'package:cookfluencer/data/channelData.dart';
-import 'package:cookfluencer/routing/appRoute.dart';
-import 'package:cookfluencer/ui/screen/ChannelDetailScreen.dart';
 import 'package:cookfluencer/ui/widget/common/LikeChannelButton.dart';
 import 'package:flutter/material.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChannelItemHorizontal extends StatelessWidget {
   final ChannelData channelData;
@@ -35,8 +32,8 @@ class ChannelItemHorizontal extends StatelessWidget {
             ClipOval(
               child: Image.network(
                 channelData.thumbnailUrl,
-                width: ScreenUtil.width(context, 0.25), // 썸네일 이미지 크기
-                height: ScreenUtil.width(context, 0.25), // 썸네일 이미지 크기
+                width: 0.25.sw, // 썸네일 이미지 크기
+                height: 0.25.sw, // 썸네일 이미지 크기
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Icon(Icons.error), // 에러 발생 시 표시할 아이콘
               ),
@@ -54,14 +51,14 @@ class ChannelItemHorizontal extends StatelessWidget {
                       Flexible(
                         child: Row(
                           children: [
-                            Image.asset(Assets.youtube, width: 20, height: 20),
+                            Image.asset(Assets.youtube, width: 20.w, height: 20.h),
                             const SizedBox(width: 2), // 간격
                             Flexible(
                               child: Text(
                                 channelData.channelName,
                                 maxLines: 1, // 한 줄로 제한
                                 overflow: TextOverflow.ellipsis, // 길어질 경우 생략
-                                style: Theme.of(context).textTheme.labelMedium,
+                                style: Theme.of(context).textTheme.titleSmall,
                               ),
                             ),
                           ],
@@ -71,17 +68,19 @@ class ChannelItemHorizontal extends StatelessWidget {
                       LikeChannelButton(channelData: channelData,rightMargin: 16,), // 좋아요 버튼을 오른쪽에 배치
                     ],
                   ),
-                  const SizedBox(height: 4), // 간격
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center, // 각 아이콘과 텍스트가 수평으로 정렬되도록 유지
                     children: [
-                      Image.asset(Assets.group, width: 20, height: 20, color: AppColors.grey), // group 아이콘
+                      Image.asset(Assets.group, width: 16.w, height: 16.h), // group 아이콘
                       const SizedBox(width: 5), // 간격
                       Text(
                         channelData.subscriberCount.toSubscribeUnit(), // 구독자 수를 포맷팅
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: AppColors.grey, fontSize: 12),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: AppColors.grey,
+                          fontSize: 10.sp,
+                        ),
                       ),
                       const SizedBox(width: 4), // 간격
                       CircleAvatar(radius: 1, backgroundColor: AppColors.grey),
@@ -90,7 +89,10 @@ class ChannelItemHorizontal extends StatelessWidget {
                         '동영상 ${channelData.videoCount}개', // 동영상 수
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: AppColors.grey, fontSize: 12),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: AppColors.grey,
+                          fontSize: 10.sp,
+                        ),
                       ),
                     ],
                   ),

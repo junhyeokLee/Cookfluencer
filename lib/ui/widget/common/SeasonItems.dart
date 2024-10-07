@@ -1,9 +1,9 @@
 import 'package:cookfluencer/common/EmptyMessage.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/seasonData.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:cookfluencer/ui/widget/common/VideoItem.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SeasonItems extends HookConsumerWidget {
   final SeasonData seasonData;
@@ -27,20 +27,22 @@ class SeasonItems extends HookConsumerWidget {
               children: [
                 Text(
                   seasonData.title,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   seasonData.sub_title,
-                  style: Theme.of(context).textTheme.labelMedium,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ],
             ),
             ClipOval(
               child: Image.network(
                 seasonData.image,
-                width: ScreenUtil.width(context, 0.16),
-                height: ScreenUtil.width(context, 0.16),
+                width: 0.16.sw,
+                height: 0.16.sw,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
               ),
@@ -48,7 +50,7 @@ class SeasonItems extends HookConsumerWidget {
           ],
         ),
 
-        const SizedBox(height: 20), // 간격
+        const SizedBox(height: 32), // 간격
 
         // videos 리스트의 데이터를 매핑하여 표시
         seasonData.videos.isEmpty
@@ -61,9 +63,9 @@ class SeasonItems extends HookConsumerWidget {
             final video = seasonData.videos[index];
             return VideoItem(
               video: video,
-              size: ScreenUtil.width(context, 0.25), // 썸네일 사이즈
-              titleWidth: ScreenUtil.width(context, 0.4), // 제목 너비
-              channelWidth: ScreenUtil.width(context, 0.12),
+              size: 0.25.sw, // 썸네일 사이즈
+              titleWidth: 0.45.sw, // 제목 너비
+              channelWidth: 0.12.sw,
               onVideoItemClick: () {
 
               }, // 채널 이름 너비

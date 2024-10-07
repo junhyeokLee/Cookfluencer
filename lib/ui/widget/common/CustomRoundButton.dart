@@ -63,7 +63,7 @@ class CustomRoundButton extends StatelessWidget {
                 style: TextStyle(
                   color: textColor,
                   fontSize: fontSize,
-                  fontFamily: GoogleFonts.nanumGothic().fontFamily,
+                  fontFamily: GoogleFonts.notoSans().fontFamily, // Google Font 사용 (Noto Sans
                   fontWeight: fontWeight,
                 ),
               ),

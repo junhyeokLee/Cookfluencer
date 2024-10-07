@@ -33,7 +33,7 @@ class Popularkeyword extends HookConsumerWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 24, top: 24, bottom: 12),
-            child: Text('인기 키워드', style: Theme.of(context).textTheme.labelLarge),
+            child: Text('인기 키워드', style: Theme.of(context).textTheme.titleSmall),
           ),
           ListView.builder(
             shrinkWrap: true,
@@ -58,24 +58,16 @@ class Popularkeyword extends HookConsumerWidget {
                         children: [
                           Text(
                             "${index + 1}", // 순위 표시
-                            style: TextStyle(
-                              color: AppColors.black, // 텍스트 색상
-                              fontSize: 16, // 글자 크기
-                              fontFamily: GoogleFonts.nanumGothic().fontFamily, // 글자 폰트
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w700, // 글자 굵기
-                            ),
+                            )
                           ),
                           SizedBox(width: 12),
                           Text(
                             keyword['name'] ?? '', // null 체크 후 텍스트 표시
                             maxLines: 1, // 한 줄로 제한
                             overflow: TextOverflow.ellipsis, // 길어질 경우 생략
-                            style: TextStyle(
-                              color: AppColors.black, // 선택 여부에 따라 텍스트 색 변경
-                              fontSize: 16, // 글자 크기
-                              fontFamily: GoogleFonts.nanumGothic().fontFamily, // 글자 폰트
-                              fontWeight: FontWeight.w500, // 글자 굵기
-                            ),
+                              style: Theme.of(context).textTheme.bodySmall
                           ),
                         ],
                       ),

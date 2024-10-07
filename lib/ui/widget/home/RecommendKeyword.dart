@@ -1,14 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cookfluencer/common/common.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/ui/widget/common/BarIndicator.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:cookfluencer/ui/widget/common/KeywordChip.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RecommendKeyword extends HookConsumerWidget {
   const RecommendKeyword({
@@ -43,15 +44,18 @@ class RecommendKeyword extends HookConsumerWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 24, top: 24, bottom: 12),
-                child: Text('이 키워드를 주목하세요',
-                    style: Theme.of(context).textTheme.labelLarge),
+                child: Text(
+                  '이 키워드를 주목하세요',
+                    style: context.textTheme.titleLarge,
+                ),
               ),
               Column(
                 children: [
                   CarouselSlider(
                     options: CarouselOptions(
+                      pageSnapping: false,
                       autoPlay: false,
-                      enableInfiniteScroll: true,
+                      enableInfiniteScroll: false,
                       enlargeCenterPage: false,
                       initialPage: 0,
                       viewportFraction: 0.64, // 각 슬라이드의 비율
@@ -90,83 +94,17 @@ class RecommendKeyword extends HookConsumerWidget {
                   ),
                   SizedBox(height: 20),
                   BarIndicator(
-                    currentIndex: currentIndex.value, // 현재 페이지 인덱스
-                    itemCount: keywords.length, // 전체 아이템 수를 keywords의 길이로 설정
+                    currentIndex: currentIndex.value == keywords.length - 1 ? currentIndex.value + 1 : currentIndex.value, // 마지막 인덱스일 경우 +1
+                    itemCount: keywords.length-1, // 마지막 인덱스일 경우 아이템 수 +1
                     activeColor: AppColors.primarySelectedColor, // 활성화된 인디케이터 색상
                     inactiveColor: Colors.grey, // 비활성화된 인디케이터 색상
-                    barWidth: ScreenUtil.width(context, 0.8), // 인디케이터 크기
+                    barWidth: 0.8.sw, // 인디케이터 크기
                     barHeight: 4.0, // 인디케이터 간 간격
                   ),
                   SizedBox(height: 20,)
                 ],
               ),
               if (selectedKeyword.value != null) // 선택된 키워드가 있을 때만 아래 리스트 표시
-                // Padding(
-                //   padding:
-                //   const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                //   child: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       keywrodVideoListAsyncValue.when(
-                //         data: (videos) {
-                //           if (videos.isEmpty) {
-                //             return Padding(
-                //               padding:
-                //               const EdgeInsets.only(top: 48, bottom: 56),
-                //               child: Center(
-                //                   child: const Text('이 키워드에는 비디오가 없습니다.')),
-                //             );
-                //           }
-                //
-                //           // 비디오 리스트가 있을 경우 최대 3개의 비디오를 세로로 표시
-                //           return ListView.builder(
-                //             shrinkWrap: true,
-                //             physics: const NeverScrollableScrollPhysics(),
-                //             itemCount: videos.length,
-                //             itemBuilder: (context, index) {
-                //               final video =
-                //               videos[index].data() as Map<String, dynamic>;
-                //               // ChannelModel에 데이터를 맵핑
-                //               final videoData = VideoData(
-                //                 id: video['id'] ?? 'Unknown',
-                //                 channelId: video['channel_id'] ?? 'Unknown',
-                //                 channelName: video['channel_name'] ?? 'Unknown',
-                //                 description: video['description'] ?? '',
-                //                 thumbnailUrl: video['thumbnail_url'] ?? '',
-                //                 title: video['title'] ?? 'Unknown',
-                //                 uploadDate: video['upload_date'] ?? '',
-                //                 videoId: video['video_id'] ?? '',
-                //                 videoUrl: video['video_url'] ?? '',
-                //                 viewCount: int.tryParse(
-                //                     video['view_count'].toString()) ??
-                //                     0,
-                //                 section: video['section'] ?? '',
-                //               );
-                //               return VideoItem(
-                //                 video: videoData,
-                //                 // 비디오 데이터
-                //                 size: ScreenUtil.width(context, 0.25),
-                //                 // 썸네일 사이즈
-                //                 titleWidth: ScreenUtil.width(context, 0.6),
-                //                 // 제목 너비
-                //                 channelWidth:
-                //                 ScreenUtil.width(context, 0.3), // 채널 이름 너비
-                //               );
-                //             },
-                //           );
-                //         },
-                //         loading: () => CircularLoading(),
-                //         error: (error, stackTrace) =>
-                //             ErrorMessage(message: '${error}'),
-                //       ),
-                //       CustomRoundButton(
-                //         text: '더보기',
-                //         onTap: () {},
-                //       ),
-                //       const SizedBox(height: 12),
-                //     ],
-                //   ),
-                // ),
                 Center()
             ],
           );

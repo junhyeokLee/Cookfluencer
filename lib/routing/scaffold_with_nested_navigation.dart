@@ -1,8 +1,10 @@
+import 'package:cookfluencer/common/constant/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/constant/assets.dart';
 import 'package:cookfluencer/common/constant/dimen.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ScaffoldWithNestedNavigation extends StatefulWidget {
   const ScaffoldWithNestedNavigation({
@@ -21,7 +23,6 @@ class _ScaffoldWithNestedNavigationState
     extends State<ScaffoldWithNestedNavigation> {
   // 인덱스 기록을 위한 배열
   List<int> navigationHistory = [];
-
   // 앱 종료 여부를 확인하기 위한 플래그
   bool _isExitWarningShown = false;
 
@@ -76,8 +77,12 @@ class _ScaffoldWithNestedNavigationState
         body: widget.navigationShell,
         currentIndex: widget.navigationShell.currentIndex,
         onDestinationSelected: (index) {
-          if (index != widget.navigationShell.currentIndex) {
-            _goBranch(index);
+
+          if (index == widget.navigationShell.currentIndex) {   // 같은 인덱스를 두 번 클릭했을 때
+            if (context.canPop()) context.pop();   // 창이 열려 있을 때만 pop 실행
+            _goBranch(index); // 해당 화면으로 가기
+          } else {
+            _goBranch(index); // 다른 인덱스일 경우 이동
           }
         },
       ),
@@ -171,8 +176,8 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
             // 애니메이션 커브
             child: Image.asset(
               isSelected ? selectedIconPath : iconPath,
-              width: 24,
-              height: 24,
+              width: 24.w,
+              height: 24.h,
             ),
           ),
           // dot이 선택된 경우 위에서 아래로 자연스럽게 나타나도록 애니메이션 추가
@@ -182,10 +187,10 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
             curve: Curves.easeInOut, // 부드러운 애니메이션
             child: isSelected
                 ? Image.asset(
-                    Assets.gradientDot, // dot을 아이콘 이미지로 대체
-                    width: 6,
-                    height: 6,
-                  )
+              Assets.gradientDot, // dot을 아이콘 이미지로 대체
+              width: 6.w,
+              height: 6.h,
+            )
                 : SizedBox.shrink(), // 선택되지 않았을 때는 dot 숨김
           ),
         ],

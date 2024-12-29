@@ -19,7 +19,7 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2  # Flutter 환경을 설정합니다.
       with:
-        flutter-version: 'stable'  # 안정적인 Flutter 버전 사용
+        flutter-version: '3.27.1'  # 안정적인 Flutter 버전 사용
 
     - name: Install dependencies
       run: flutter pub get  # 의존성을 설치합니다.

@@ -1,0 +1,29 @@
+name: Flutter CI/CD
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 푸시될 때 실행
+  pull_request:
+    branches:
+      - main  # main 브랜치로 PR 생성 시 실행
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Linux 환경에서 실행
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3  # GitHub 저장소의 코드를 가져옵니다.
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2  # Flutter 환경을 설정합니다.
+      with:
+        flutter-version: 'stable'  # 안정적인 Flutter 버전 사용
+
+    - name: Install dependencies
+      run: flutter pub get  # 의존성을 설치합니다.
+
+    - name: Run tests
+      run: flutter test  # 테스트를 실행합니다.
+

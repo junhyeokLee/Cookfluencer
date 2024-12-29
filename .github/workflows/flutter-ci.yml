@@ -20,7 +20,8 @@ jobs:
       run: |
         git clone https://github.com/flutter/flutter.git -b stable
         echo "$PWD/flutter/bin" >> $GITHUB_PATH
-        flutter --version
+        echo "$PWD/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+        flutter doctor
 
     - name: Install dependencies
       run: flutter pub get

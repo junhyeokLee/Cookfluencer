@@ -31,20 +31,5 @@ jobs:
       - name: Restore keystore
         env:
           KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
-        run: echo "$KEYSTORE_FILE" | base64 --decode > 
-android/app/cookfluencer-release-key.jks
+        run: echo "$KEYSTORE_FILE" | base64 --decode > android/app/cookfluencer-release-key.jks
 
-      # 5. Android 릴리스 빌드
-      - name: Build APK
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: flutter build apk --release
-
-      # 6. 빌드 결과 업로드
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk

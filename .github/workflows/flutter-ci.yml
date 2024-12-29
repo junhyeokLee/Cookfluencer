@@ -17,14 +17,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. 올바른 Java 버전 설치
+      # 2. Java 설치
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin' # OpenJDK 배포판
-          java-version: '17'    # Gradle이 요구하는 버전 (필요에 따라 '11'로 변경 가능)
+          distribution: 'temurin'
+          java-version: '17'
 
-      # 3. Flutter SDK 다운로드 및 경로 설정
+      # 3. Gradle 설정 업데이트
+      - name: Configure Gradle Java Home
+        run: echo "org.gradle.java.home=$JAVA_HOME" >> android/gradle.properties
+
+      # 4. Flutter SDK 다운로드 및 경로 설정
       - name: Install Flutter
         run: |
           git clone https://github.com/flutter/flutter.git -b stable $HOME/flutter
@@ -32,17 +36,17 @@ jobs:
           export PATH="$HOME/flutter/bin:$PATH"
           flutter --version
 
-      # 4. 의존성 설치
+      # 5. 의존성 설치
       - name: Install dependencies
         run: flutter pub get
 
-      # 5. Keystore 복원
+      # 6. Keystore 복원
       - name: Restore keystore
         env:
           KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
         run: echo "$KEYSTORE_FILE" | base64 --decode > android/app/cookfluencer-release-key.jks
 
-      # 6. 안드로이드 릴리즈 빌드
+      # 7. 안드로이드 릴리즈 빌드
       - name: Build APK
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -51,7 +55,7 @@ jobs:
         run: |
           flutter build apk --release
 
-      # 7. 빌드된 APK 업로드 (Artifacts 저장)
+      # 8. 빌드된 APK 업로드 (Artifacts 저장)
       - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
@@ -82,8 +86,9 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # 5. 인증서 및 프로비저닝 프로파일 복원
+      # 5. 인증서 및 프로비저닝 프로파일 복원 (선택적)
       - name: Restore certificates and provisioning profile
+        if: env.CERTIFICATE_BASE64 != ''
         env:
           CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
           CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
@@ -94,7 +99,6 @@ jobs:
           security import Certificates.p12 -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp ProvisioningProfile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
-
 
       # 6. iOS 릴리즈 빌드
       - name: Build IPA

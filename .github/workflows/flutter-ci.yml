@@ -17,11 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Flutter 설치
+      # 2. Flutter SDK 다운로드 및 설치
       - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: 'stable'
+        run: |
+          git clone https://github.com/flutter/flutter.git -b stable
+          echo "::add-path::${{ github.workspace }}/flutter/bin"
+          flutter --version
 
       # 3. 의존성 설치
       - name: Install dependencies

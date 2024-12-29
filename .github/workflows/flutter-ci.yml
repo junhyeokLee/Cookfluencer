@@ -22,6 +22,7 @@ jobs:
         run: |
           git clone https://github.com/flutter/flutter.git -b stable $HOME/flutter
           echo "$HOME/flutter/bin" >> $GITHUB_PATH
+          export PATH="$HOME/flutter/bin:$PATH"
           flutter --version
 
       # 3. 의존성 설치

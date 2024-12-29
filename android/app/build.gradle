@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.cookfl"
+    namespace = "com.devsheep.cookfluencer"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,20 +21,29 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.cookfl"
+     namespace = "com.devsheep.cookfluencer"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+          versionCode = 5
+        versionName = "1.0.4"
+    }
+    signingConfigs {
+        release {
+            storeFile file("cookfluencer-release-key.jks") // 키 저장 경로
+            storePassword "ckwer2000" // keystore 비밀번호
+            keyAlias "my-key-alias" // 키 별칭
+            keyPassword "ckwer2000" // 키 비밀번호
+        }
     }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+//            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }

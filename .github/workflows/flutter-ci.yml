@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build:
+  android-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,3 +34,67 @@ jobs:
         env:
           KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
         run: echo "$KEYSTORE_FILE" | base64 --decode > android/app/cookfluencer-release-key.jks
+
+      # 5. 안드로이드 릴리즈 빌드
+      - name: Build APK
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          flutter build apk --release
+
+      # 6. 빌드된 APK 업로드 (Artifacts 저장)
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  ios-build:
+    runs-on: macos-latest
+
+    steps:
+      # 1. 리포지토리 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Flutter SDK 다운로드 및 경로 설정
+      - name: Install Flutter
+        run: |
+          git clone https://github.com/flutter/flutter.git -b stable $HOME/flutter
+          echo "$HOME/flutter/bin" >> $GITHUB_PATH
+          export PATH="$HOME/flutter/bin:$PATH"
+          flutter --version
+
+      # 3. CocoaPods 설치
+      - name: Install CocoaPods
+        run: sudo gem install cocoapods
+
+      # 4. 의존성 설치
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 5. 인증서 및 프로비저닝 프로파일 복원
+      - name: Restore certificates and provisioning profile
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          MOBILEPROVISION_BASE64: ${{ secrets.MOBILEPROVISION_BASE64 }}
+        run: |
+          echo "$CERTIFICATE_BASE64" | base64 --decode > Certificates.p12
+          echo "$MOBILEPROVISION_BASE64" | base64 --decode > ProvisioningProfile.mobileprovision
+          security import Certificates.p12 -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp ProvisioningProfile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      # 6. iOS 릴리즈 빌드
+      - name: Build IPA
+        run: flutter build ipa --release --no-codesign
+
+      # 7. 빌드된 IPA 업로드 (Artifacts 저장)
+      - name: Upload IPA
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release-ipa
+          path: build/ios/ipa/*.ipa

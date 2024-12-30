@@ -10,7 +10,7 @@ on:
 
 jobs:
   android-build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       # 1. 리포지토리 코드 체크아웃
@@ -35,6 +35,10 @@ jobs:
           echo "$HOME/flutter/bin" >> $GITHUB_PATH
           export PATH="$HOME/flutter/bin:$PATH"
           flutter --version
+
+      # 5. Flutter Clean (공통 작업)
+      - name: Clean project
+        run: flutter clean
 
       # 5. 의존성 설치
       - name: Install dependencies
@@ -82,6 +86,10 @@ jobs:
       - name: Install CocoaPods
         run: sudo gem install cocoapods
 
+      # 4. Flutter Clean (공통 작업)
+      - name: Clean project
+        run: flutter clean
+
       # 4. 의존성 설치
       - name: Install dependencies
         run: flutter pub get
@@ -100,11 +108,26 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp ProvisioningProfile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
 
-      # 6. iOS 릴리즈 빌드
-      - name: Build IPA
-        run: flutter build ipa --release --no-codesign
+      # 6. iOS 아카이브 생성
+      - name: Archive IPA
+        run: |
+          xcodebuild -workspace ios/Runner.xcworkspace \
+          -scheme Runner \
+          -sdk iphoneos \
+          -configuration Release \
+          archive -archivePath build/ios/Runner.xcarchive \
+          -verbose
 
-      # 7. 빌드된 IPA 업로드 (Artifacts 저장)
+      # 7. IPA 내보내기
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+          -archivePath build/ios/Runner.xcarchive \
+          -exportPath build/ios/ipa \
+          -exportOptionsPlist ios/exportOptions.plist \
+          -verbose
+
+      # 8. 빌드된 IPA 업로드 (Artifacts 저장)
       - name: Upload IPA
         uses: actions/upload-artifact@v3
         with:

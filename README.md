@@ -1,16 +1,10 @@
 # cookfluencer
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+IOS store = https://apps.apple.com/us/app/%EC%BF%A1%ED%94%8C-100%EB%A7%8C-%EC%9D%B8%ED%94%8C%EB%A3%A8%EC%96%B8%EC%84%9C-%EB%A0%88%EC%8B%9C%ED%94%BC/id6737149961
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+AOS store = https://play.google.com/store/apps/details?id=com.devsheep.cookfluencer
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![스크린샷 2025-01-03 오전 11 01 55](https://github.com/user-attachments/assets/60eddb90-77c8-43af-8a49-9c490cf55990)

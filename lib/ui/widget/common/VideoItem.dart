@@ -9,6 +9,7 @@ import 'package:cookfluencer/ui/widget/common/CustomVideoImage.dart';
 import 'package:cookfluencer/ui/widget/common/LikeVideoButton.dart'; // LikeVideoButton 추가
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../common/util/DateUtil.dart';
 import 'CustomPageRouter.dart';
 
 class VideoItem extends StatelessWidget {
@@ -18,6 +19,8 @@ class VideoItem extends StatelessWidget {
   final double channelWidth; // 채널 이름 너비
   final VoidCallback onVideoItemClick;
   final bool showLikeButton; // 비디오 클릭 시 호출할 콜백 추가
+  final bool showChannelName; // 채널 이름 표시 여부
+  final bool paddiongNone;
 
   const VideoItem({
     Key? key,
@@ -27,6 +30,8 @@ class VideoItem extends StatelessWidget {
     required this.channelWidth, // 채널 이름 너비 추가
     required this.onVideoItemClick, // 콜백 전달
     this.showLikeButton = false,
+    this.showChannelName = true, // 채널 이름 표시 여부 기본값 추가
+    this.paddiongNone = false
   }) : super(key: key);
 
   @override
@@ -47,8 +52,8 @@ class VideoItem extends StatelessWidget {
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+        margin: paddiongNone ? EdgeInsets.zero : EdgeInsets.only(bottom: 16),
+        padding: paddiongNone ? EdgeInsets.symmetric(horizontal: 0, vertical: 0) : EdgeInsets.symmetric(horizontal: 0, vertical: 4),
         decoration: BoxDecoration(
           color: hasError ? Colors.red.withOpacity(0.1) : Colors.transparent, // 에러 시 배경색 처리
           borderRadius: BorderRadius.circular(8),
@@ -61,7 +66,8 @@ class VideoItem extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8), // 라운드 처리
                 child: Hero(
-                  tag: 'video_${video.id}',
+                  // tag: 'video_${video.id}',
+                  tag: '',
                   child: CustomVideoImage(
                     imageUrl: video.thumbnailUrl, // 썸네일 이미지
                     size: size,
@@ -83,6 +89,27 @@ class VideoItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start, // 왼쪽 정렬
                 children: [
+                  showChannelName? Row(
+                    children: [
+                      Image.asset(Assets.youtube,width: 20.w),
+                      // 별 아이콘AppColors.grey
+                      SizedBox(width: 4),
+                      Text(
+                        video.channelName.length > 14
+                            ? '${video.channelName.substring(0, 14)}...'
+                            : video.channelName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(
+                          color: AppColors.grey,
+                          fontSize: 11.sp,
+                        ),
+                      ),
+                    ],
+                  ): Container(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween, // 타이틀과 버튼 사이에 공간 배분
                     children: [
@@ -106,38 +133,52 @@ class VideoItem extends StatelessWidget {
                   SizedBox(height: 6), // 간격
                   Row(
                     children: [
-                      Image.asset(Assets.view,
-                          width: 16.w,
-                          height: 16.h,
-                          color: AppColors.grey), // 조회수 아이콘
-                      SizedBox(width: 4), // 간격
+                      Text(
+                        formatMonthDayDate(video.uploadDate), // 조회수를 한국어 형식으로 변환
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(
+                            color: AppColors.grey,
+                            fontSize: 11.sp
+                        ),
+                      ),
+
+                      Container(
+                          padding: EdgeInsets.only(left: 6,right: 6),
+                          child: Text(
+                            '·',
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: AppColors.grey,
+                            ),
+                          )
+                      ),
+
                       Text(video.viewCount.toViewCountUnit(),
                           style: Theme.of(context)
                               .textTheme
                               .labelSmall
                               ?.copyWith(
                             color: AppColors.grey,
-                            fontSize: 10.sp,
+                            fontSize: 11.sp,
                           )),
-                      SizedBox(width: 16),
-                      Image.asset(Assets.youtube,
-                          width: 20.w, height: 20.h), // 유튜브 아이콘
-                      SizedBox(width: 4), // 간격
-                      Container(
-                        width: channelWidth, // 전달받은 채널 이름 너비 사용
-                        child: Text(
-                          video.channelName, // 채널 이름
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
-                              ?.copyWith(
-                            color: AppColors.grey,
-                            fontSize: 10.sp,
-                          ),
-                        ),
-                      ),
+
+                      // Container(
+                      //   width: channelWidth, // 전달받은 채널 이름 너비 사용
+                      //   child: Text(
+                      //     video.channelName, // 채널 이름
+                      //     maxLines: 1,
+                      //     overflow: TextOverflow.ellipsis,
+                      //     style: Theme.of(context)
+                      //         .textTheme
+                      //         .labelSmall
+                      //         ?.copyWith(
+                      //       color: AppColors.grey,
+                      //       fontSize: 10.sp,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],

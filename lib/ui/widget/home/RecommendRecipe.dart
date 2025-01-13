@@ -13,6 +13,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:cookfluencer/common/dart/extension/num_extension.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../common/util/DateUtil.dart';
+
 class RecommendRecipe extends HookConsumerWidget {
   const RecommendRecipe({
     super.key,
@@ -95,13 +97,60 @@ class RecommendRecipe extends HookConsumerWidget {
                         //   overflow: TextOverflow.ellipsis,
                         //   style: Theme.of(context).textTheme.labelSmall,
                         // ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 6),
                         Row(
                           children: [
-                            Image.asset(Assets.view,
-                                width: 14, height: 14, color: AppColors.greyDeep),
-                            // 별 아이콘
+                            Image.asset(Assets.youtube,
+                                width: 20.w, height: 20.h),
+                            // 별 아이콘AppColors.grey
                             SizedBox(width: 4),
+                            // 간격
+                            Text(
+                              video.channelName.length > 10
+                                  ? '${video.channelName.substring(0, 10)}...'
+                                  : video.channelName,
+                              maxLines: 1, // 한 줄로 제한
+                              overflow: TextOverflow.ellipsis, // 길어질 경우 생략
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                  color: AppColors.greyDeep,
+                                  fontSize: 11.sp
+                              ),
+                            ),
+
+                            Container(
+                              padding: EdgeInsets.only(left: 6,right: 6),
+                              child: Text(
+                                '·',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: AppColors.greyDeep,
+                                ),
+                              )
+                            ),
+                            Text(
+                              formatMonthDayDate(video.uploadDate), // 조회수를 한국어 형식으로 변환
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                  color: AppColors.greyDeep,
+                                  fontSize: 11.sp
+                              ),
+                            ),
+
+                            Container(
+                                padding: EdgeInsets.only(left: 6,right: 6),
+                                child: Text(
+                                  '·',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: AppColors.greyDeep,
+                                  ),
+                                )
+                            ),
                             // 간격
                             Text(
                               viewCount.toViewCountUnit(), // 조회수를 한국어 형식으로 변환
@@ -111,28 +160,6 @@ class RecommendRecipe extends HookConsumerWidget {
                                   ?.copyWith(
                                   color: AppColors.greyDeep,
                                   fontSize: 11.sp
-                              ),
-                            ),
-                            SizedBox(width: 16),
-                            // 간격
-                            Image.asset(Assets.youtube,
-                                width: 16.w, height: 16.h),
-                            // 별 아이콘AppColors.grey
-                            SizedBox(width: 4),
-                            // 간격
-                            Expanded(
-                              // 공간을 차지하게 하여 텍스트가 넘어가지 않도록 설정
-                              child: Text(
-                                video.channelName.toString(), // 채널 이름
-                                maxLines: 1, // 한 줄로 제한
-                                overflow: TextOverflow.ellipsis, // 길어질 경우 생략
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelSmall
-                                    ?.copyWith(
-                                      color: AppColors.greyDeep,
-                                       fontSize: 11.sp
-                                    ),
                               ),
                             ),
                           ],

@@ -1,17 +1,16 @@
-import 'package:algolia_helper_flutter/algolia_helper_flutter.dart';
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
-import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/common/AlgoliaService.dart';
+import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/data/videoData.dart';
 import 'package:cookfluencer/provider/SearchProvider.dart';
 import 'package:cookfluencer/ui/widget/common/ChannelItem.dart';
+import 'package:cookfluencer/ui/widget/common/CustomRoundButton.dart';
 import 'package:cookfluencer/ui/widget/common/FilterRecipe.dart';
 import 'package:cookfluencer/ui/widget/common/VideoItem.dart';
 import 'package:cookfluencer/ui/widget/search/AutoSearch2.dart';
-import 'package:cookfluencer/ui/widget/search/ResultSearch.dart';
 import 'package:cookfluencer/ui/widget/search/ResultSearchChannel.dart';
 import 'package:cookfluencer/ui/widget/search/SearchBarWidget.dart';
 import 'package:cookfluencer/ui/widget/search/TotalChannels.dart';
@@ -50,7 +49,6 @@ class ResultSearchAlgoria extends HookConsumerWidget {
     final showFilterOptions = useState<bool>(false);
     final showChannelDetail = useState<bool>(false);
     final showTotalChannel = useState<bool>(false);
-    debugPrint("알고리아 서치");
 
     // 키보드 닫는 기능 추가
     void _dismissKeyboard() {
@@ -66,37 +64,32 @@ class ResultSearchAlgoria extends HookConsumerWidget {
 
     final fb_searchResult = ref.watch(autoSearchChannelAndVideoProvider(searchQueryState.value));
 
-    final initialFetch = useState<bool>(true);
     final selectedSort = useState<String>('created_at DESC'); // 기본값 최신순
 
-// 비디오 데이터 가져오기
     Future<void> fetchVideos(int pageKey) async {
       try {
-        final videoResults = await algoliaService
-            .searchTitleFilter(searchQueryState.value, pageKey, selectedSort.value)
-            .first;
-
-        // 새로 가져온 비디오 리스트
+        final videoResults = await algoliaService.searchTitleFilter(searchQueryState.value, pageKey, selectedSort.value).first;
+          print("Fetched Videos Count: ${videoResults.videos.length}");
+        for (var video in videoResults.videos) {
+          print("Video ID: ${video.id}, Title: ${video.title}");
+        }
         final newVideos = videoResults.videos;
 
-        // 기존 비디오 리스트와 중복 제거
-        final existingVideos = videoPagingController.value.itemList ?? [];
-        final uniqueVideos = newVideos.where(
-              (newVideo) => !existingVideos.any(
-                (existingVideo) => existingVideo.id == newVideo.id,
-          ),
-        ).toList();
+        // 페이지 끝 판단
+        final isLastPage = newVideos.length < 20;
 
-        if (uniqueVideos.isEmpty) {
-          videoPagingController.value.appendLastPage(uniqueVideos);
+        if (isLastPage) {
+          videoPagingController.value.appendLastPage(newVideos);
         } else {
-          videoPagingController.value.appendPage(uniqueVideos, pageKey + 1);
+          final nextPageKey = pageKey + 1;
+
+          // 중복 제거된 데이터가 없더라도 다음 페이지 요청
+          videoPagingController.value.appendPage(newVideos, nextPageKey);
         }
       } catch (error) {
         videoPagingController.value.error = error;
       }
     }
-
 
     // 채널 데이터 가져오기
     Future<void> fetchChannels(int pageKey) async {
@@ -125,13 +118,12 @@ class ResultSearchAlgoria extends HookConsumerWidget {
         channelPagingController.value.error = error;
       }
     }
+
     useEffect(() {
       videoPagingController.value.addPageRequestListener(fetchVideos);
       channelPagingController.value.addPageRequestListener(fetchChannels);
-
-      fetchVideos(0);
-      fetchChannels(0);
-
+      // fetchVideos(0);
+      // fetchChannels(0);
       return () {
         videoPagingController.value.removePageRequestListener(fetchVideos);
         channelPagingController.value.removePageRequestListener(fetchChannels);
@@ -196,16 +188,6 @@ class ResultSearchAlgoria extends HookConsumerWidget {
                 child: searchFocus.value
                     ? fb_searchResult.when(
                   data: (results) {
-                    // if (results.isEmpty) {
-                    //   debugPrint('파베 검색 결과 없음');
-                    //   return Padding(
-                    //     padding: const EdgeInsets.all(42),
-                    //     child: Center(
-                    //       child:
-                    //       EmptyMessage(message: '쿡플루언서 검색 결과가 없습니다.'),
-                    //     ),
-                    //   );
-                    // }
                     return AutoSearch2(
                       key: ValueKey('autoSearch'),
                       // results: results,
@@ -234,7 +216,7 @@ class ResultSearchAlgoria extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 16, top: 24),
+                            padding: const EdgeInsets.only(left: 16, top: 24, bottom: 12),
                             child: Text(
                               '인플루언서',
                               style: Theme.of(context).textTheme.titleLarge,
@@ -273,13 +255,44 @@ class ResultSearchAlgoria extends HookConsumerWidget {
                               ),
                             ),
                           ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16,
+                                top: 12,
+                                right: 24,
+                                bottom: 24),
+                            child: CustomRoundButton(
+                              isEnabled: true,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              textColor: AppColors.black,
+                              bgColor: AppColors.keywordBackground,
+                              leftIcon: Icon(
+                                Icons.search,
+                                size: 16,
+                                color: AppColors.grey,
+                              ),
+                              text: '인플루언서 전체 보기',
+                              onTap: () {
+                                onTotalChannelClick(searchQueryState.value); // 콜백 호출
+                              },
+                            ),
+                          ),
                         ],
+                      ),
+                    ),
+                    // 비디오 목록
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16.0,top: 12),
+                        child: Text('레시피 영상', style: Theme.of(context).textTheme.titleLarge),
                       ),
                     ),
                     // 필터 레시피
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.only(right: 22,top: 12 ,bottom: 32),
                         child: FilterRecipe(
                           selectedFilter: selectedFilter,
                           showFilterOptions: showFilterOptions,
@@ -290,13 +303,6 @@ class ResultSearchAlgoria extends HookConsumerWidget {
                             videoPagingController.value.refresh();
                           },
                         ),
-                      ),
-                    ),
-                    // 비디오 목록
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text('레시피 영상', style: Theme.of(context).textTheme.titleLarge),
                       ),
                     ),
                     SliverPadding(
@@ -368,30 +374,6 @@ class ResultSearchAlgoria extends HookConsumerWidget {
                 ),
               ),
             );
-            // Navigator.push(
-            //   context,
-            //   PageRouteBuilder(
-            //     pageBuilder: (context, animation, secondaryAnimation) =>
-            //         ResultSearchChannel(
-            //           channelData: channelData,
-            //         ),
-            //     transitionsBuilder:
-            //         (context, animation, secondaryAnimation, child) {
-            //       const begin = Offset(1.0, 0.0); // 오른쪽에서 왼쪽으로 슬라이드
-            //       const end = Offset.zero;
-            //       const curve = Curves.easeInOut;
-            //
-            //       var tween = Tween(begin: begin, end: end)
-            //           .chain(CurveTween(curve: curve));
-            //       var offsetAnimation = animation.drive(tween);
-            //
-            //       return SlideTransition(
-            //         position: offsetAnimation,
-            //         child: child,
-            //       );
-            //     },
-            //   ),
-            // );
           },
           onTotalChannelClick: (String totalChannel) {
             // 전체 채널 클릭 시 TotalChannels 페이지로 이동

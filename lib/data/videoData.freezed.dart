@@ -31,7 +31,7 @@ mixin _$VideoData {
   String get thumbnailUrl => throw _privateConstructorUsedError;
   @JsonKey(name: 'title')
   String get title => throw _privateConstructorUsedError;
-  @JsonKey(name: 'upload_data')
+  @JsonKey(name: 'upload_date')
   String get uploadDate => throw _privateConstructorUsedError;
   @JsonKey(name: 'video_id')
   String get videoId => throw _privateConstructorUsedError;
@@ -66,7 +66,7 @@ abstract class $VideoDataCopyWith<$Res> {
       @JsonKey(name: 'description') String description,
       @JsonKey(name: 'thumbnail_url') String thumbnailUrl,
       @JsonKey(name: 'title') String title,
-      @JsonKey(name: 'upload_data') String uploadDate,
+      @JsonKey(name: 'upload_date') String uploadDate,
       @JsonKey(name: 'video_id') String videoId,
       @JsonKey(name: 'video_url') String videoUrl,
       @JsonKey(name: 'view_count') int viewCount,
@@ -192,7 +192,7 @@ abstract class _$$VideoDataImplCopyWith<$Res>
       @JsonKey(name: 'description') String description,
       @JsonKey(name: 'thumbnail_url') String thumbnailUrl,
       @JsonKey(name: 'title') String title,
-      @JsonKey(name: 'upload_data') String uploadDate,
+      @JsonKey(name: 'upload_date') String uploadDate,
       @JsonKey(name: 'video_id') String videoId,
       @JsonKey(name: 'video_url') String videoUrl,
       @JsonKey(name: 'view_count') int viewCount,
@@ -298,7 +298,7 @@ class _$VideoDataImpl implements _VideoData {
       @JsonKey(name: 'description') this.description = "",
       @JsonKey(name: 'thumbnail_url') this.thumbnailUrl = "",
       @JsonKey(name: 'title') this.title = "",
-      @JsonKey(name: 'upload_data') this.uploadDate = "",
+      @JsonKey(name: 'upload_date') this.uploadDate = "",
       @JsonKey(name: 'video_id') this.videoId = "",
       @JsonKey(name: 'video_url') this.videoUrl = "",
       @JsonKey(name: 'view_count') this.viewCount = 0,
@@ -328,7 +328,7 @@ class _$VideoDataImpl implements _VideoData {
   @JsonKey(name: 'title')
   final String title;
   @override
-  @JsonKey(name: 'upload_data')
+  @JsonKey(name: 'upload_date')
   final String uploadDate;
   @override
   @JsonKey(name: 'video_id')
@@ -423,7 +423,7 @@ abstract class _VideoData implements VideoData {
       @JsonKey(name: 'description') final String description,
       @JsonKey(name: 'thumbnail_url') final String thumbnailUrl,
       @JsonKey(name: 'title') final String title,
-      @JsonKey(name: 'upload_data') final String uploadDate,
+      @JsonKey(name: 'upload_date') final String uploadDate,
       @JsonKey(name: 'video_id') final String videoId,
       @JsonKey(name: 'video_url') final String videoUrl,
       @JsonKey(name: 'view_count') final int viewCount,
@@ -452,7 +452,7 @@ abstract class _VideoData implements VideoData {
   @JsonKey(name: 'title')
   String get title;
   @override
-  @JsonKey(name: 'upload_data')
+  @JsonKey(name: 'upload_date')
   String get uploadDate;
   @override
   @JsonKey(name: 'video_id')

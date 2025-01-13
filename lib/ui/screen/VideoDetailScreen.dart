@@ -25,6 +25,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../common/util/DateUtil.dart';
+
 final loadingProvider = StateProvider<bool>((ref) => true);
 
 class VideoDetailScreen extends HookConsumerWidget {
@@ -191,18 +193,23 @@ class VideoDetailScreen extends HookConsumerWidget {
                           mediaPlaybackRequiresUserGesture: true,
                           allowsInlineMediaPlayback: true,
                           useOnLoadResource: true,
+                          javaScriptEnabled: true,
+                          cacheEnabled: true,
+                          clearCache: false,
+                          hardwareAcceleration: true,  // ✅ 하드웨어 가속 활성화
+                          transparentBackground: false, // ✅ 투명 배경 비활성화
+                          disableContextMenu: true,    // ✅ 불필요한 컨텍스트 메뉴 제거
+                          preferredContentMode: UserPreferredContentMode.MOBILE,
                         ),
                         initialUrlRequest: URLRequest(
                           url: WebUri(embedUrl), // WebUri로 변환
                         ),
                         onWebViewCreated: (
                             InAppWebViewController controller) {
-                          webViewController =
-                              controller; // webViewController를 저장
+                          webViewController = controller; // webViewController를 저장
                           webViewController?.addJavaScriptHandler(
                             handlerName: 'ErrorDetected',
                             callback: (error) {
-                              debugPrint("Detected 에러발생");
                               debugPrint("Detected 에러발생 = ${error}");
                               var watchUrl = error;
                               // ytp-embed-error가 발생한 경우
@@ -249,21 +256,71 @@ class VideoDetailScreen extends HookConsumerWidget {
 
                 Padding(
                   padding: const EdgeInsets.only(left: 16, right: 16, top: 0),
-                  child: Row(
+                  child:
+                  Row(
                     children: [
-                      Image.asset(
-                        Assets.view,
-                        width: 16.w,
-                        height: 16.h,
-                        color: AppColors.greyDeep,
-                      ),
+                      Image.asset(Assets.youtube,
+                          width: 20.w, height: 20.h),
+                      // 별 아이콘AppColors.grey
                       SizedBox(width: 4),
-                      Text(videoData.viewCount.toViewCountUnit(),
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .labelSmall
-                              ?.copyWith(color: AppColors.grey)),
+                      // 간격
+                      Text(
+                        videoData.channelName.length > 20
+                            ? '${videoData.channelName.substring(0, 20)}...'
+                            : videoData.channelName,
+                        maxLines: 1, // 한 줄로 제한
+                        overflow: TextOverflow.ellipsis, // 길어질 경우 생략
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(
+                            color: AppColors.greyDeep,
+                            fontSize: 12.sp
+                        ),
+                      ),
+
+                      Container(
+                          padding: EdgeInsets.only(left: 6,right: 6),
+                          child: Text(
+                            '·',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: AppColors.greyDeep,
+                            ),
+                          )
+                      ),
+                      Text(
+                        formatMonthDayDate(videoData.uploadDate), // 조회수를 한국어 형식으로 변환
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(
+                            color: AppColors.greyDeep,
+                            fontSize: 12.sp
+                        ),
+                      ),
+
+                      Container(
+                          padding: EdgeInsets.only(left: 6,right: 6),
+                          child: Text(
+                            '·',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: AppColors.greyDeep,
+                            ),
+                          )
+                      ),
+                      // 간격
+                      Text(
+                        videoData.viewCount.toViewCountUnit(), // 조회수를 한국어 형식으로 변환
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(
+                            color: AppColors.greyDeep,
+                            fontSize: 12.sp
+                        ),
+                      ),
                     ],
                   ),
                 ),

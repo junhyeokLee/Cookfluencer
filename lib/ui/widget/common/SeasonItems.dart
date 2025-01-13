@@ -66,9 +66,8 @@ class SeasonItems extends HookConsumerWidget {
               size: 0.25.sw, // 썸네일 사이즈
               titleWidth: 0.42.sw, // 제목 너비
               channelWidth: 0.12.sw,
-              onVideoItemClick: () {
-
-              }, // 채널 이름 너비
+              onVideoItemClick: () {}, // 채널 이름 너비
+              showChannelName: true,
             );
           },
         ),

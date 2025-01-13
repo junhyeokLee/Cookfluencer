@@ -134,3 +134,6 @@ jobs:
         with:
           name: app-release-ipa
           path: build/ios/ipa/*.ipa
+
+      - name: Deploy to TestFlight
+        run: bundle exec fastlane beta

@@ -13,6 +13,7 @@ import 'package:cookfluencer/ui/widget/home/RecommendRecipe.dart';
 import 'package:cookfluencer/ui/widget/home/RecommendSeasonRecipe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../widget/home/RecentVideo.dart';
 
 
 class HomeScreen extends ConsumerWidget {
@@ -22,6 +23,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recommendChannelsAsyncValue = ref.watch(recommendChannelsProvider);
     final recommendVideoListAsyncValue = ref.watch(recommendVideosProvider);
+    final recentVideoListAsyncValue = ref.watch(recentVideosProvider);
     final recommendSeasonAsyncValue = ref.watch(seasonListProvider);
     final keywordListAsyncValue = ref.watch(keywordListProvider);
 
@@ -64,7 +66,7 @@ class HomeScreen extends ConsumerWidget {
     // final season = seasonSnapshots;
 
     final videos = recommendVideoListAsyncValue.asData!.value; // 이미 VideoData 타입의 리스트
-
+    final recentVideos = recentVideoListAsyncValue.asData!.value; // 이미 VideoData 타입의 리스트
     final season = recommendSeasonAsyncValue.asData!.value; // 이미 SeasonData 타입의 리스트
 
     final channelsSnapshots = recommendChannelsAsyncValue.asData!.value;
@@ -76,6 +78,7 @@ class HomeScreen extends ConsumerWidget {
     final keywordList = keywords
         .map((doc) => doc.data() as Map<String, dynamic>)
         .toList();
+
 
     return Scaffold(
       appBar: AppbarWidget(),
@@ -90,6 +93,14 @@ class HomeScreen extends ConsumerWidget {
               ),
               child: RecommendRecipe(recommendVideoListAsyncValue: videos),
             ),
+
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: RecentVideo(
+                recentVideoListAsyncValue: recentVideos,
+              ),
+            ),
+
             // HomeScreen에서 채널 아이템 클릭 시
             RecommendChannel(
               recommendChannelsListAsyncValue: channels,

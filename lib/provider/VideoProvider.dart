@@ -35,6 +35,66 @@ final recommendVideosProvider = FutureProvider.autoDispose<List<VideoData>>((ref
   return videos; // 최종 비디오 리스트 반환
 });
 
+final recentVideosProvider = FutureProvider.autoDispose<List<VideoData>>((ref) async {
+  // Firestore에서 "recommend" 섹션의 비디오 데이터를 가져옵니다.
+  final querySnapshot = await FirebaseFirestore.instance
+      .collection('videos')
+      .orderBy('upload_date', descending: true) // upload_date 기준 내림차순 정렬 (최신순)
+      .limit(6) // 최대 3개 비디오만 가져옴
+      .get();
+
+  List<VideoData> videos = [];
+
+  // 비디오 데이터를 가져온 후 각 비디오에 대해 레시피 데이터를 가져옵니다.
+  for (var doc in querySnapshot.docs) {
+    final data = doc.data() as Map<String, dynamic>;
+
+    // 비디오 데이터 생성
+    VideoData videoData = VideoData.fromJson({
+      'id': doc.id, // 문서 ID 추가
+      'video_id': doc.id, // 비디오 ID 설정
+      ...data, // 기존 데이터 추가
+    });
+
+    // 비디오 ID에 해당하는 레시피 데이터 가져오기
+    List<RecipeData> recipes = await _fetchRecipesForVideo(videoData.videoId);
+    // 레시피가 존재하면 첫 번째 레시피를 설정합니다.
+    videoData = videoData.copyWith(recipe: recipes.isNotEmpty ? recipes[0] : RecipeData());
+    videos.add(videoData);
+  }
+
+  return videos; // 최종 비디오 리스트 반환
+});
+
+// 최신순으로 20개씩 불러오는 Provider
+final paginatedRecentVideosProvider = FutureProvider.family<List<VideoData>, String?>((ref, lastUploadDate) async {
+  try {
+    // ✅ Firestore 쿼리 최적화
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('videos')
+        .orderBy('upload_date', descending: true)
+        .limit(30); // 🔥 10개씩 불러오기
+
+    // 🔎 마지막 upload_date가 있을 경우 이후 데이터부터 불러옴
+    if (lastUploadDate != null) {
+      query = query.startAfter([lastUploadDate]);
+    }
+
+    // ✅ 서버 우선 + 캐시 활용
+    final querySnapshot = await query.get(GetOptions(source: Source.serverAndCache));
+
+    // 🔄 데이터 변환
+    return querySnapshot.docs.map((doc) {
+      return VideoData.fromJson({
+        'id': doc.id,
+        ...doc.data(),
+      });
+    }).toList();
+  } catch (e) {
+    throw Exception('데이터 로딩 실패: $e');
+  }
+});
+
 // 특정 비디오에 대한 레시피 데이터를 가져오는 비동기 메서드
 Future<List<RecipeData>> _fetchRecipesForVideo(String videoId) async {
   try {

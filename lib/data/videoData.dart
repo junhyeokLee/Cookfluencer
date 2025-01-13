@@ -14,7 +14,7 @@ class VideoData with _$VideoData {
     @JsonKey(name: 'description') @Default("") String description,
     @JsonKey(name: 'thumbnail_url') @Default("") String thumbnailUrl,
     @JsonKey(name: 'title') @Default("") String title,
-    @JsonKey(name: 'upload_data') @Default("") String uploadDate,
+    @JsonKey(name: 'upload_date') @Default("") String uploadDate,
     @JsonKey(name: 'video_id') @Default("") String videoId,
     @JsonKey(name: 'video_url') @Default("") String videoUrl,
     @JsonKey(name: 'view_count') @Default(0) int viewCount,

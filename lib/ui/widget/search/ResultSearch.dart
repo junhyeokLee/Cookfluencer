@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
@@ -6,13 +5,11 @@ import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/data/recipeData.dart';
 import 'package:cookfluencer/data/videoData.dart';
-import 'package:cookfluencer/provider/ChannelProvider.dart';
 import 'package:cookfluencer/provider/SearchProvider.dart';
 import 'package:cookfluencer/ui/widget/common/ChannelItem.dart';
 import 'package:cookfluencer/ui/widget/common/CustomRoundButton.dart';
 import 'package:cookfluencer/ui/widget/common/FilterRecipe.dart';
 import 'package:cookfluencer/ui/widget/common/VideoItem.dart';
-import 'package:cookfluencer/ui/widget/search/AutoSearch.dart';
 import 'package:cookfluencer/ui/widget/search/AutoSearch2.dart';
 import 'package:cookfluencer/ui/widget/search/ResultSearchChannel.dart';
 import 'package:cookfluencer/ui/widget/search/SearchBarWidget.dart';

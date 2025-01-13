@@ -145,6 +145,7 @@ class ChannelItems extends HookConsumerWidget {
                   titleWidth: 0.45.sw, // 제목 너비
                   channelWidth: 0.14.sw,
                   onVideoItemClick: () {  }, // 채널 이름 너비
+                  showChannelName: false,
                 );
               },
             );

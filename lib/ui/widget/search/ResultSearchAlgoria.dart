@@ -22,6 +22,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../AdNative.dart';
+
 class ResultSearchAlgoria extends HookConsumerWidget {
   final String searchQuery;
   final Function(ChannelData) onChannelItemClick;
@@ -58,13 +60,14 @@ class ResultSearchAlgoria extends HookConsumerWidget {
     final videoPagingController = useState(
       PagingController<int, VideoData>(firstPageKey: 0),
     );
+
     final channelPagingController = useState(
       PagingController<int, ChannelData>(firstPageKey: 0),
     );
 
     final fb_searchResult = ref.watch(autoSearchChannelAndVideoProvider(searchQueryState.value));
 
-    final selectedSort = useState<String>('created_at DESC'); // 기본값 최신순
+    final selectedSort = useState<String>('upload_date'); // 기본값 최신순
 
     Future<void> fetchVideos(int pageKey) async {
       try {
@@ -282,24 +285,27 @@ class ResultSearchAlgoria extends HookConsumerWidget {
                         ],
                       ),
                     ),
+                    SliverToBoxAdapter(
+                      child: setNativeView(),
+                    ),
                     // 비디오 목록
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 16.0,top: 12),
+                        padding: const EdgeInsets.only(left: 16.0,top: 0),
                         child: Text('레시피 영상', style: Theme.of(context).textTheme.titleLarge),
                       ),
                     ),
                     // 필터 레시피
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 22,top: 12 ,bottom: 32),
+                        padding: const EdgeInsets.only(right: 22,top: 0 ,bottom: 32),
                         child: FilterRecipe(
                           selectedFilter: selectedFilter,
                           showFilterOptions: showFilterOptions,
                           onFilterChanged: (filter) {
                             selectedSort.value = filter == FilterOption.latest
-                                ? 'created_at DESC' // 최신순
-                                : 'popularity DESC'; // 인기순
+                                ? 'upload_date' // 최신순
+                                : 'view_count'; // 인기순
                             videoPagingController.value.refresh();
                           },
                         ),

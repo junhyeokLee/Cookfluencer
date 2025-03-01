@@ -41,12 +41,14 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks! # 프레임워크를 사용하도록 설정
   use_modular_headers! # 모듈화된 헤더를 사용하도록 설정
+  pod 'AdPopcornSSP', '2.9.0'
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   # 기존 pod 선언
   pod 'gRPC-C++' # gRPC C++ 라이브러리
    # Firebase 버전 고정
-  pod 'Firebase/Firestore', '11.2.0' # cloud_firestore에서 요구하는 버전과 맞춤
+  pod 'Firebase/Firestore', '11.8.0' # cloud_firestore에서 요구하는 버전과 맞춤
+  pod 'Firebase/Messaging', '11.8.0'
 
   # 모든 Flutter iOS pod 설치
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))

@@ -4,6 +4,7 @@ import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:cookfluencer/provider/ChannelProvider.dart';
 import 'package:cookfluencer/provider/SearchProvider.dart';
 import 'package:cookfluencer/provider/SeasonProvider.dart';
+import 'package:cookfluencer/provider/UpdateProvider.dart';
 import 'package:cookfluencer/provider/VideoProvider.dart';
 import 'package:cookfluencer/ui/widget/common/AppbarWidget.dart';
 import 'package:cookfluencer/ui/widget/common/ServiceSuggestions.dart';
@@ -38,11 +39,13 @@ class HomeScreen extends ConsumerWidget {
         recommendSeasonAsyncValue.hasError; // 시즌도 에러 상태 체크
 
     if (hasError) {
-      return Scaffold(
-        appBar: AppbarWidget(),
-        body: Center(
-          child: ErrorMessage(
-            message: 'An error occurred. Please try again later.',
+      return UpdateChecker(
+        child: Scaffold(
+          appBar: AppbarWidget(),
+          body: Center(
+            child: ErrorMessage(
+              message: 'An error occurred. Please try again later.',
+            ),
           ),
         ),
       );
@@ -79,43 +82,54 @@ class HomeScreen extends ConsumerWidget {
         .map((doc) => doc.data() as Map<String, dynamic>)
         .toList();
 
+    // AdPopcornSSP.loadInterstitial('118439798', 'V247cLQwngSgnN4');
+    //
+    // AdPopcornSSP.interstitialAdLoadSuccessListener = (placementId) {
+    //   AdPopcornSSP.showInterstitial('118439798', 'V247cLQwngSgnN4');
+    // };
+    // AdPopcornSSP.interstitialAdLoadFailListener = (placementId, error) {
+    //   print('Interstitial Ad Failed: $placementId, Error: $error');
+    // };
 
-    return Scaffold(
-      appBar: AppbarWidget(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: AppColors.primaryColor,
-              ),
-              child: RecommendRecipe(recommendVideoListAsyncValue: videos),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: RecentVideo(
-                recentVideoListAsyncValue: recentVideos,
-              ),
-            ),
-
-            // HomeScreen에서 채널 아이템 클릭 시
-            RecommendChannel(
-              recommendChannelsListAsyncValue: channels,
-              onChannelItemClick: (channelData) {},
-            ),
-            Container(
+    return UpdateChecker(
+      child: Scaffold(
+        appBar: AppbarWidget(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
                 margin: EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: AppColors.keywordBackground,
+                  color: AppColors.primaryColor,
                 ),
-                child: RecommendKeyword(keywordListAsyncValue: keywordList)),
-            RecommendSeasonRecipe(recommendSeasonListAsyncValue: season),
-            Servicesuggestions(),
-          ],
+                child: RecommendRecipe(recommendVideoListAsyncValue: videos),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: RecentVideo(
+                  recentVideoListAsyncValue: recentVideos,
+                ),
+              ),
+
+              // HomeScreen에서 채널 아이템 클릭 시
+              RecommendChannel(
+                recommendChannelsListAsyncValue: channels,
+                onChannelItemClick: (channelData) {},
+              ),
+              Container(
+                  margin: EdgeInsets.only(top: 12, left: 16, right: 16, bottom: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: AppColors.keywordBackground,
+                  ),
+                  child: RecommendKeyword(keywordListAsyncValue: keywordList)),
+              RecommendSeasonRecipe(recommendSeasonListAsyncValue: season),
+              Servicesuggestions(),
+
+            ],
+          ),
         ),
       ),
     );

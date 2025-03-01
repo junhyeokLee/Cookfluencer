@@ -6,6 +6,8 @@ import 'package:cookfluencer/common/constant/dimen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../ui/widget/AdBannerBottom.dart';
+
 class ScaffoldWithNestedNavigation extends StatefulWidget {
   const ScaffoldWithNestedNavigation({
     Key? key,
@@ -105,7 +107,13 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body,
+      // body: body,
+      body: Column(
+        children: [
+          Expanded(child: body),
+          setAdBannerBottom(),
+        ],
+      ),
       bottomNavigationBar: Container(
         decoration: ShapeDecoration(
           color: Colors.white,

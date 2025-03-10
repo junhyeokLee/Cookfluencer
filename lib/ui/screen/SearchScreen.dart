@@ -1,13 +1,11 @@
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
-import 'package:cookfluencer/provider/ChannelProvider.dart';
 import 'package:cookfluencer/provider/SearchProvider.dart';
 import 'package:cookfluencer/sharedPreferences/sharedPreferences.dart';
 import 'package:cookfluencer/ui/widget/search/AutoSearch.dart';
 import 'package:cookfluencer/ui/widget/search/PopularKeyword.dart';
 import 'package:cookfluencer/ui/widget/search/RecentSearch.dart';
-import 'package:cookfluencer/ui/widget/search/ResultSearch.dart';
 import 'package:cookfluencer/ui/widget/search/ResultSearchAlgoria.dart';
 import 'package:cookfluencer/ui/widget/search/ResultSearchChannel.dart';
 import 'package:cookfluencer/ui/widget/search/SearchBarWidget.dart';
@@ -17,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../widget/AdNativeBottom.dart';
 
 class SearchScreen extends HookConsumerWidget {
   @override
@@ -36,7 +35,8 @@ class SearchScreen extends HookConsumerWidget {
     }
 
     // 검색 결과를 가져오는 프로바이더
-    final fb_searchResult = ref.watch(autoSearchChannelAndVideoProvider(searchQuery.value));
+    final fb_searchResult =
+    ref.watch(autoSearchChannelAndVideoProvider(searchQuery.value));
     final keywordListAsyncValue = ref.watch(keywordListProvider);
 
     // 최근 검색어 로드
@@ -50,6 +50,7 @@ class SearchScreen extends HookConsumerWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(toolbarHeight: 0),
+        resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면 크기 변경 방지
         body: WillPopScope(
           onWillPop: () async {
             // 뒤로가기 처리 로직
@@ -90,22 +91,23 @@ class SearchScreen extends HookConsumerWidget {
                   showFinalResults.value = false;
                   searchQuery.value = "";
                   searchController.clear();
-                  },
+                },
                 onSubmitted: () {
-                  _navigateToResultsPage(context, searchQuery.value); // 결과 페이지로 이동
+                  _navigateToResultsPage(
+                      context, searchQuery.value); // 결과 페이지로 이동
                   showSearchWidgets.value = false;
                   showRecentSearch.value = true;
                   showFinalResults.value = false;
                   searchQuery.value = "";
                   searchController.clear();
-                }, onBackPressed: () {
-
-              },
+                },
+                onBackPressed: () {},
               ),
               Expanded(
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 500),
-                  transitionBuilder: (Widget child, Animation<double> animation) {
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
                     return _buildSlideTransition(child, animation);
                   },
                   child: searchQuery.value.isEmpty
@@ -122,34 +124,43 @@ class SearchScreen extends HookConsumerWidget {
                           showRecentSearch.value = false;
                           showChannelDetail.value = false;
                           showTotalChannel.value = false;
-                          _navigateToResultsPage(context, searchQuery.value);
+                          _navigateToResultsPage(
+                              context, searchQuery.value);
                           searchQuery.value = "";
                           searchController.clear();
                         },
                       ),
-                      keywordListAsyncValue.when(
-                        data: (keywords) {
-                          List<Map<String, dynamic>> keywordList = keywords
-                              .map((doc) => doc.data() as Map<String, dynamic>)
-                              .toList();
-                          return Popularkeyword(
-                            keywordList: keywordList,
-                            searchQuery: searchQuery,
-                            onSubmitted: () {
-                              showSearchWidgets.value = true;
-                              showFinalResults.value = false;
-                              showRecentSearch.value = false;
-                              showChannelDetail.value = false;
-                              showTotalChannel.value = false;
-                              _navigateToResultsPage(context, searchQuery.value);
-                              searchQuery.value = "";
-                              searchController.clear();
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: keywordListAsyncValue.when(
+                            data: (keywords) {
+                              List<Map<String, dynamic>> keywordList =
+                              keywords
+                                  .map((doc) => doc.data()
+                              as Map<String, dynamic>)
+                                  .toList();
+                              return Popularkeyword(
+                                keywordList: keywordList,
+                                searchQuery: searchQuery,
+                                onSubmitted: () {
+                                  showSearchWidgets.value = true;
+                                  showFinalResults.value = false;
+                                  showRecentSearch.value = false;
+                                  showChannelDetail.value = false;
+                                  showTotalChannel.value = false;
+                                  _navigateToResultsPage(
+                                      context, searchQuery.value);
+                                  searchQuery.value = "";
+                                  searchController.clear();
+                                },
+                                searchController: searchController,
+                              );
                             },
-                            searchController: searchController,
-                          );
-                        },
-                        loading: () => CircularLoading(),
-                        error: (error, stackTrace) => ErrorMessage(message: '${error}'),
+                            loading: () => CircularLoading(),
+                            error: (error, stackTrace) =>
+                                ErrorMessage(message: '${error}'),
+                          ),
+                        ),
                       ),
                     ],
                   )
@@ -175,17 +186,21 @@ class SearchScreen extends HookConsumerWidget {
                           showRecentSearch.value = false;
                           showChannelDetail.value = false;
                           showTotalChannel.value = false;
-                          _navigateToResultsPage(context, searchQuery.value);
+                          _navigateToResultsPage(
+                              context, searchQuery.value);
                           searchQuery.value = "";
                           searchController.clear();
                         },
                       );
                     },
                     loading: () => CircularLoading(),
-                    error: (error, stackTrace) => ErrorMessage(message: '${error}'),
+                    error: (error, stackTrace) =>
+                        ErrorMessage(message: '${error}'),
                   ),
                 ),
               ),
+              AdNativeBottom(),
+              // setNativeBottomView(),
             ],
           ),
         ),
@@ -251,5 +266,4 @@ class SearchScreen extends HookConsumerWidget {
       ),
     );
   }
-
 }

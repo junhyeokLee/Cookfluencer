@@ -111,7 +111,7 @@ class ScaffoldWithNavigationBar extends StatelessWidget {
       body: Column(
         children: [
           Expanded(child: body),
-          setAdBannerBottom(),
+          // setAdBannerBottom(),
         ],
       ),
       bottomNavigationBar: Container(

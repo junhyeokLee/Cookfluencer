@@ -2,7 +2,7 @@ name: cookfluencer
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.7+1
+version: 1.0.10+1
 
 environment:
   sdk: '>=2.19.0 <4.0.0'
@@ -45,13 +45,15 @@ dependencies:
   package_info_plus: ^8.0.2
   youtube_player_iframe: ^5.2.0
   webview_flutter: ^4.9.0
-  webviewtube: ^2.1.2
+  webviewtube: ^2.0.0
+  webview_flutter_android: ^4.3.1
   lottie: ^3.0.0
   connectivity_plus: ^6.0.5 # 네트워크 연결 상태를 위한 connectivity_plus
   algolia: ^1.1.2
   algolia_helper_flutter: ^1.1.0
   adpopcornssp_flutter: ^1.0.8  # 광고를 위한 adpopcornssp_flutter
-
+  google_mobile_ads: ^5.2.0
+#  google_mobile_ads: ^5.3.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

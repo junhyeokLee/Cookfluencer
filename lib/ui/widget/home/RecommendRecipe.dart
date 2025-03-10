@@ -22,7 +22,7 @@ class RecommendRecipe extends HookConsumerWidget {
   });
 
   final List<VideoData>
-      recommendVideoListAsyncValue; // 비디오 리스트 (썸네일, 제목, 설명 등 포함)
+  recommendVideoListAsyncValue; // 비디오 리스트 (썸네일, 제목, 설명 등 포함)
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +34,7 @@ class RecommendRecipe extends HookConsumerWidget {
         Padding(
           padding: const EdgeInsets.only(left: 24, top: 20, bottom: 16),
           child:
-              Text('오늘의 추천 레시피', style: Theme.of(context).textTheme.titleLarge),
+          Text('오늘의 추천 레시피', style: Theme.of(context).textTheme.titleLarge),
         ),
         Column(
           children: [
@@ -121,14 +121,14 @@ class RecommendRecipe extends HookConsumerWidget {
                             ),
 
                             Container(
-                              padding: EdgeInsets.only(left: 6,right: 6),
-                              child: Text(
-                                '·',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: AppColors.greyDeep,
-                                ),
-                              )
+                                padding: EdgeInsets.only(left: 6,right: 6),
+                                child: Text(
+                                  '·',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: AppColors.greyDeep,
+                                  ),
+                                )
                             ),
                             Text(
                               formatMonthDayDate(video.uploadDate), // 조회수를 한국어 형식으로 변환

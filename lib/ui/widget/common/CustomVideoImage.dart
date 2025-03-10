@@ -67,11 +67,11 @@ class CustomVideoImage extends StatelessWidget {
             bottom: iconBottomPadding, // 아래에서 8px 떨어진 위치
             right: iconRightPadding,  // 오른쪽에서 8px 떨어진 위치
             child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black54, // 배경을 반투명 검정색으로
-                shape: BoxShape.circle, // 아이콘을 원형으로 감싸기
-              ),
-              child: icon
+                decoration: BoxDecoration(
+                  color: Colors.black54, // 배경을 반투명 검정색으로
+                  shape: BoxShape.circle, // 아이콘을 원형으로 감싸기
+                ),
+                child: icon
             ),
           ),
       ],

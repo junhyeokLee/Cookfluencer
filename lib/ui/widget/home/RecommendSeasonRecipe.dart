@@ -6,6 +6,7 @@ import 'package:cookfluencer/ui/widget/common/SeasonItems.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../AdNativeBottom.dart';
 
 class RecommendSeasonRecipe extends HookConsumerWidget {
   const RecommendSeasonRecipe({
@@ -30,6 +31,8 @@ class RecommendSeasonRecipe extends HookConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
       children: [
+        // setNativeBottomView(),
+        AdNativeBottom(),
         Padding(
           padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
           child: Text(

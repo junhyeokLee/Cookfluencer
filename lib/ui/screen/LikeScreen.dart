@@ -12,6 +12,7 @@ import 'package:cookfluencer/ui/widget/common/VideoItem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../widget/AdNativeBottom.dart';
 
 class LikeScreen extends ConsumerWidget {
   const LikeScreen({super.key});
@@ -41,33 +42,39 @@ class LikeScreen extends ConsumerWidget {
   }
 
   // TabBar 빌더
-  PreferredSizeWidget _buildTabBar() {
-    return TabBar(
-      labelColor: AppColors.primarySelectedColor,
-      unselectedLabelColor: AppColors.black,
-      indicatorColor: AppColors.primarySelectedColor,
-      dividerColor: Colors.transparent,
-      indicatorPadding: const EdgeInsets.only(left: 24, right: 24),
-      indicatorSize: TabBarIndicatorSize.tab,
-      tabs: const [
-        Tab(
-          child: Text(
-            '인플루언서',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+  Column _buildTabBar() {
+    return Column(
+      children: [
+        TabBar(
+          labelColor: AppColors.primarySelectedColor,
+          unselectedLabelColor: AppColors.black,
+          indicatorColor: AppColors.primarySelectedColor,
+          dividerColor: Colors.transparent,
+          indicatorPadding: const EdgeInsets.only(left: 24, right: 24),
+          indicatorSize: TabBarIndicatorSize.tab,
+          tabs: const [
+            Tab(
+              child: Text(
+                '인플루언서',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
-          ),
-        ),
-        Tab(
-          child: Text(
-            '레시피',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+            Tab(
+              child: Text(
+                '레시피',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
+        // setNativeBottomView(),
+        AdNativeBottom(),
       ],
     );
   }
@@ -84,7 +91,7 @@ class LikeScreen extends ConsumerWidget {
 
         if (likedChannelsList.isEmpty) {
           return const Center(
-            child: EmptyMessage(message: '저장된 인플루언서가 없습니다.'));
+              child: EmptyMessage(message: '저장된 인플루언서가 없습니다.'));
         }
 
         return Padding(

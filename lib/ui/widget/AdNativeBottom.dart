@@ -4,21 +4,23 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../common/util/AdManager.dart';
 
-class AdNative extends StatefulWidget {
+class AdNativeBottom extends StatefulWidget {
 
-  const AdNative({super.key});
+  const AdNativeBottom({super.key});
 
   @override
-  State<AdNative> createState() => _NativeAdWrapperState();
+  State<AdNativeBottom> createState() => _NativeAdWrapperState();
 }
 
-class _NativeAdWrapperState extends State<AdNative> {
+class _NativeAdWrapperState extends State<AdNativeBottom> {
   bool _useAdMob = false; // AdMob으로 전환 여부
   bool _adMobLoaded = false; // AdMob 로드 성공 여부
   bool _hasAd = true; // 기본값 광고 있음
 
-  static const MethodChannel androidNativeChannel = MethodChannel('adpopcornssp/IM3JlCYWPOuqfw5');
-  static const MethodChannel iosNativeChannel = MethodChannel('adpopcornssp/413yNnzh8t6pCXy');
+  // static const MethodChannel androidNativeChannel = MethodChannel('adpopcornssp/IM3JlCYWPOuqfw5');
+  // static const MethodChannel iosNativeChannel = MethodChannel('adpopcornssp/413yNnzh8t6pCXy');
+  static const MethodChannel androidNativeBottomChannel = MethodChannel('adpopcornssp/iL2sQ3ZVSTkqmHB');
+  static const MethodChannel iosNativeBottomChannel = MethodChannel('adpopcornssp/i4AcFEMwKw5lqxt');
 
   @override
   void initState() {
@@ -28,9 +30,11 @@ class _NativeAdWrapperState extends State<AdNative> {
 
   void _initAd() {
     if (Platform.isAndroid) {
-      androidNativeChannel.setMethodCallHandler(_eventHandleMethod);
+      // androidNativeChannel.setMethodCallHandler(_eventHandleMethod);
+      androidNativeBottomChannel.setMethodCallHandler(_eventHandleMethod);
     } else if (Platform.isIOS) {
-      iosNativeChannel.setMethodCallHandler(_eventHandleMethod);
+      // iosNativeChannel.setMethodCallHandler(_eventHandleMethod);
+      iosNativeBottomChannel.setMethodCallHandler(_eventHandleMethod);
     }
   }
 
@@ -44,10 +48,10 @@ class _NativeAdWrapperState extends State<AdNative> {
         _hasAd = true;
         _useAdMob = false; // 성공 시 AdMob 전환 해제
       });
-      debugPrint('✅ AdPopcorn 네이티브 광고 로드 성공');
+      debugPrint('✅ AdPopcorn 네이티브 하단 광고 로드 성공');
     } else if (method == 'APSSPNativeAdLoadFail') {
       final int errorCode = arguments['errorCode'];
-      debugPrint('🚫 AdPopcorn 네이티브 광고 로드 실패: $errorCode');
+      debugPrint('🚫 AdPopcorn 네이티브 하단 광고 로드 실패: $errorCode');
       // AdMob 네이티브로 전환
       _switchToAdMob();
     } else if (method == 'APSSPNativeAdImpression') {
@@ -57,12 +61,12 @@ class _NativeAdWrapperState extends State<AdNative> {
   }
 
   void _switchToAdMob() {
-    debugPrint('🔄 AdMob 네이티브 광고 전환 시도');
+    debugPrint('🔄 AdMob 네이티브 하단 광고 전환 시도');
     setState(() {
       _useAdMob = true;
       _hasAd = true;
     });
-    AdManager.loadAdMobNative((success) {
+    AdManager.loadAdMobNativeBottom((success) {
       setState(() {
         _adMobLoaded = success;
         if (!success) _hasAd = false; // AdMob도 실패 시 숨김
@@ -75,7 +79,7 @@ class _NativeAdWrapperState extends State<AdNative> {
     if (!_hasAd) return const SizedBox.shrink();
 
     if (_useAdMob) {
-      final ad = AdManager.adMobNative;
+      final ad = AdManager.adMobNativeBottom;
       if (_adMobLoaded && ad != null) {
         return Container(
           width: double.infinity,
@@ -95,14 +99,14 @@ class _NativeAdWrapperState extends State<AdNative> {
     const viewType = 'AdPopcornSSPNativeView';
     final creationParams = {
       'appKey': Platform.isAndroid ? '118439798' : '603898345',
-      'placementId': Platform.isAndroid ? 'IM3JlCYWPOuqfw5' : '413yNnzh8t6pCXy',
-      'height': 100,
+      'placementId': Platform.isAndroid ? 'iL2sQ3ZVSTkqmHB' : 'i4AcFEMwKw5lqxt',
+      'height': 80,
     };
 
     if (Platform.isAndroid) {
       return Container(
         width: double.infinity,
-        height: 100,
+        height: 80,
         child: AndroidView(
           viewType: viewType,
           layoutDirection: TextDirection.ltr,
@@ -116,7 +120,7 @@ class _NativeAdWrapperState extends State<AdNative> {
     } else if (Platform.isIOS) {
       return Container(
         width: double.infinity,
-        height: 100,
+        height: 80,
         child: UiKitView(
           viewType: viewType,
           layoutDirection: TextDirection.ltr,

@@ -32,63 +32,63 @@ class ChannelsScreen extends HookConsumerWidget {
     final fb_searchResult = ref.watch(autoSearchChannelProvider(query.value));
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // 기본 뒤로 가기 버튼을 숨김
-        title: SearchBarWidget(
-          searchQuery: query,
-          searchController: searchController,
-          recentSearches: recentSearches,
-          onSearchTap: () {
-            showSearchWidgets.value = true; // 자동 검색 화면 활성화
-            showFinalResults.value = false; // 최종 검색 결과 숨기기
-          },
-          onBackPressed: () {
-            GoRouter.of(context).pop();
-            query.value = ''; // 검색 쿼리 초기화
-            searchController.clear(); // 검색 컨트롤러 초기화
-          },
-          showBackButton: !showSearchWidgets.value,
-          // 뒤로가기 버튼 표시 여부
-          onSubmitted: () {
-            // 검색 완료 시
-            showSearchWidgets.value = false; // 자동 검색 화면 숨기기
-            showFinalResults.value = true; // 최종 검색 결과 화면 보이기
-          },
-          enabled: true, // ResultSearch가 true일 때 enabled 설정
-        ),
-      ),
-      body: showFinalResults.value
-          ? buildSingleChildScrollView(searchChannelListAsyncValue,context)
-          : showSearchWidgets.value
-          ? fb_searchResult.when(
-        data: (results) {
-          // 검색 결과가 있는 경우
-          if (results.isEmpty) {
-            return Padding(
-              padding: const EdgeInsets.all(42),
-              child: Center(
-                child: EmptyMessage(
-                    message:
-                    '쿡플루언서 검색 결과가 없습니다.'), // 결과가 없을 때 메시지
-              ),
-            );
-          }
-          return AutoSearch(
-            results: results,
+        appBar: AppBar(
+          automaticallyImplyLeading: false, // 기본 뒤로 가기 버튼을 숨김
+          title: SearchBarWidget(
             searchQuery: query,
             searchController: searchController,
+            recentSearches: recentSearches,
+            onSearchTap: () {
+              showSearchWidgets.value = true; // 자동 검색 화면 활성화
+              showFinalResults.value = false; // 최종 검색 결과 숨기기
+            },
+            onBackPressed: () {
+              GoRouter.of(context).pop();
+              query.value = ''; // 검색 쿼리 초기화
+              searchController.clear(); // 검색 컨트롤러 초기화
+            },
+            showBackButton: !showSearchWidgets.value,
+            // 뒤로가기 버튼 표시 여부
             onSubmitted: () {
-              // 엔터 누르기 동작을 처리
+              // 검색 완료 시
               showSearchWidgets.value = false; // 자동 검색 화면 숨기기
               showFinalResults.value = true; // 최종 검색 결과 화면 보이기
             },
-          ); // 검색 결과 위젯 반환
-        },
-        loading: () => CircularLoading(),
-        error: (error, stackTrace) =>
-            ErrorMessage(message: '${error}'),
-      )
-          : Container() // 검색 결과 화면
+            enabled: true, // ResultSearch가 true일 때 enabled 설정
+          ),
+        ),
+        body: showFinalResults.value
+            ? buildSingleChildScrollView(searchChannelListAsyncValue,context)
+            : showSearchWidgets.value
+            ? fb_searchResult.when(
+          data: (results) {
+            // 검색 결과가 있는 경우
+            if (results.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.all(42),
+                child: Center(
+                  child: EmptyMessage(
+                      message:
+                      '쿡플루언서 검색 결과가 없습니다.'), // 결과가 없을 때 메시지
+                ),
+              );
+            }
+            return AutoSearch(
+              results: results,
+              searchQuery: query,
+              searchController: searchController,
+              onSubmitted: () {
+                // 엔터 누르기 동작을 처리
+                showSearchWidgets.value = false; // 자동 검색 화면 숨기기
+                showFinalResults.value = true; // 최종 검색 결과 화면 보이기
+              },
+            ); // 검색 결과 위젯 반환
+          },
+          loading: () => CircularLoading(),
+          error: (error, stackTrace) =>
+              ErrorMessage(message: '${error}'),
+        )
+            : Container() // 검색 결과 화면
     );
   }
 

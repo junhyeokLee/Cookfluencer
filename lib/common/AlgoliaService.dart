@@ -10,10 +10,10 @@ class AlgoliaService {
 
   AlgoliaService()
       : _titleSearcher = HitsSearcher(
-          applicationID: 'MC84CR9U8O',
-          apiKey: 'ecef53cb69da08b3e4f77e92cc600eb1',
-          indexName: 'title',
-        ),
+    applicationID: 'MC84CR9U8O',
+    apiKey: 'ecef53cb69da08b3e4f77e92cc600eb1',
+    indexName: 'title',
+  ),
         _channelSearcher = HitsSearcher(
           applicationID: 'MC84CR9U8O',
           apiKey: 'ecef53cb69da08b3e4f77e92cc600eb1',

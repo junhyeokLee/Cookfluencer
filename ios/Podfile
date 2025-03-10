@@ -1,5 +1,6 @@
 # 프로젝트의 전역 플랫폼을 정의하기 위한 주석 해제
-platform :ios, '14.0' # Xcode 설정과 맞추어 iOS 13.0 이상으로 명시
+# platform :ios, '14.0' # Xcode 설정과 맞추어 iOS 13.0 이상으로 명시
+platform :ios, '14.3'
 
 # CocoaPods 분석 통계를 비동기적으로 전송하여 Flutter 빌드 지연 시간에 영향을 줄 수 있음
 ENV['COCOAPODS_DISABLE_STATS'] = 'true' # CocoaPods의 분석 통계를 비활성화하여 빌드 지연 시간 단축
@@ -41,7 +42,7 @@ flutter_ios_podfile_setup
 target 'Runner' do
   use_frameworks! # 프레임워크를 사용하도록 설정
   use_modular_headers! # 모듈화된 헤더를 사용하도록 설정
-  pod 'AdPopcornSSP', '2.9.0'
+#   pod 'AdPopcornSSP', '2.9.0'
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   # 기존 pod 선언
@@ -49,6 +50,8 @@ target 'Runner' do
    # Firebase 버전 고정
   pod 'Firebase/Firestore', '11.8.0' # cloud_firestore에서 요구하는 버전과 맞춤
   pod 'Firebase/Messaging', '11.8.0'
+#   pod 'Google-Mobile-Ads-SDK', '11.10.0'
+#   pod 'Google-Mobile-Ads-SDK', '11.9.0'
 
   # 모든 Flutter iOS pod 설치
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
@@ -58,6 +61,7 @@ target 'Runner' do
     inherit! :search_paths # 검색 경로 상속
   end
 end
+
 
 # 설치 후 추가 설정
 post_install do |installer|

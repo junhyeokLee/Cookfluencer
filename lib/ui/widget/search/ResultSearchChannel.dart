@@ -211,7 +211,7 @@ class ResultSearchChannel extends HookConsumerWidget {
             if (pagingController.value.error != null)
               SliverToBoxAdapter(
                 child:
-                    ErrorMessage(message: '오류 발생: ${pagingController.value.error}'),
+                ErrorMessage(message: '오류 발생: ${pagingController.value.error}'),
               ),
           ],
         ),

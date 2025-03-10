@@ -33,7 +33,7 @@ class SearchScreen3 extends HookConsumerWidget {
     final selectedTotalChannel = useState<String>('');
 
     final fb_searchResult =
-        ref.watch(autoSearchChannelAndVideoProvider(searchQuery.value));
+    ref.watch(autoSearchChannelAndVideoProvider(searchQuery.value));
     final keywordListAsyncValue = ref.watch(keywordListProvider);
 
     useEffect(() {
@@ -119,102 +119,102 @@ class SearchScreen3 extends HookConsumerWidget {
                 },
                 child: showTotalChannel.value
                     ? Totalchannels(
-                        searchQuery: selectedTotalChannel.value,
-                        onChannelItemClick: (channelData) {
-                          showTotalChannel.value = false;
-                          selectedChannelData.value = channelData;
-                          showChannelDetail.value = true;
-                        },
-                      )
+                  searchQuery: selectedTotalChannel.value,
+                  onChannelItemClick: (channelData) {
+                    showTotalChannel.value = false;
+                    selectedChannelData.value = channelData;
+                    showChannelDetail.value = true;
+                  },
+                )
                     : showChannelDetail.value
-                        ? ResultSearchChannel(
-                            key: ValueKey(selectedChannelData.value?.id),
-                            channelData: selectedChannelData.value!,
-                          )
-                        : showFinalResults.value
-                            ? ResultSearch(
-                                key: ValueKey(searchQuery.value),
-                                searchQuery: searchQuery.value,
-                                onChannelItemClick: (channelData) {
-                                  selectedChannelData.value = channelData;
-                                  showChannelDetail.value = true;
-                                },
-                                onTotalChannelClick: (String) {
-                                  selectedTotalChannel.value = String;
-                                  showTotalChannel.value = true;
-                                },
-                              )
-                            : showSearchWidgets.value
-                                ? Column(
-                                    key: ValueKey('searchWidgets'),
-                                    children: [
-                                      RecentSearch(
-                                        recentSearches: recentSearches,
-                                        searchQuery: searchQuery,
-                                        searchController: searchController,
-                                        onSubmitted: () {
-                                          showSearchWidgets.value = false;
-                                          showFinalResults.value = true;
-                                          showRecentSearch.value = false;
-                                          showChannelDetail.value = false;
-                                          showTotalChannel.value = false;
-                                        },
-                                      ),
-                                      keywordListAsyncValue.when(
-                                        data: (keywords) {
-                                          List<Map<String, dynamic>>
-                                              keywordList = keywords
-                                                  .map((doc) => doc.data()
-                                                      as Map<String, dynamic>)
-                                                  .toList();
-                                          return Popularkeyword(
-                                            keywordList: keywordList,
-                                            searchQuery: searchQuery,
-                                            onSubmitted: () {
-                                              showSearchWidgets.value = false;
-                                              showFinalResults.value = true;
-                                              showRecentSearch.value = false;
-                                              showChannelDetail.value = false;
-                                              showTotalChannel.value = false;
-                                            },
-                                            searchController: searchController,
-                                          );
-                                        },
-                                        loading: () => CircularLoading(),
-                                        error: (error, stackTrace) =>
-                                            ErrorMessage(message: '${error}'),
-                                      ),
-                                    ],
-                                  )
-                                : fb_searchResult.when(
-                                    data: (results) {
-                                      if (results.isEmpty) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(42),
-                                          child: Center(
-                                            child: EmptyMessage(
-                                                message: '쿡플루언서 검색 결과가 없습니다.'),
-                                          ),
-                                        );
-                                      }
-                                      return AutoSearch(
-                                        key: ValueKey('autoSearch'),
-                                        results: results,
-                                        searchQuery: searchQuery,
-                                        searchController: searchController,
-                                        onSubmitted: () {
-                                          showSearchWidgets.value = false;
-                                          showFinalResults.value = true;
-                                          showRecentSearch.value = false;
-                                          showChannelDetail.value = false;
-                                          showTotalChannel.value = false;
-                                        },
-                                      );
-                                    },
-                                    loading: () => CircularLoading(),
-                                    error: (error, stackTrace) =>
-                                        ErrorMessage(message: '${error}'),
-                                  ),
+                    ? ResultSearchChannel(
+                  key: ValueKey(selectedChannelData.value?.id),
+                  channelData: selectedChannelData.value!,
+                )
+                    : showFinalResults.value
+                    ? ResultSearch(
+                  key: ValueKey(searchQuery.value),
+                  searchQuery: searchQuery.value,
+                  onChannelItemClick: (channelData) {
+                    selectedChannelData.value = channelData;
+                    showChannelDetail.value = true;
+                  },
+                  onTotalChannelClick: (String) {
+                    selectedTotalChannel.value = String;
+                    showTotalChannel.value = true;
+                  },
+                )
+                    : showSearchWidgets.value
+                    ? Column(
+                  key: ValueKey('searchWidgets'),
+                  children: [
+                    RecentSearch(
+                      recentSearches: recentSearches,
+                      searchQuery: searchQuery,
+                      searchController: searchController,
+                      onSubmitted: () {
+                        showSearchWidgets.value = false;
+                        showFinalResults.value = true;
+                        showRecentSearch.value = false;
+                        showChannelDetail.value = false;
+                        showTotalChannel.value = false;
+                      },
+                    ),
+                    keywordListAsyncValue.when(
+                      data: (keywords) {
+                        List<Map<String, dynamic>>
+                        keywordList = keywords
+                            .map((doc) => doc.data()
+                        as Map<String, dynamic>)
+                            .toList();
+                        return Popularkeyword(
+                          keywordList: keywordList,
+                          searchQuery: searchQuery,
+                          onSubmitted: () {
+                            showSearchWidgets.value = false;
+                            showFinalResults.value = true;
+                            showRecentSearch.value = false;
+                            showChannelDetail.value = false;
+                            showTotalChannel.value = false;
+                          },
+                          searchController: searchController,
+                        );
+                      },
+                      loading: () => CircularLoading(),
+                      error: (error, stackTrace) =>
+                          ErrorMessage(message: '${error}'),
+                    ),
+                  ],
+                )
+                    : fb_searchResult.when(
+                  data: (results) {
+                    if (results.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.all(42),
+                        child: Center(
+                          child: EmptyMessage(
+                              message: '쿡플루언서 검색 결과가 없습니다.'),
+                        ),
+                      );
+                    }
+                    return AutoSearch(
+                      key: ValueKey('autoSearch'),
+                      results: results,
+                      searchQuery: searchQuery,
+                      searchController: searchController,
+                      onSubmitted: () {
+                        showSearchWidgets.value = false;
+                        showFinalResults.value = true;
+                        showRecentSearch.value = false;
+                        showChannelDetail.value = false;
+                        showTotalChannel.value = false;
+                      },
+                    );
+                  },
+                  loading: () => CircularLoading(),
+                  error: (error, stackTrace) =>
+                      ErrorMessage(message: '${error}'),
+                ),
               ),
             ),
           ],

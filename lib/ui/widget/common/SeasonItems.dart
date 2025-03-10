@@ -44,7 +44,7 @@ class SeasonItems extends HookConsumerWidget {
                 width: 0.16.sw,
                 height: 0.16.sw,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                errorBuilder: (context, error, stackTrace) => const Icon(Icons.food_bank),
               ),
             ),
           ],

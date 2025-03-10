@@ -43,105 +43,105 @@ class HomeSearchScreen extends HookConsumerWidget {
     return GestureDetector(
       onTap: _dismissKeyboard, // 화면 터치 시 키보드 닫기
       child: Scaffold(
-          // appBar: AppbarWidget(), // 앱바 추가
-          body: Column(
-              children: [
-                Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    transitionBuilder: (Widget child, Animation<double> animation) {
-                      return _buildSlideTransition(child, animation);
-                    },
-                    child:
-                    showTotalChannel.value
-                        ? Totalchannels(
-                            searchQuery: selectedTotalChannel.value,
-                            onChannelItemClick: (channelData) {
-                              showTotalChannel.value = false;
-                              selectedChannelData.value = channelData;
-                              showChannelDetail.value = true;
-                            },
-                          )
-                        : showChannelDetail.value
-                            ? ResultSearchChannel(
-                                key: ValueKey(selectedChannelData.value?.id),
-                                channelData: selectedChannelData.value!,
-                              )
-                            : showFinalResults.value
-                                ? ResultSearchAlgoria(
-                      key: ValueKey(searchQuery.value),
-                      searchQuery: searchQuery.value,
+        // appBar: AppbarWidget(), // 앱바 추가
+        body: Column(
+          children: [
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return _buildSlideTransition(child, animation);
+                },
+                child:
+                showTotalChannel.value
+                    ? Totalchannels(
+                  searchQuery: selectedTotalChannel.value,
+                  onChannelItemClick: (channelData) {
+                    showTotalChannel.value = false;
+                    selectedChannelData.value = channelData;
+                    showChannelDetail.value = true;
+                  },
+                )
+                    : showChannelDetail.value
+                    ? ResultSearchChannel(
+                  key: ValueKey(selectedChannelData.value?.id),
+                  channelData: selectedChannelData.value!,
+                )
+                    : showFinalResults.value
+                    ? ResultSearchAlgoria(
+                  key: ValueKey(searchQuery.value),
+                  searchQuery: searchQuery.value,
 
-                      onChannelItemClick: (channelData) {
-                        // selectedChannelData.value = channelData;
-                        // showChannelDetail.value = true;
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) => ResultSearchChannel(
-                              channelData: channelData,
-                            ),
-                          ),
-                        );
+                  onChannelItemClick: (channelData) {
+                    // selectedChannelData.value = channelData;
+                    // showChannelDetail.value = true;
+                    Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (context) => ResultSearchChannel(
+                          channelData: channelData,
+                        ),
+                      ),
+                    );
+                  },
+                  onTotalChannelClick: (String) {
+                    // selectedTotalChannel.value = String;
+                    // showTotalChannel.value = true;
+                    Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (context) => Totalchannels(
+                          searchQuery: String,
+                          onChannelItemClick: (channelData) {
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                builder: (context) => ResultSearchChannel(
+                                  channelData: channelData,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ) : showSearchWidgets.value
+                    ? fb_searchResult.when(
+                  data: (results) {
+                    // 검색 결과가 있는 경우
+                    // if (results.isEmpty) {
+                    //   return Padding(
+                    //     padding: const EdgeInsets.all(42),
+                    //     child: Center(
+                    //       child: EmptyMessage(
+                    //           message:
+                    //               '쿡플루언서 검색 결과가 없습니다.'), // 결과가 없을 때 메시지
+                    //     ),
+                    //   );
+                    // }
+                    return AutoSearch(
+                      key: ValueKey('autoSearch'),
+                      results: results,
+                      searchQuery: searchQuery,
+                      searchController: searchController,
+                      onSubmitted: () {
+                        // 엔터 누르기 동작을 처리
+                        showSearchWidgets.value = false;
+                        showFinalResults.value = true; // 최종 검색 결과 화면 보이기
+                        _navigateToResultsPage(context, searchQuery.value); // 결과 페이지로 이동
+                        searchQuery.value = "";
+                        searchController.clear();
                       },
-                      onTotalChannelClick: (String) {
-                        // selectedTotalChannel.value = String;
-                        // showTotalChannel.value = true;
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) => Totalchannels(
-                              searchQuery: String,
-                              onChannelItemClick: (channelData) {
-                                Navigator.of(context).push(
-                                  CupertinoPageRoute(
-                                    builder: (context) => ResultSearchChannel(
-                                      channelData: channelData,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    ) : showSearchWidgets.value
-                                    ? fb_searchResult.when(
-                                        data: (results) {
-                                          // 검색 결과가 있는 경우
-                                          // if (results.isEmpty) {
-                                          //   return Padding(
-                                          //     padding: const EdgeInsets.all(42),
-                                          //     child: Center(
-                                          //       child: EmptyMessage(
-                                          //           message:
-                                          //               '쿡플루언서 검색 결과가 없습니다.'), // 결과가 없을 때 메시지
-                                          //     ),
-                                          //   );
-                                          // }
-                                          return AutoSearch(
-                                            key: ValueKey('autoSearch'),
-                                            results: results,
-                                            searchQuery: searchQuery,
-                                            searchController: searchController,
-                                            onSubmitted: () {
-                                              // 엔터 누르기 동작을 처리
-                                              showSearchWidgets.value = false;
-                                              showFinalResults.value = true; // 최종 검색 결과 화면 보이기
-                                              _navigateToResultsPage(context, searchQuery.value); // 결과 페이지로 이동
-                                              searchQuery.value = "";
-                                              searchController.clear();
-                                            },
-                                          ); // 검색 결과 위젯 반환
-                                        },
-                                        loading: () => CircularLoading(),
-                                        error: (error, stackTrace) =>
-                                            ErrorMessage(message: '${error}'),
-                                      )
-                                    : Container(),
-                  ),
-                ),
-              ],
+                    ); // 검색 결과 위젯 반환
+                  },
+                  loading: () => CircularLoading(),
+                  error: (error, stackTrace) =>
+                      ErrorMessage(message: '${error}'),
+                )
+                    : Container(),
+              ),
             ),
-          ),
+          ],
+        ),
+      ),
     );
   }
 

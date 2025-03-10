@@ -185,7 +185,7 @@ class ChannelDetailScreen extends HookConsumerWidget {
           SliverPadding(
             padding: const EdgeInsets.only(left: 16, right: 16,top: 12),
             sliver: PagedSliverList<int, Map<String, dynamic>>(
-            pagingController: pagingController.value,
+              pagingController: pagingController.value,
               builderDelegate: PagedChildBuilderDelegate<Map<String, dynamic>>(
                 itemBuilder: (context, video, index) {
                   final videoData = VideoData(

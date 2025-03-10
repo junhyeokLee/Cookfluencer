@@ -1,18 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cookfluencer/common/common.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
-import 'package:cookfluencer/common/constant/assets.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/routing/appRoute.dart';
 import 'package:cookfluencer/ui/widget/common/ChannelItems.dart';
-import 'package:cookfluencer/ui/widget/common/CustomChannelImage.dart';
 import 'package:cookfluencer/ui/widget/common/PageIndicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../AdNative.dart';
+import '../AdNativeBottom.dart';
 
 class RecommendChannel extends HookConsumerWidget {
   final Function(ChannelData) onChannelItemClick; // 콜백 추가
@@ -24,7 +21,7 @@ class RecommendChannel extends HookConsumerWidget {
   });
 
   final List<Map<String, dynamic>>
-      recommendChannelsListAsyncValue; // 채널 리스트 (썸네일, 제목, 설명 등 포함)
+  recommendChannelsListAsyncValue; // 채널 리스트 (썸네일, 제목, 설명 등 포함)
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,10 +37,12 @@ class RecommendChannel extends HookConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
       children: [
+        // setNativeMiddleView(),
+        AdNative(),
         Padding(
-          padding: const EdgeInsets.only(left: 16, bottom: 12),
+          padding: const EdgeInsets.only(left: 16, bottom: 12,top: 16),
           child:
-              Text('추천 쿡플루언서', style: Theme.of(context).textTheme.titleLarge),
+          Text('추천 쿡플루언서', style: Theme.of(context).textTheme.titleLarge),
         ),
         Column(
           children: [
@@ -64,7 +63,7 @@ class RecommendChannel extends HookConsumerWidget {
                 },
               ),
               items:
-                  recommendChannelsListAsyncValue.asMap().entries.map((entry) {
+              recommendChannelsListAsyncValue.asMap().entries.map((entry) {
                 int index = entry.key;
                 var channel = entry.value; // 채널 데이터
 
@@ -76,9 +75,9 @@ class RecommendChannel extends HookConsumerWidget {
                   channelUrl: channel['channel_url'] ?? '',
                   thumbnailUrl: channel['thumbnail_url'] ?? '',
                   subscriberCount:
-                      int.tryParse(channel['subscriber_count'].toString()) ?? 0,
+                  int.tryParse(channel['subscriber_count'].toString()) ?? 0,
                   videoCount:
-                      int.tryParse(channel['video_count'].toString()) ?? 0,
+                  int.tryParse(channel['video_count'].toString()) ?? 0,
                   // 숫자로 변환
                   videos: channel['videos'] ?? [],
                   section: channel['section'] ?? '',
@@ -86,7 +85,7 @@ class RecommendChannel extends HookConsumerWidget {
 
                 // 각 카드의 인덱스에 따라 배경색 설정
                 Color backgroundColor =
-                    channelColors[index % channelColors.length];
+                channelColors[index % channelColors.length];
 
                 return Container(
                   margin: EdgeInsets.only(top: 0, left: 16, right: 0, bottom: 0),

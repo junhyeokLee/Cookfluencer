@@ -15,6 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../provider/NotificationProvider.dart';
+import 'common/util/AdManager.dart';
 
 // Firebase 초기화 및 앱 시작
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -191,6 +192,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     });
     // 알림 설정 불러오기
     setupFCMListener(ref);
+    await AdManager.initialize();  // AdMob 초기화
 
     // ✅ AdPopcorn SSP 초기화 (네이티브 연결 후 실행)
     if (Platform.isAndroid) {

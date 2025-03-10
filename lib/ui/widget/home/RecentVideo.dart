@@ -87,7 +87,7 @@ class RecentVideo extends HookConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                      VideoItem(
+                    VideoItem(
                       video: video,
                       size: 0.25.sw, // 썸네일 사이즈
                       titleWidth: 0.45.sw, // 제목 너비
@@ -96,8 +96,8 @@ class RecentVideo extends HookConsumerWidget {
                       showChannelName: true,
                       paddiongNone: true,
                     )
-                      ],
-                    ),
+                  ],
+                ),
               );
             },
           ),

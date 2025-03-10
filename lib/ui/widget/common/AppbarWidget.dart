@@ -24,8 +24,8 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
           SizedBox(width: 12),  // 로고와 텍스트 사이의 간격을 조절합니다.
           // 텍스트
           Text(
-            '쿡플',
-            style: Theme.of(context).textTheme.titleLarge
+              '쿡플',
+              style: Theme.of(context).textTheme.titleLarge
           ),
         ],
       ),

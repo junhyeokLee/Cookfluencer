@@ -95,7 +95,7 @@ class MyPageScreen extends ConsumerWidget {
                   InkWell(
                     onTap: () async {
                       final Uri _url =
-                          Uri.parse('https://forms.gle/ZpCYw7Tei3QiWkUm9');
+                      Uri.parse('https://forms.gle/ZpCYw7Tei3QiWkUm9');
                       if (await canLaunchUrl(_url)) {
                         await launchUrl(_url);
                       } else {
@@ -115,7 +115,7 @@ class MyPageScreen extends ConsumerWidget {
                   InkWell(
                     onTap: () async {
                       final Uri _url =
-                          Uri.parse('https://forms.gle/VdymB883WEmpWkmq7');
+                      Uri.parse('https://forms.gle/VdymB883WEmpWkmq7');
                       if (await canLaunchUrl(_url)) {
                         await launchUrl(_url);
                       } else {
@@ -133,9 +133,9 @@ class MyPageScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-        
+
               const SizedBox(height: 20),
-        
+
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -185,7 +185,7 @@ class MyPageScreen extends ConsumerWidget {
                             final tween = Tween(begin: begin, end: end)
                                 .chain(CurveTween(curve: curve));
                             final offsetAnimation = animation.drive(tween);
-        
+
                             return SlideTransition(
                               position: offsetAnimation,
                               child: child,
@@ -220,7 +220,7 @@ class MyPageScreen extends ConsumerWidget {
                             final tween = Tween(begin: begin, end: end)
                                 .chain(CurveTween(curve: curve));
                             final offsetAnimation = animation.drive(tween);
-        
+
                             return SlideTransition(
                               position: offsetAnimation,
                               child: child,

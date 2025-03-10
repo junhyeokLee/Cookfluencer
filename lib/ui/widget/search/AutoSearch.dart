@@ -59,10 +59,10 @@ class AutoSearch extends StatelessWidget {
                     SizedBox(width: 16),
                     Expanded(
                       child: Text(
-                        item['title'], // 채널 이름 또는 비디오 제목 표시
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.labelMedium
+                          item['title'], // 채널 이름 또는 비디오 제목 표시
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.labelMedium
                       ),
                     ),
                   ],

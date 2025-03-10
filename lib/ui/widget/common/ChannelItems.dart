@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
 import 'package:cookfluencer/common/dart/extension/num_extension.dart';
@@ -36,16 +37,33 @@ class ChannelItems extends HookConsumerWidget {
           children: [
             // 채널 썸네일
             InkWell(
-              onTap: () {
-                onChannelItemClick(); // 채널 클릭 시 콜백 호출
-              },
+              onTap: onChannelItemClick,
               child: ClipOval(
-                child: Image.network(
-                  channelData.thumbnailUrl,
+                child: CachedNetworkImage(
+                  imageUrl: channelData.thumbnailUrl,
                   width: 0.4.sw,
                   height: 0.4.sw,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+                  placeholder: (context, url) => Container(
+                    width: 0.4.sw,
+                    height: 0.4.sw,
+                    color: AppColors.greyBackground,
+                    child: Icon(
+                      Icons.person,
+                      size: 0.2.sw,
+                      color: AppColors.grey,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    width: 0.4.sw,
+                    height: 0.4.sw,
+                    color: AppColors.greyBackground,
+                    child: Icon(
+                      Icons.person,
+                      size: 0.2.sw,
+                      color: AppColors.grey,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -77,21 +95,21 @@ class ChannelItems extends HookConsumerWidget {
             Image.asset(Assets.group, width: 16.w, height: 16.h),
             const SizedBox(width: 5),
             Text(
-              channelData.subscriberCount.toSubscribeUnit(), // 구독자 수 포맷
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppColors.grey,
-                fontSize: 11.sp,
-              )
+                channelData.subscriberCount.toSubscribeUnit(), // 구독자 수 포맷
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppColors.grey,
+                  fontSize: 11.sp,
+                )
             ),
             const SizedBox(width: 4),
             CircleAvatar(radius: 1, backgroundColor: AppColors.grey),
             const SizedBox(width: 4),
             Text(
-              '동영상 ${channelData.videoCount}개', // 동영상 수
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+                '동영상 ${channelData.videoCount}개', // 동영상 수
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: AppColors.grey,
                   fontSize: 11.sp,

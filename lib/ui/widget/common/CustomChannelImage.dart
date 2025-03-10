@@ -1,6 +1,7 @@
 import 'package:cookfluencer/common/constant/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Customchannelimage extends StatelessWidget {
   final String imageUrl;
@@ -36,9 +37,11 @@ class Customchannelimage extends StatelessWidget {
           borderRadius: BorderRadius.circular(100), // 원형으로 만들기
           color: AppColors.greyBackground, // 로딩 중 배경색
         ),
-        child: const Center(
-          child: CircularProgressIndicator(
-            color: AppColors.greyBackground,
+        child:  Center(
+          child: Icon(
+            Icons.person,
+            size: 0.2.sw,
+            color: AppColors.grey, // 로딩 중 아이콘 컬러
           ), // 로딩 상태 표시
         ),
       ),
@@ -49,7 +52,11 @@ class Customchannelimage extends StatelessWidget {
           borderRadius: BorderRadius.circular(100), // 원형으로 만들기
           color: AppColors.greyBackground,
         ),
-        child: const Icon(Icons.error, color: Colors.red), // 에러 상태 표시
+        child:  Icon(
+          Icons.person, // 에러 시 기본 사용자 아이콘
+          size: 0.2.sw,
+          color: AppColors.grey, // 에러 상태 표시 컬러
+        ),
       ),
     );
   }

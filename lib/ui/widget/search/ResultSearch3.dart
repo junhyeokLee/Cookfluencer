@@ -61,7 +61,7 @@ class ResultSearch3 extends HookConsumerWidget {
         await Future.delayed(Duration(milliseconds: 500)); // 500ms 지연
 
         final newVideos =
-            await ref.read(searchFilterVideoProvider(searchParams).future);
+        await ref.read(searchFilterVideoProvider(searchParams).future);
 
         final existingIds =
             pagingController.value.itemList?.map((item) => item.id).toSet() ??
@@ -124,193 +124,193 @@ class ResultSearch3 extends HookConsumerWidget {
       appBar: AppBar(
         toolbarHeight: 0,
       ),
-       body: Column(
-          children: [
-            Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        searchChannelListAsyncValue.when(
-                          data: (channels) {
-                            if (channels.isEmpty) {
-                              return Center(
-                                child: EmptyMessage(message: '검색된 쿡플루언서가 없습니다.'),
-                              );
-                            }
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 16, top: 24),
-                                  child: Text('인플루언서',
-                                      style: Theme.of(context).textTheme.titleLarge),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 20),
-                                  height: 210.w,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: channels.length,
-                                    itemBuilder: (context, index) {
-                                      final channel =
-                                          channels[index].data() as Map<String, dynamic>;
-                                      final channelData = ChannelData(
-                                        id: channel['id'] ?? 'Unknown',
-                                        channelName: channel['channel_name'] ?? 'Unknown',
-                                        channelDescription:
-                                            channel['channel_description'] ?? '',
-                                        channelUrl: channel['channel_url'] ?? '',
-                                        thumbnailUrl: channel['thumbnail_url'] ?? '',
-                                        subscriberCount: int.tryParse(
-                                                channel['subscriber_count'].toString()) ??
-                                            0,
-                                        videoCount: channel['video_count'] ?? 0,
-                                        videos: channel['videos'] ?? [],
-                                        section: channel['section'] ?? '',
-                                      );
-
-                                      final paddingLeft = index == 0 ? 16.0 : 24.0;
-                                      final paddingRight = 0.0;
-
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                            left: paddingLeft, right: paddingRight),
-                                        child: ChannelItem(
-                                          key: ValueKey(channelData.id),
-                                          // GlobalKey 대신 ValueKey 사용
-                                          channelData: channelData,
-                                          size: 0.4.sw,
-                                          onChannelItemClick: () {
-                                            onChannelItemClick(channelData); // 콜백 호출
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 16, top: 12, right: 24, bottom: 24),
-                                  child: CustomRoundButton(
-                                    isEnabled: true,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    textColor: AppColors.black,
-                                    bgColor: AppColors.keywordBackground,
-                                    leftIcon: Icon(
-                                      Icons.search,
-                                      size: 16,
-                                      color: AppColors.grey,
-                                    ),
-                                    text: '인플루언서 전체 보기',
-                                    onTap: () {
-                                      onTotalChannelClick(searchQuery); // 콜백 호출
-                                      // context.goNamed(
-                                      //   AppRoute.channels.name,
-                                      //   pathParameters: {'channels': searchQuery},
-                                      // );
-                                    },
-                                  ),
-                                ),
-                              ],
+      body: Column(
+        children: [
+          Expanded(
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      searchChannelListAsyncValue.when(
+                        data: (channels) {
+                          if (channels.isEmpty) {
+                            return Center(
+                              child: EmptyMessage(message: '검색된 쿡플루언서가 없습니다.'),
                             );
-                          },
-                          loading: () => CircularLoading(),
-                          error: (error, stackTrace) => ErrorMessage(message: '${error}'),
-                        ),
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 16, top: 24),
+                                child: Text('인플루언서',
+                                    style: Theme.of(context).textTheme.titleLarge),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 20),
+                                height: 210.w,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: channels.length,
+                                  itemBuilder: (context, index) {
+                                    final channel =
+                                    channels[index].data() as Map<String, dynamic>;
+                                    final channelData = ChannelData(
+                                      id: channel['id'] ?? 'Unknown',
+                                      channelName: channel['channel_name'] ?? 'Unknown',
+                                      channelDescription:
+                                      channel['channel_description'] ?? '',
+                                      channelUrl: channel['channel_url'] ?? '',
+                                      thumbnailUrl: channel['thumbnail_url'] ?? '',
+                                      subscriberCount: int.tryParse(
+                                          channel['subscriber_count'].toString()) ??
+                                          0,
+                                      videoCount: channel['video_count'] ?? 0,
+                                      videos: channel['videos'] ?? [],
+                                      section: channel['section'] ?? '',
+                                    );
 
-                        // 비디오 검색 결과 처리
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
-                          child: Text('레시피 영상',
-                              style: Theme.of(context).textTheme.titleLarge),
-                        ),
+                                    final paddingLeft = index == 0 ? 16.0 : 24.0;
+                                    final paddingRight = 0.0;
 
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 16, right: 16),
-                            child: FilterRecipe(
-                              selectedFilter: selectedFilter,
-                              showFilterOptions: showFilterOptions,
-                              onFilterChanged: (filter) {
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SliverPadding(
-                    padding: const EdgeInsets.only(left: 16, right: 16),
-                    sliver: PagedSliverList<int, QueryDocumentSnapshot>(
-                      pagingController: pagingController.value,
-                      builderDelegate: PagedChildBuilderDelegate<QueryDocumentSnapshot>(
-                        itemBuilder: (context, videoSnapshot, index) {
-                          final video = videoSnapshot.data() as Map<String, dynamic>;
-                          final videoData = VideoData(
-                            id: video['id'] ?? 'Unknown',
-                            channelId: video['channel_id'] ?? 'Unknown',
-                            channelName: video['channel_name'] ?? 'Unknown',
-                            description: video['description'] ?? '',
-                            thumbnailUrl: video['thumbnail_url'] ?? '',
-                            title: video['title'] ?? 'Unknown',
-                            uploadDate: video['upload_date'] ?? '',
-                            videoId: video['video_id'] ?? '',
-                            videoUrl: video['video_url'] ?? '',
-                            viewCount: int.tryParse(video['view_count'].toString()) ?? 0,
-                            recipe: video['recipe'] != null
-                                ? RecipeData(
-                              video_id: video['recipe']['video_id'] ?? '',
-                              description: video['recipe']['description'] ?? '',
-                              cookingTime: video['recipe']['cooking_time'] ?? '',
-                              level: video['recipe']['level'] ?? '',
-                              tip_knowhow: video['recipe']['tip_knowhow'] ?? '',
-                              finishing: video['recipe']['finishing'] ?? '',
-                              ingredients: video['recipe']['ingredients'] ?? '',
-                              equipment: video['recipe']['equipment'] ?? '',
-                              cookingMethods: video['recipe']['cooking_methods'] ?? '',
-                            ) : RecipeData(), // 레시피가 없으면 기본 RecipeData 객체 생성
-                            section: video['section'] ?? '',
-                          );
-                          return VideoItem(
-                            key: ValueKey(videoData.id),
-                            // 고유한 ID를 사용해 ValueKey 설정
-                            video: videoData,
-                            size: 0.22.sw,
-                            titleWidth: 0.6.sw,
-                            channelWidth: 0.35.sw,
-                            onVideoItemClick: () {},
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                          left: paddingLeft, right: paddingRight),
+                                      child: ChannelItem(
+                                        key: ValueKey(channelData.id),
+                                        // GlobalKey 대신 ValueKey 사용
+                                        channelData: channelData,
+                                        size: 0.4.sw,
+                                        onChannelItemClick: () {
+                                          onChannelItemClick(channelData); // 콜백 호출
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 16, top: 12, right: 24, bottom: 24),
+                                child: CustomRoundButton(
+                                  isEnabled: true,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  textColor: AppColors.black,
+                                  bgColor: AppColors.keywordBackground,
+                                  leftIcon: Icon(
+                                    Icons.search,
+                                    size: 16,
+                                    color: AppColors.grey,
+                                  ),
+                                  text: '인플루언서 전체 보기',
+                                  onTap: () {
+                                    onTotalChannelClick(searchQuery); // 콜백 호출
+                                    // context.goNamed(
+                                    //   AppRoute.channels.name,
+                                    //   pathParameters: {'channels': searchQuery},
+                                    // );
+                                  },
+                                ),
+                              ),
+                            ],
                           );
                         },
-
-
-                        firstPageProgressIndicatorBuilder: (context) =>
-                            Center(child: CircularLoading()),
-                        newPageProgressIndicatorBuilder: (context) =>
-                            Center(child: CircularLoading()),
-                        noItemsFoundIndicatorBuilder: (context) =>
-                            EmptyMessage(message: '비디오가 없음'),
-                        noMoreItemsIndicatorBuilder: (context) =>
-                            EmptyMessage(message: '더 이상 비디오 없음'),
+                        loading: () => CircularLoading(),
+                        error: (error, stackTrace) => ErrorMessage(message: '${error}'),
                       ),
+
+                      // 비디오 검색 결과 처리
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
+                        child: Text('레시피 영상',
+                            style: Theme.of(context).textTheme.titleLarge),
+                      ),
+
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 16, right: 16),
+                          child: FilterRecipe(
+                            selectedFilter: selectedFilter,
+                            showFilterOptions: showFilterOptions,
+                            onFilterChanged: (filter) {
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                SliverPadding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  sliver: PagedSliverList<int, QueryDocumentSnapshot>(
+                    pagingController: pagingController.value,
+                    builderDelegate: PagedChildBuilderDelegate<QueryDocumentSnapshot>(
+                      itemBuilder: (context, videoSnapshot, index) {
+                        final video = videoSnapshot.data() as Map<String, dynamic>;
+                        final videoData = VideoData(
+                          id: video['id'] ?? 'Unknown',
+                          channelId: video['channel_id'] ?? 'Unknown',
+                          channelName: video['channel_name'] ?? 'Unknown',
+                          description: video['description'] ?? '',
+                          thumbnailUrl: video['thumbnail_url'] ?? '',
+                          title: video['title'] ?? 'Unknown',
+                          uploadDate: video['upload_date'] ?? '',
+                          videoId: video['video_id'] ?? '',
+                          videoUrl: video['video_url'] ?? '',
+                          viewCount: int.tryParse(video['view_count'].toString()) ?? 0,
+                          recipe: video['recipe'] != null
+                              ? RecipeData(
+                            video_id: video['recipe']['video_id'] ?? '',
+                            description: video['recipe']['description'] ?? '',
+                            cookingTime: video['recipe']['cooking_time'] ?? '',
+                            level: video['recipe']['level'] ?? '',
+                            tip_knowhow: video['recipe']['tip_knowhow'] ?? '',
+                            finishing: video['recipe']['finishing'] ?? '',
+                            ingredients: video['recipe']['ingredients'] ?? '',
+                            equipment: video['recipe']['equipment'] ?? '',
+                            cookingMethods: video['recipe']['cooking_methods'] ?? '',
+                          ) : RecipeData(), // 레시피가 없으면 기본 RecipeData 객체 생성
+                          section: video['section'] ?? '',
+                        );
+                        return VideoItem(
+                          key: ValueKey(videoData.id),
+                          // 고유한 ID를 사용해 ValueKey 설정
+                          video: videoData,
+                          size: 0.22.sw,
+                          titleWidth: 0.6.sw,
+                          channelWidth: 0.35.sw,
+                          onVideoItemClick: () {},
+                        );
+                      },
+
+
+                      firstPageProgressIndicatorBuilder: (context) =>
+                          Center(child: CircularLoading()),
+                      newPageProgressIndicatorBuilder: (context) =>
+                          Center(child: CircularLoading()),
+                      noItemsFoundIndicatorBuilder: (context) =>
+                          EmptyMessage(message: '비디오가 없음'),
+                      noMoreItemsIndicatorBuilder: (context) =>
+                          EmptyMessage(message: '더 이상 비디오 없음'),
                     ),
                   ),
-                  // 오류 발생 시 메시지 표시
-                  if (pagingController.value.error != null)
-                    SliverToBoxAdapter(
-                      child:
-                          ErrorMessage(message: '오류 발생: ${pagingController.value.error}'),
-                    ),
-                ],
-              ),
+                ),
+                // 오류 발생 시 메시지 표시
+                if (pagingController.value.error != null)
+                  SliverToBoxAdapter(
+                    child:
+                    ErrorMessage(message: '오류 발생: ${pagingController.value.error}'),
+                  ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 

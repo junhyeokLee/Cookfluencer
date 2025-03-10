@@ -26,6 +26,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/util/DateUtil.dart';
+import '../widget/AdNative150.dart';
 
 final loadingProvider = StateProvider<bool>((ref) => true);
 
@@ -866,6 +867,8 @@ class VideoDetailScreen extends HookConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            AdNative150(),
+            SizedBox(height: 16),
             Airoundbutton(
               isEnabled: videoData.recipe != null &&
                   (videoData.recipe!.video_id.isNotEmpty ||
@@ -974,9 +977,9 @@ String _getJavaScriptCode(videoData, bool isIOS) {
               console.log('비디오 로드 오류 발생: ytp-embed-error 클래스가 포함되어 있습니다.');
            var watchUrl = '${videoData.videoUrl.replaceAll('embed/', 'watch?v=')}';
                     ${isIOS ?
-            "window.flutter_inappwebview.callHandler('ErrorDetected', '${videoData.videoUrl.replaceAll('embed/', 'watch?v=')}');" :
-            "window.location.href = watchUrl;"
-            }
+  "window.flutter_inappwebview.callHandler('ErrorDetected', '${videoData.videoUrl.replaceAll('embed/', 'watch?v=')}');" :
+  "window.location.href = watchUrl;"
+  }
             // 반복 중지
             clearInterval(errorCheckInterval);
         } else {
@@ -1018,9 +1021,9 @@ String _getJavaScriptCode(videoData, bool isIOS) {
 
              var watchUrl = '${videoData.videoUrl.replaceAll('embed/', 'watch?v=')}';
                   ${isIOS ?
-                  "window.flutter_inappwebview.callHandler('ErrorDetected', '${videoData.videoUrl.replaceAll('embed/', 'watch?v=')}');" :
-                  "window.location.href = watchUrl;"
-                  }
+  "window.flutter_inappwebview.callHandler('ErrorDetected', '${videoData.videoUrl.replaceAll('embed/', 'watch?v=')}');" :
+  "window.location.href = watchUrl;"
+  }
                   
             } else {
                 console.log('비디오가 성공적으로 로드되었습니다.');

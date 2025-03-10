@@ -71,7 +71,7 @@ class ChannelItem extends StatelessWidget {
                   ),
                   SizedBox(width: 4),
                   Text(
-                    channelData.subscriberCount.toSubscribeUnit(),
+                      channelData.subscriberCount.toSubscribeUnit(),
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: AppColors.grey,
                           fontSize: 10.sp
@@ -91,13 +91,13 @@ class ChannelItem extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      '동영상 ${channelData.videoCount}개', // 채널에 있는 동영상 개수
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppColors.grey,
-                        fontSize: 10.sp
-                      )
+                        '동영상 ${channelData.videoCount}개', // 채널에 있는 동영상 개수
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            color: AppColors.grey,
+                            fontSize: 10.sp
+                        )
                     ),
                   ),
                 ],

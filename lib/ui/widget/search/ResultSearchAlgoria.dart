@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cookfluencer/common/CircularLoading.dart';
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/ErrorMessage.dart';
@@ -21,8 +22,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../AdNative.dart';
+import '../../../data/recipeData.dart';
+import '../AdNativeBottom.dart';
 
 class ResultSearchAlgoria extends HookConsumerWidget {
   final String searchQuery;
@@ -69,30 +70,114 @@ class ResultSearchAlgoria extends HookConsumerWidget {
 
     final selectedSort = useState<String>('upload_date'); // 기본값 최신순
 
+
+    // 📌 Firebase에서 특정 레시피 문서의 서브컬렉션을 가져오는 함수
+    Future<List<T>> _fetchSubCollection<T>(
+        String recipeId,
+        String subCollectionName,
+        T Function(Map<String, dynamic>) fromJson,
+        ) async {
+      try {
+        QuerySnapshot subCollectionSnapshot = await FirebaseFirestore.instance
+            .collection('recipe')
+            .doc(recipeId)
+            .collection(subCollectionName)
+            .get();
+
+        return subCollectionSnapshot.docs.map((doc) {
+          return fromJson(doc.data() as Map<String, dynamic>);
+        }).toList();
+      } catch (e) {
+        print("Error fetching $subCollectionName for recipe $recipeId: $e");
+        return [];
+      }
+    }
+
+    // 📌 Firebase에서 video_id가 같은 레시피를 가져오는 함수
+    Future<List<RecipeData>> _fetchRecipesForVideo(String videoId) async {
+      try {
+        if (videoId.isEmpty) return [];
+
+        QuerySnapshot recipeSnapshot = await FirebaseFirestore.instance
+            .collection('recipe')
+            .where('video_id', isEqualTo: videoId)
+            .get();
+
+        return await Future.wait(recipeSnapshot.docs.map((doc) async {
+          final recipeData = RecipeData.fromJson(doc.data() as Map<String, dynamic>);
+
+          List<CookingMethod> cookingMethods = await _fetchSubCollection<CookingMethod>(
+            doc.id, 'cooking_methods', CookingMethod.fromJson,
+          );
+          List<Ingredient> ingredients = await _fetchSubCollection<Ingredient>(
+            doc.id, 'ingredients', Ingredient.fromJson,
+          );
+          List<Equipment> equipment = await _fetchSubCollection<Equipment>(
+            doc.id, 'equipment', Equipment.fromJson,
+          );
+
+          return recipeData.copyWith(
+            cookingMethods: cookingMethods,
+            ingredients: ingredients,
+            equipment: equipment,
+          );
+        }).toList());
+      } catch (e) {
+        print("Error fetching recipes for video: $e");
+        return [];
+      }
+    }
+
+    // 📌 Algolia에서 검색된 비디오에 Firebase의 레시피를 추가하는 함수
     Future<void> fetchVideos(int pageKey) async {
       try {
-        final videoResults = await algoliaService.searchTitleFilter(searchQueryState.value, pageKey, selectedSort.value).first;
-          print("Fetched Videos Count: ${videoResults.videos.length}");
-        for (var video in videoResults.videos) {
-          print("Video ID: ${video.id}, Title: ${video.title}");
-        }
-        final newVideos = videoResults.videos;
+        final videoResults = await algoliaService
+            .searchTitleFilter(searchQueryState.value, pageKey, selectedSort.value)
+            .first;
 
-        // 페이지 끝 판단
+        final List<VideoData> newVideos = await Future.wait(
+          videoResults.videos.map((video) async {
+            List<RecipeData> recipes = await _fetchRecipesForVideo(video.videoId);
+            return video.copyWith(recipe: recipes.isNotEmpty ? recipes[0] : RecipeData());
+          }).toList(),
+        );
+
         final isLastPage = newVideos.length < 20;
-
         if (isLastPage) {
           videoPagingController.value.appendLastPage(newVideos);
         } else {
           final nextPageKey = pageKey + 1;
-
-          // 중복 제거된 데이터가 없더라도 다음 페이지 요청
           videoPagingController.value.appendPage(newVideos, nextPageKey);
         }
       } catch (error) {
         videoPagingController.value.error = error;
       }
     }
+
+    // Future<void> fetchVideos(int pageKey) async {
+    //   try {
+    //     final videoResults = await algoliaService.searchTitleFilter(searchQueryState.value, pageKey, selectedSort.value).first;
+    //       print("Fetched Videos Count: ${videoResults.videos.length}");
+    //     for (var video in videoResults.videos) {
+    //       print("Video ID: ${video.id}, Title: ${video.title}");
+    //     }
+    //     final newVideos = videoResults.videos;
+    //
+    //     // 페이지 끝 판단
+    //     final isLastPage = newVideos.length < 20;
+    //
+    //     if (isLastPage) {
+    //       videoPagingController.value.appendLastPage(newVideos);
+    //     } else {
+    //       final nextPageKey = pageKey + 1;
+    //
+    //       // 중복 제거된 데이터가 없더라도 다음 페이지 요청
+    //       videoPagingController.value.appendPage(newVideos, nextPageKey);
+    //     }
+    //   } catch (error) {
+    //     videoPagingController.value.error = error;
+    //   }
+    // }
 
     // 채널 데이터 가져오기
     Future<void> fetchChannels(int pageKey) async {
@@ -286,12 +371,12 @@ class ResultSearchAlgoria extends HookConsumerWidget {
                       ),
                     ),
                     SliverToBoxAdapter(
-                      child: setNativeView(),
+                      child: AdNativeBottom(),
                     ),
                     // 비디오 목록
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 16.0,top: 0),
+                        padding: const EdgeInsets.only(left: 16.0,top: 16),
                         child: Text('레시피 영상', style: Theme.of(context).textTheme.titleLarge),
                       ),
                     ),
@@ -317,6 +402,7 @@ class ResultSearchAlgoria extends HookConsumerWidget {
                         pagingController: videoPagingController.value,
                         builderDelegate: PagedChildBuilderDelegate<VideoData>(
                           itemBuilder: (context, video, index) {
+                            debugPrint("레시피 확인: ${video.recipe}");
                             return VideoItem(
                               key: ValueKey(video.id),
                               video: video,

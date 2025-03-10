@@ -100,15 +100,15 @@ class SearchBarWidget extends HookConsumerWidget {
                       // 아이콘 유무에 따라 패딩 조정
                       child: searchQuery.value.isEmpty
                           ? Padding(
-                              padding: const EdgeInsets.only(left: 0),
-                              child: Text('검색어를 입력하세요',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        color: AppColors.grey,
-                                      )),
-                            )
+                        padding: const EdgeInsets.only(left: 0),
+                        child: Text('검색어를 입력하세요',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                              color: AppColors.grey,
+                            )),
+                      )
                           : SizedBox.shrink(), // 힌트가 필요 없을 때는 숨김
                     ),
                     GestureDetector(

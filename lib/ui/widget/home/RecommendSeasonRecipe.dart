@@ -32,7 +32,6 @@ class RecommendSeasonRecipe extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
       children: [
         // setNativeBottomView(),
-        AdNativeBottom(),
         Padding(
           padding: const EdgeInsets.only(left: 16, top: 12, bottom: 12),
           child: Text(

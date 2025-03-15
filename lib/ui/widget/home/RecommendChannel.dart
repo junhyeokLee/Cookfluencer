@@ -38,7 +38,6 @@ class RecommendChannel extends HookConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽 정렬
       children: [
         // setNativeMiddleView(),
-        AdNative(),
         Padding(
           padding: const EdgeInsets.only(left: 16, bottom: 12,top: 16),
           child:

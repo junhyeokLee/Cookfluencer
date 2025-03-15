@@ -34,6 +34,8 @@ mixin _$ChannelData {
   int get subscriberCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'video_count')
   int get videoCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'upload_date')
+  String get uploadDate => throw _privateConstructorUsedError;
   List<VideoData> get videos =>
       throw _privateConstructorUsedError; // 리스트 타입으로 수정
   @JsonKey(name: 'section')
@@ -64,6 +66,7 @@ abstract class $ChannelDataCopyWith<$Res> {
       @JsonKey(name: 'thumbnail_url') String thumbnailUrl,
       @JsonKey(name: 'subscriber_count') int subscriberCount,
       @JsonKey(name: 'video_count') int videoCount,
+      @JsonKey(name: 'upload_date') String uploadDate,
       List<VideoData> videos,
       @JsonKey(name: 'section') String section,
       bool isLiked});
@@ -91,6 +94,7 @@ class _$ChannelDataCopyWithImpl<$Res, $Val extends ChannelData>
     Object? thumbnailUrl = null,
     Object? subscriberCount = null,
     Object? videoCount = null,
+    Object? uploadDate = null,
     Object? videos = null,
     Object? section = null,
     Object? isLiked = null,
@@ -124,6 +128,10 @@ class _$ChannelDataCopyWithImpl<$Res, $Val extends ChannelData>
           ? _value.videoCount
           : videoCount // ignore: cast_nullable_to_non_nullable
               as int,
+      uploadDate: null == uploadDate
+          ? _value.uploadDate
+          : uploadDate // ignore: cast_nullable_to_non_nullable
+              as String,
       videos: null == videos
           ? _value.videos
           : videos // ignore: cast_nullable_to_non_nullable
@@ -156,6 +164,7 @@ abstract class _$$ChannelDataImplCopyWith<$Res>
       @JsonKey(name: 'thumbnail_url') String thumbnailUrl,
       @JsonKey(name: 'subscriber_count') int subscriberCount,
       @JsonKey(name: 'video_count') int videoCount,
+      @JsonKey(name: 'upload_date') String uploadDate,
       List<VideoData> videos,
       @JsonKey(name: 'section') String section,
       bool isLiked});
@@ -181,6 +190,7 @@ class __$$ChannelDataImplCopyWithImpl<$Res>
     Object? thumbnailUrl = null,
     Object? subscriberCount = null,
     Object? videoCount = null,
+    Object? uploadDate = null,
     Object? videos = null,
     Object? section = null,
     Object? isLiked = null,
@@ -214,6 +224,10 @@ class __$$ChannelDataImplCopyWithImpl<$Res>
           ? _value.videoCount
           : videoCount // ignore: cast_nullable_to_non_nullable
               as int,
+      uploadDate: null == uploadDate
+          ? _value.uploadDate
+          : uploadDate // ignore: cast_nullable_to_non_nullable
+              as String,
       videos: null == videos
           ? _value._videos
           : videos // ignore: cast_nullable_to_non_nullable
@@ -241,6 +255,7 @@ class _$ChannelDataImpl implements _ChannelData {
       @JsonKey(name: 'thumbnail_url') this.thumbnailUrl = "",
       @JsonKey(name: 'subscriber_count') this.subscriberCount = 0,
       @JsonKey(name: 'video_count') this.videoCount = 0,
+      @JsonKey(name: 'upload_date') this.uploadDate = "",
       final List<VideoData> videos = const <VideoData>[],
       @JsonKey(name: 'section') this.section = "",
       this.isLiked = false})
@@ -270,6 +285,9 @@ class _$ChannelDataImpl implements _ChannelData {
   @override
   @JsonKey(name: 'video_count')
   final int videoCount;
+  @override
+  @JsonKey(name: 'upload_date')
+  final String uploadDate;
   final List<VideoData> _videos;
   @override
   @JsonKey()
@@ -289,7 +307,7 @@ class _$ChannelDataImpl implements _ChannelData {
 
   @override
   String toString() {
-    return 'ChannelData(id: $id, channelName: $channelName, channelDescription: $channelDescription, channelUrl: $channelUrl, thumbnailUrl: $thumbnailUrl, subscriberCount: $subscriberCount, videoCount: $videoCount, videos: $videos, section: $section, isLiked: $isLiked)';
+    return 'ChannelData(id: $id, channelName: $channelName, channelDescription: $channelDescription, channelUrl: $channelUrl, thumbnailUrl: $thumbnailUrl, subscriberCount: $subscriberCount, videoCount: $videoCount, uploadDate: $uploadDate, videos: $videos, section: $section, isLiked: $isLiked)';
   }
 
   @override
@@ -310,6 +328,8 @@ class _$ChannelDataImpl implements _ChannelData {
                 other.subscriberCount == subscriberCount) &&
             (identical(other.videoCount, videoCount) ||
                 other.videoCount == videoCount) &&
+            (identical(other.uploadDate, uploadDate) ||
+                other.uploadDate == uploadDate) &&
             const DeepCollectionEquality().equals(other._videos, _videos) &&
             (identical(other.section, section) || other.section == section) &&
             (identical(other.isLiked, isLiked) || other.isLiked == isLiked));
@@ -326,6 +346,7 @@ class _$ChannelDataImpl implements _ChannelData {
       thumbnailUrl,
       subscriberCount,
       videoCount,
+      uploadDate,
       const DeepCollectionEquality().hash(_videos),
       section,
       isLiked);
@@ -355,6 +376,7 @@ abstract class _ChannelData implements ChannelData {
       @JsonKey(name: 'thumbnail_url') final String thumbnailUrl,
       @JsonKey(name: 'subscriber_count') final int subscriberCount,
       @JsonKey(name: 'video_count') final int videoCount,
+      @JsonKey(name: 'upload_date') final String uploadDate,
       final List<VideoData> videos,
       @JsonKey(name: 'section') final String section,
       final bool isLiked}) = _$ChannelDataImpl;
@@ -383,6 +405,9 @@ abstract class _ChannelData implements ChannelData {
   @override
   @JsonKey(name: 'video_count')
   int get videoCount;
+  @override
+  @JsonKey(name: 'upload_date')
+  String get uploadDate;
   @override
   List<VideoData> get videos; // 리스트 타입으로 수정
   @override

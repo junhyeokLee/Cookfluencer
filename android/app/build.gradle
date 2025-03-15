@@ -26,8 +26,11 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-          versionCode = 12
-        versionName = "1.0.11"
+        minSdkVersion 23  // 🔥 최소 버전을 23으로 변경
+        targetSdkVersion 33
+
+        versionCode = 13
+        versionName = "1.0.12"
     }
     signingConfigs {
         release {

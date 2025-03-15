@@ -17,6 +17,9 @@ import 'package:cookfluencer/ui/widget/home/RecommendRecipe.dart';
 import 'package:cookfluencer/ui/widget/home/RecommendSeasonRecipe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../widget/AdNative.dart';
+import '../widget/AdNativeBottom.dart';
+import '../widget/home/RecentChannel.dart';
 import '../widget/home/RecentVideo.dart';
 
 
@@ -28,6 +31,7 @@ class HomeScreen extends ConsumerWidget {
     final recommendChannelsAsyncValue = ref.watch(recommendChannelsProvider);
     final recommendVideoListAsyncValue = ref.watch(recommendVideosProvider);
     final recentVideoListAsyncValue = ref.watch(recentVideosProvider);
+    final recentChannelListAsyncValue = ref.watch(recentChannelsProvider);
     final recommendSeasonAsyncValue = ref.watch(seasonListProvider);
     final keywordListAsyncValue = ref.watch(keywordListProvider);
 
@@ -73,6 +77,7 @@ class HomeScreen extends ConsumerWidget {
 
     final videos = recommendVideoListAsyncValue.asData!.value; // 이미 VideoData 타입의 리스트
     final recentVideos = recentVideoListAsyncValue.asData!.value; // 이미 VideoData 타입의 리스트
+    final recentChannels = recentChannelListAsyncValue.asData!.value; // 이미 Channels 타입의 리스트
     final season = recommendSeasonAsyncValue.asData!.value; // 이미 SeasonData 타입의 리스트
 
     final channelsSnapshots = recommendChannelsAsyncValue.asData!.value;
@@ -130,6 +135,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
 
                 // HomeScreen에서 채널 아이템 클릭 시
+                AdNative(),
                 RecommendChannel(
                   recommendChannelsListAsyncValue: channels,
                   onChannelItemClick: (channelData) {},
@@ -141,6 +147,17 @@ class HomeScreen extends ConsumerWidget {
                       color: AppColors.keywordBackground,
                     ),
                     child: RecommendKeyword(keywordListAsyncValue: keywordList)),
+
+                AdNativeBottom(),
+
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: RecentChannel(
+                    recentChannelListAsyncValue: recentChannels,
+                  ),
+                ),
+
+
                 RecommendSeasonRecipe(recommendSeasonListAsyncValue: season),
                 Servicesuggestions(),
 

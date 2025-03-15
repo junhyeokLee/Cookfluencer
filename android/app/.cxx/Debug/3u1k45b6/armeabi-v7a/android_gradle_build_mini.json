@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/junhyeok_lee/development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/junhyeok_lee/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/junhyeok_lee/Personal_Project/cookfluencer/android/app/.cxx/Debug/3u1k45b6/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/junhyeok_lee/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/junhyeok_lee/Personal_Project/cookfluencer/android/app/.cxx/Debug/3u1k45b6/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

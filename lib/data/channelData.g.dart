@@ -15,6 +15,7 @@ _$ChannelDataImpl _$$ChannelDataImplFromJson(Map<String, dynamic> json) =>
       thumbnailUrl: json['thumbnail_url'] as String? ?? "",
       subscriberCount: (json['subscriber_count'] as num?)?.toInt() ?? 0,
       videoCount: (json['video_count'] as num?)?.toInt() ?? 0,
+      uploadDate: json['upload_date'] as String? ?? "",
       videos: (json['videos'] as List<dynamic>?)
               ?.map((e) => VideoData.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -32,6 +33,7 @@ Map<String, dynamic> _$$ChannelDataImplToJson(_$ChannelDataImpl instance) =>
       'thumbnail_url': instance.thumbnailUrl,
       'subscriber_count': instance.subscriberCount,
       'video_count': instance.videoCount,
+      'upload_date': instance.uploadDate,
       'videos': instance.videos,
       'section': instance.section,
       'isLiked': instance.isLiked,

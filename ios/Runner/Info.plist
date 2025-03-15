@@ -13,7 +13,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>7.0</string>
+	<string>12.0</string>
 	<key>CFBundleName</key>
 	<string>쿡플</string>
 	<key>CFBundlePackageType</key>
@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>8</string>
+	<string>12</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>GADApplicationIdentifier</key>
@@ -56,6 +56,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>kakaokompassauth</string>
+        <string>kakaolink</string>
+    </array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

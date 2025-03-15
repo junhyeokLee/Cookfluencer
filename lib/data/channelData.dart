@@ -15,6 +15,7 @@ class ChannelData with _$ChannelData {
     @JsonKey(name: 'thumbnail_url') @Default("") String thumbnailUrl,
     @JsonKey(name: 'subscriber_count') @Default(0) int subscriberCount,
     @JsonKey(name: 'video_count') @Default(0) int videoCount,
+    @JsonKey(name: 'upload_date') @Default("") String uploadDate,
     @Default(<VideoData>[]) List<VideoData> videos, // 리스트 타입으로 수정
     @JsonKey(name: 'section') @Default("") String section,
     @Default(false) bool isLiked, // 좋아요 상태 추가
@@ -31,6 +32,7 @@ class ChannelData with _$ChannelData {
       thumbnailUrl: hit.data['thumbnail_url'] ?? '',
       subscriberCount: hit.data['subscriber_count'] ?? 0,
       videoCount: hit.data['video_count'] ?? 0,
+      uploadDate: hit.data['upload_date'] ?? '',
       section: hit.data['section'] ?? '',
       isLiked: hit.data['isLiked'] ?? false, // Algolia에서 좋아요 상태 가져오기
     );

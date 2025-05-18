@@ -24,7 +24,6 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../common/util/DateUtil.dart';
 import '../widget/AdNative150.dart';
 
@@ -40,6 +39,8 @@ class VideoDetailScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    debugPrint("비디오 라이크 상태 = ${videoData.isLiked}");
+
     final showRecipeDatas = useState(false); // 레시피 데이터 표시 여부
     // final isAiButtonPressed = useState(false); // 버튼 상태
     ValueNotifier<bool> isAiButtonPressed = ValueNotifier(false);

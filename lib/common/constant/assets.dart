@@ -17,6 +17,7 @@ class Assets {
   static const String splash = 'assets/images/splash_img.jpeg';
 
   static const String logo = 'assets/images/icon/logo.png';
+  static const String kakaoLogo = 'assets/images/icon/kakao_logo.png';
   static const String home = 'assets/images/icon/home.png';
   static const String search = 'assets/images/icon/search.png';
   static const String heart = 'assets/images/icon/like.png';

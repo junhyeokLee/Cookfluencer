@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cookfluencer/common/dart/extension/num_extension.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/ui/widget/common/LikeChannelButton.dart';
@@ -28,30 +29,75 @@ class ChannelItemHorizontal extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start, // 콘텐츠가 왼쪽 정렬되도록 유지
           crossAxisAlignment: CrossAxisAlignment.center, // 콘텐츠가 중앙 정렬되도록 유지
           children: [
-            // 썸네일 이미지
             ClipOval(
-              child: Image.network(
-                channelData.thumbnailUrl,
-                width: 0.25.sw, // 썸네일 이미지 크기
-                height: 0.25.sw, // 썸네일 이미지 크기
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Icon(Icons.error), // 에러 발생 시 표시할 아이콘
+              child: CachedNetworkImage(
+                imageUrl: channelData.thumbnailUrl,
+                imageBuilder: (context, imageProvider) => Container(
+                  height: 0.25.sw,
+                  width: 0.25.sw,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100), // 원형으로 만들기
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                placeholder: (context, url) => Container(
+                  height: 0.25.sw,
+                  width: 0.25.sw,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100), // 원형으로 만들기
+                    color: AppColors.greyBackground, // 로딩 중 배경색
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.person,
+                      size: 0.2.sw,
+                      color: AppColors.grey, // 로딩 중 아이콘 컬러
+                    ), // 로딩 상태 표시
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  height: 0.25.sw,
+                  width: 0.25.sw,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100), // 원형으로 만들기
+                    color: AppColors.greyBackground,
+                  ),
+                  child: Icon(
+                    Icons.person, // 에러 시 기본 사용자 아이콘
+                    size: 0.2.sw,
+                    color: AppColors.grey, // 에러 상태 표시 컬러
+                  ),
+                ),
               ),
+              // Image.network(
+              //   channelData.thumbnailUrl,
+              //   width: 0.25.sw, // 썸네일 이미지 크기
+              //   height: 0.25.sw, // 썸네일 이미지 크기
+              //   fit: BoxFit.cover,
+              //   errorBuilder: (context, error, stackTrace) => Icon(Icons.error), // 에러 발생 시 표시할 아이콘
+              // ),
             ),
             const SizedBox(width: 12), // 간격
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // 컬럼 내 모든 요소를 왼쪽 정렬
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // 컬럼 내 모든 요소를 왼쪽 정렬
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // 좌우 정렬
-                    crossAxisAlignment: CrossAxisAlignment.center, // 요소들이 수평으로 중앙 정렬되도록 유지
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // 좌우 정렬
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    // 요소들이 수평으로 중앙 정렬되도록 유지
                     children: [
                       // Flexible로 텍스트의 크기를 조정
                       Flexible(
                         child: Row(
                           children: [
-                            Image.asset(Assets.youtube, width: 20.w, height: 20.h),
+                            Image.asset(Assets.youtube,
+                                width: 20.w, height: 20.h),
                             const SizedBox(width: 2), // 간격
                             Flexible(
                               child: Text(
@@ -64,35 +110,46 @@ class ChannelItemHorizontal extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8), // 텍스트와 좋아요 버튼 사이 간격
-                      LikeChannelButton(channelData: channelData,rightMargin: 16,), // 좋아요 버튼을 오른쪽에 배치
+                      const SizedBox(width: 8),
+                      // 텍스트와 좋아요 버튼 사이 간격
+                      LikeChannelButton(
+                        channelData: channelData,
+                        rightMargin: 16,
+                      ),
+                      // 좋아요 버튼을 오른쪽에 배치
                     ],
                   ),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.center, // 각 아이콘과 텍스트가 수평으로 정렬되도록 유지
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    // 각 아이콘과 텍스트가 수평으로 정렬되도록 유지
                     children: [
-                      Image.asset(Assets.group, width: 16.w, height: 16.h), // group 아이콘
-                      const SizedBox(width: 5), // 간격
+                      Image.asset(Assets.group, width: 16.w, height: 16.h),
+                      // group 아이콘
+                      const SizedBox(width: 5),
+                      // 간격
                       Text(
-                        channelData.subscriberCount.toSubscribeUnit(), // 구독자 수를 포맷팅
+                        channelData.subscriberCount.toSubscribeUnit(),
+                        // 구독자 수를 포맷팅
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.grey,
-                          fontSize: 10.sp,
-                        ),
+                              color: AppColors.grey,
+                              fontSize: 10.sp,
+                            ),
                       ),
-                      const SizedBox(width: 4), // 간격
+                      const SizedBox(width: 4),
+                      // 간격
                       CircleAvatar(radius: 1, backgroundColor: AppColors.grey),
-                      const SizedBox(width: 4), // 간격
+                      const SizedBox(width: 4),
+                      // 간격
                       Text(
                         '동영상 ${channelData.videoCount}개', // 동영상 수
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.grey,
-                          fontSize: 10.sp,
-                        ),
+                              color: AppColors.grey,
+                              fontSize: 10.sp,
+                            ),
                       ),
                     ],
                   ),

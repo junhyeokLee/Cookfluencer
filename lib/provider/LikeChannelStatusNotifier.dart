@@ -1,21 +1,20 @@
 import 'package:cookfluencer/data/videoData.dart';
-import 'package:cookfluencer/sharedPreferences/sharedPreferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cookfluencer/data/channelData.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// LikeStatus 객체 정의
 class LikeChannelStatus {
-  final String id; // 채널 ID
-  final String channelName; // 채널 이름
-  final String channelDescription; // 채널 설명
-  final String channelUrl; // 채널 URL
-  final String thumbnailUrl; // 썸네일 URL
-  final int subscriberCount; // 구독자 수
-  final int videoCount; // 비디오 수
-  final List<VideoData> videos; // 비디오 리스트
-  final String section; // 섹션
-  final bool isLiked; // 좋아요 여부
+  final String id;
+  final String channelName;
+  final String channelDescription;
+  final String channelUrl;
+  final String thumbnailUrl;
+  final int subscriberCount;
+  final int videoCount;
+  final List<VideoData> videos;
+  final String section;
+  final bool isLiked;
 
   LikeChannelStatus({
     required this.id,
@@ -31,75 +30,82 @@ class LikeChannelStatus {
   });
 }
 
-// LikeStatusNotifier 정의
-class LikeChannelStatusNotifier
-    extends StateNotifier<AsyncValue<Map<String, LikeChannelStatus>>> {
-  LikeChannelStatusNotifier() : super(AsyncValue.loading()) {
-    _loadLikedChannels(); // 앱 시작 시 좋아요된 채널 로드
+class LikeChannelStatusNotifier extends StateNotifier<AsyncValue<Map<String, LikeChannelStatus>>> {
+  LikeChannelStatusNotifier() : super(const AsyncLoading()) {
+    fetchLikedChannels();
   }
 
-  // 저장된 좋아요 상태를 로드하는 메소드
-  Future<void> _loadLikedChannels() async {
+  Future<void> fetchLikedChannels() async {
     try {
-      final likedChannels = await loadLikedChannelData(); // 기기에서 좋아요된 채널 불러오기
-      Map<String, LikeChannelStatus> loadedVideos = {};
-      // 각 채널의 좋아요 상태를 업데이트
-      for (ChannelData channelData in likedChannels) {
-        loadedVideos[channelData.id] = LikeChannelStatus(
-          id: channelData.id,
-          channelName: channelData.channelName,
-          channelDescription: channelData.channelDescription,
-          channelUrl: channelData.channelUrl,
-          thumbnailUrl: channelData.thumbnailUrl,
-          subscriberCount: channelData.subscriberCount,
-          videoCount: channelData.videoCount,
-          videos: channelData.videos,
-          section: channelData.section,
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        state = const AsyncData({});
+        return;
+      }
+
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('likedChannels')
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final liked = <String, LikeChannelStatus>{};
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        liked[doc.id] = LikeChannelStatus(
+          id: doc.id,
+          channelName: data['channel_name'] ?? '',
+          channelDescription: data['channel_description'],
+          channelUrl: data['channel_url'] ?? '',
+          thumbnailUrl: data['thumbnail_url'] ?? '',
+          subscriberCount: data['subscriber_count'] ?? 0,
+          videoCount: data['video_count'] ?? 0,
+          videos: [],
+          section: '',
           isLiked: true,
         );
       }
-      state = AsyncValue.data(loadedVideos); // 좋아요 상태 업데이트
-    } catch (e) {
-      state = AsyncValue.error(e, StackTrace.current); // 에러 발생 시 에러 상태 업데이트
+
+      state = AsyncData(liked);
+    } catch (e, st) {
+      state = AsyncError(e, st);
     }
   }
 
-  void toggleLike(ChannelData channelData) async {
-    final currentState = state;
+  void toggleLike(ChannelData channel) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
 
-    if (currentState is AsyncData) {
-      final currentStatus = currentState.value?[channelData.id];
-      bool newIsLiked = !(currentStatus?.isLiked ?? false);
-      final updateChannels = {
-        ...?currentState.value!,
-        channelData.id: LikeChannelStatus(
-          id: channelData.id,
-          channelName: channelData.channelName,
-          channelDescription: channelData.channelDescription,
-          channelUrl: channelData.channelUrl,
-          thumbnailUrl: channelData.thumbnailUrl,
-          subscriberCount: channelData.subscriberCount,
-          videoCount: channelData.videoCount,
-          videos: channelData.videos,
-          section: channelData.section,
-          isLiked: newIsLiked,
-        )
-      };
-      state = AsyncValue.data(updateChannels);
-      // 기기에 저장 또는 삭제
-      if (newIsLiked) {
-        await saveChannelData(channelData); // 좋아요 추가 시 저장
-      } else {
-        await removeChannelData(channelData.id); // 좋아요 해제 시 삭제
-      }
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('likedChannels')
+        .doc(channel.id);
+
+    final isLiked = state.value?[channel.id]?.isLiked ?? false;
+
+    if (isLiked) {
+      await docRef.delete();
+    } else {
+      await docRef.set({
+        'channel_name': channel.channelName,
+        'channel_url': channel.channelUrl,
+        'thumbnail_url': channel.thumbnailUrl,
+        'channel_description': channel.channelDescription,
+        'id': channel.id,
+        'subscriber_count': channel.subscriberCount,
+        'video_count': channel.videoCount,
+        'subscriber_count': channel.subscriberCount,
+        'videos':channel.videos,
+        'createdAt': DateTime.now().toIso8601String(),
+      });
     }
+
+    await fetchLikedChannels();
   }
 }
 
-// LikeStatusNotifier Provider 정의
-  final likeChannelStatusProvider = StateNotifierProvider<
-      LikeChannelStatusNotifier,
-      AsyncValue<Map<String, LikeChannelStatus>>>((ref) {
-    return LikeChannelStatusNotifier();
-  });
-
+final likeChannelStatusProvider = StateNotifierProvider<LikeChannelStatusNotifier, AsyncValue<Map<String, LikeChannelStatus>>>(
+      (ref) => LikeChannelStatusNotifier(),
+);

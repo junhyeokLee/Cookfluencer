@@ -6,6 +6,8 @@ import 'package:cookfluencer/ui/screen/LikeScreen.dart';
 import 'package:cookfluencer/ui/screen/MyPageScreen.dart';
 import 'package:cookfluencer/ui/screen/HomeSearchScreen.dart';
 import 'package:cookfluencer/ui/screen/SearchScreen.dart';
+import 'package:cookfluencer/ui/screen/LoginScreen.dart'; // ✅ 로그인 화면 추가
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth; // ✅ Firebase Auth 추가
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -29,10 +31,15 @@ final _mypageNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'mypage');
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/home', // ✅ 기본 경로를 `/login`으로 설정
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
     routes: [
+      GoRoute(
+        path: '/login',
+        name: 'login',
+        builder: (context, state) => LoginScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return ScaffoldWithNestedNavigation(navigationShell: navigationShell);
@@ -72,7 +79,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/search',
                 name: AppRoute.search.name,
-                builder: (context, state) =>  SearchScreen(),
+                builder: (context, state) => SearchScreen(),
               ),
             ],
           ),

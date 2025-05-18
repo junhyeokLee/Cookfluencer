@@ -7,6 +7,11 @@
         android:icon="@mipmap/ic_launcher"
         android:hardwareAccelerated="true"
         >
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="87ab621c8be7408e618e3f12007ec9ae"/>  <!-- 네이티브 앱 키 -->
+
         <meta-data android:name="adpopcorn_ssp_app_key" android:value="118439798"/>
         <meta-data
             android:name="AdPopcornSSP_DEBUG_LOG"
@@ -38,18 +43,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:host="oauth"
-                    android:scheme="kakao87ab621c8be7408e618e3f12007ec9ae"/>
-            </intent-filter>
-        </activity>
-
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

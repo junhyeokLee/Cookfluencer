@@ -1,6 +1,5 @@
 import 'package:cookfluencer/common/EmptyMessage.dart';
 import 'package:cookfluencer/common/constant/app_colors.dart';
-import 'package:cookfluencer/common/util/ScreenUtil.dart';
 import 'package:cookfluencer/data/channelData.dart';
 import 'package:cookfluencer/data/videoData.dart';
 import 'package:cookfluencer/provider/LikeChannelStatusNotifier.dart';
@@ -9,9 +8,12 @@ import 'package:cookfluencer/ui/screen/ChannelDetailScreen.dart';
 import 'package:cookfluencer/ui/widget/common/AppbarWidget.dart';
 import 'package:cookfluencer/ui/widget/common/ChannelItemHorizontal.dart';
 import 'package:cookfluencer/ui/widget/common/VideoItem.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../common/constant/assets.dart';
+import '../../provider/AuthNotifier.dart';
 import '../widget/AdNativeBottom.dart';
 
 class LikeScreen extends ConsumerWidget {
@@ -19,15 +21,21 @@ class LikeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider); // 로그인 상태 구독
+    final user = authState.user;
+
     return Scaffold(
-      appBar: AppbarWidget(), // AppBar 설정 확인
-      body: DefaultTabController(
+      appBar: AppbarWidget(),
+      body: authState.isLoading
+          ? const Center(child: CircularProgressIndicator()) // 로딩 처리
+          : user == null
+          ? _buildGuestPrompt(ref)
+          : DefaultTabController(
         length: 2,
         child: Column(
           children: [
-            _buildTabBar(), // TabBar 빌더
+            _buildTabBar(),
             Expanded(
-              // TabBarView를 감싸는 Expanded 추가
               child: TabBarView(
                 children: [
                   _buildInfluencerTab(ref),
@@ -40,6 +48,7 @@ class LikeScreen extends ConsumerWidget {
       ),
     );
   }
+
 
   // TabBar 빌더
   Column _buildTabBar() {
@@ -78,6 +87,65 @@ class LikeScreen extends ConsumerWidget {
       ],
     );
   }
+
+  Widget _buildGuestPrompt(WidgetRef ref) {
+    final isLoggingIn = ref.watch(authProvider).isLoading;
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.lock_outline, size: 48, color: AppColors.grey),
+          const SizedBox(height: 12),
+          const Text(
+            '로그인이 필요한 기능입니다',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: isLoggingIn
+                ? null
+                : () => ref.read(authProvider.notifier).loginWithKakao(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.kakaoYellow,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!isLoggingIn)
+                  Image.asset(Assets.kakaoLogo, width: 24, height: 24),
+                const SizedBox(width: 8),
+                isLoggingIn
+                    ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    color: AppColors.recipeColor,
+                    strokeWidth: 2,
+                  ),
+                )
+                    : const Text(
+                  '카카오톡으로 로그인',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   // 인플루언서 탭 빌더
   Widget _buildInfluencerTab(WidgetRef ref) {

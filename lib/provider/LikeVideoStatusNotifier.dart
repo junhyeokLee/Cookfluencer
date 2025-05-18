@@ -1,25 +1,24 @@
+
 import 'package:cookfluencer/data/recipeData.dart';
 import 'package:cookfluencer/data/videoData.dart';
-import 'package:cookfluencer/sharedPreferences/sharedPreferences.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cookfluencer/data/channelData.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// LikeStatus 객체 정의
 class LikeVideoStatus {
-  final String id; // 비디오 ID
-  final String channelId; // 채널 ID
-  final String channelName; // 채널 이름
-  final String description; // 비디오 설명
-  final String thumbnailUrl; // 비디오 썸네일 URL
-  final String title; // 비디오 제목
-  final String uploadDate; // 비디오 업로드 날짜
-  final String videoId; // 비디오 ID (중복 사용)
-  final String videoUrl; // 비디오 URL
-  final int viewCount; // 비디오 조회수
-  final String section; // 비디오 섹션
-  final RecipeData recipe; // 비디오 레시피
-  final bool isLiked; // 좋아요 여부
+  final String id;
+  final String channelId;
+  final String channelName;
+  final String description;
+  final String thumbnailUrl;
+  final String title;
+  final String uploadDate;
+  final String videoId;
+  final String videoUrl;
+  final int viewCount;
+  final String section;
+  final RecipeData recipe;
+  final bool isLiked;
 
   LikeVideoStatus({
     required this.id,
@@ -38,83 +37,91 @@ class LikeVideoStatus {
   });
 }
 
-// LikeStatusNotifier 정의
 class LikeVideoStatusNotifier extends StateNotifier<AsyncValue<Map<String, LikeVideoStatus>>> {
-  LikeVideoStatusNotifier() : super(AsyncValue.loading()) {
-    _loadLikedVideos(); // 앱 시작 시 좋아요된 비디오 로드
+  LikeVideoStatusNotifier() : super(const AsyncLoading()) {
+    fetchLikedVideos();
   }
 
-  // 비디오 데이터를 로드하는 메소드
-  Future<void> _loadLikedVideos() async {
+  Future<void> fetchLikedVideos() async {
     try {
-      final likedVideos = await loadLikedVideoData(); // 기기에서 좋아요된 비디오 불러오기
-      Map<String, LikeVideoStatus> loadedVideos = {};
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        state = const AsyncData({});
+        return;
+      }
 
-      for (VideoData videoData in likedVideos) {
-        loadedVideos[videoData.videoId] = LikeVideoStatus(
-          id: videoData.id,
-          channelId: videoData.channelId,
-          channelName: videoData.channelName,
-          description: videoData.description,
-          thumbnailUrl: videoData.thumbnailUrl,
-          title: videoData.title,
-          uploadDate: videoData.uploadDate,
-          videoId: videoData.videoId,
-          videoUrl: videoData.videoUrl,
-          viewCount: videoData.viewCount,
-          section: videoData.section,
-          recipe: videoData.recipe == null ? RecipeData() : videoData.recipe!,
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('likedVideos')
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final liked = <String, LikeVideoStatus>{};
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+
+        final fallbackId = doc.id; // 문서 ID를 video_id로 사용
+
+        liked[doc.id] = LikeVideoStatus(
+          id: fallbackId,
+          channelId: data['channel_id'] ?? '',
+          channelName: data['channel_name'] ?? '',
+          description: data['description'] ?? '',
+          thumbnailUrl: data['thumbnail_url'] ?? '',
+          title: data['title'] ?? '',
+          uploadDate: data['upload_date'] ?? '',
+          videoId: data['video_id'] ?? fallbackId, // 🛡fallback 적용
+          videoUrl: data['video_url'] ?? '',
+          viewCount: data['view_count'] ?? 0,
+          section: data['section'] ?? '',
+          recipe: RecipeData(),
           isLiked: true,
         );
       }
-      state = AsyncValue.data(loadedVideos);
-    } catch (e) {
-      state = AsyncValue.error(e,StackTrace.current); // 에러 발생 시 상태 변경
+
+      state = AsyncData(liked);
+    } catch (e, st) {
+      state = AsyncError(e, st);
     }
   }
 
-  // 비디오 좋아요/싫어요 토글 메소드
-  void toggleLike(VideoData videoData) async {
-    final currentState = state;
 
-    if (currentState is AsyncData) {
-      final currentStatus = currentState.value?[videoData.videoId];
-      bool newIsLiked = !(currentStatus?.isLiked ?? false);
+  void toggleLike(VideoData video) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
 
-      // 상태 업데이트
-      final updatedVideos = {
-        ...?currentState.value,
-        videoData.videoId: LikeVideoStatus(
-          id: videoData.id,
-          channelId: videoData.channelId,
-          channelName: videoData.channelName,
-          description: videoData.description,
-          thumbnailUrl: videoData.thumbnailUrl,
-          title: videoData.title,
-          uploadDate: videoData.uploadDate,
-          videoId: videoData.videoId,
-          videoUrl: videoData.videoUrl,
-          viewCount: videoData.viewCount,
-          section: videoData.section,
-          recipe: videoData.recipe == null ? RecipeData() : videoData.recipe!,
-          isLiked: newIsLiked, // 좋아요 상태 반전
-        ),
-      };
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('likedVideos')
+        .doc(video.videoId);
 
-      state = AsyncValue.data(updatedVideos); // 상태 업데이트
+    final isLiked = state.value?[video.videoId]?.isLiked ?? false;
 
-      // 기기에 저장 또는 삭제
-      if (newIsLiked) {
-        await saveVideoData(videoData); // 좋아요 추가 시 저장
-      } else {
-        await removeVideoData(videoData.videoId); // 좋아요 해제 시 삭제
-      }
+    if (isLiked) {
+      await docRef.delete();
+    } else {
+      await docRef.set({
+        'video_id': video.videoId,
+        'title': video.title,
+        'thumbnail_url': video.thumbnailUrl,
+        'channel_id': video.channelId,
+        'channel_name': video.channelName,
+        'video_url': video.videoUrl,
+        'view_count': video.viewCount,
+        'upload_date': video.uploadDate,
+        'description': video.description,
+        'createdAt': DateTime.now().toIso8601String(),
+      });
     }
+
+    // 상태 재요청
+    await fetchLikedVideos();
   }
+
 }
 
-// LikeStatusNotifier Provider 정의
-final likeVideoStatusProvider = StateNotifierProvider<LikeVideoStatusNotifier,
-    AsyncValue<Map<String, LikeVideoStatus>>>((ref) {
-  return LikeVideoStatusNotifier();
-});
+final likeVideoStatusProvider = StateNotifierProvider<LikeVideoStatusNotifier, AsyncValue<Map<String, LikeVideoStatus>>>(
+      (ref) => LikeVideoStatusNotifier(),
+);

@@ -34,8 +34,9 @@ target 'Runner' do
   # 🔌 외부 라이브러리
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
-  pod 'Firebase/Firestore', '11.8.0'
-  pod 'Firebase/Messaging', '11.8.0'
+#   pod 'Firebase/Firestore', '11.8.0'
+#   pod 'Firebase/Messaging', '11.8.0'
+#   pod 'Firebase/Auth', '~> 11.8.0'
   pod 'KakaoSDKCommon'
   pod 'KakaoSDKAuth'
   pod 'KakaoSDKUser'

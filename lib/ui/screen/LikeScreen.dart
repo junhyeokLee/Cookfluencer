@@ -27,7 +27,7 @@ class LikeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppbarWidget(),
       body: authState.isLoading
-          ? const Center(child: CircularProgressIndicator()) // 로딩 처리
+          ? const Center(child: CircularProgressIndicator(color: AppColors.primarySelectedColor,)) // 로딩 처리
           : user == null
           ? _buildGuestPrompt(ref)
           : DefaultTabController(

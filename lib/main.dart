@@ -12,6 +12,7 @@ import 'package:cookfluencer/services/firebase_notifications.dart';
 import 'package:cookfluencer/ui/screen/HomeScreen.dart';
 import 'package:cookfluencer/ui/screen/LoginScreen.dart';
 import 'package:cookfluencer/util/AdPopcornInterstitialUtil.dart';
+import 'package:cookfluencer/util/AdPopcornInterstitialVideoUtil.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth; // Firebase Auth 별칭 추가
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -104,7 +105,7 @@ class _MyAppState extends ConsumerState<MyApp> with WidgetsBindingObserver {
     //   print('Interstitial Ad 실패: $placementId, Error: $error');
     // };
     // 전면 광고 로드
-    AdPopcornInterstitialUtil().initialize();
+    AdPopcornInterstitialVideoUtil().initialize();
   }
 
   // 앱 라이프사이클 상태 변화 감지

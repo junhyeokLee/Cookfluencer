@@ -12,6 +12,18 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="87ab621c8be7408e618e3f12007ec9ae"/>  <!-- 네이티브 앱 키 -->
 
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="kakao87ab621c8be7408e618e3f12007ec9ae"/>
+            </intent-filter>
+        </activity>
+
+
         <meta-data android:name="adpopcorn_ssp_app_key" android:value="118439798"/>
         <meta-data
             android:name="AdPopcornSSP_DEBUG_LOG"
